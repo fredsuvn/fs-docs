@@ -1,0 +1,30 @@
+# text to crlf
+# * text=auto
+* text eol=crlf
+
+*.sh eol=lf
+
+# text files:
+*.txt text
+*.java text
+*.js text
+*.html text
+*.css text
+*.svg text
+*.xml text
+*.kts text
+*.properties text
+*.md text
+*.adoc text
+*.bat text
+*.gradle text
+*.kts text
+*.kt text
+
+# binary files:
+*.gif  binary
+*.jar  binary
+*.jpeg  binary
+*.jpg  binary
+*.png  binary
+*.vsd  binary
