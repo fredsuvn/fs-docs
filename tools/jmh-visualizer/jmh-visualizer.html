@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JMH Benchmark Visualizer</title>
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="stylesheet" href="jmh-visualizer.css">
+  <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
+  <link rel="stylesheet" href="../../libs/logger.css">
+  <script src="../../libs/jquery-3.7.1.min.js"></script>
+  <script src="../../libs/jquery-ui.min.js"></script>
+  <script src="../../libs/echarts.min.js"></script>
+  <script src="../../libs/logger.js"></script>
+  <script src="../../libs/tools.js"></script>
+</head>
+<body>
+<div id="app">
+  <!-- Header with global controls -->
+  <header class="header">
+    <div style="position: relative; text-align: center; min-height: 100px;">
+      <h1>JMH Benchmark Visualizer <span class="version" id="version-info" style="font-size: 0.5em; margin-left: 10px; opacity: 0.8;"></span></h1>
+      <p class="subtitle">Visualize JMH benchmark results in an elegant way</p>
+      <p id="author-info" class="author-info"
+         style="text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
+    </div>
+    <!-- File upload section (collapsed by default) -->
+    <div class="file-upload-section">
+      <button id="toggle-file-upload" class="toggle-btn">Upload Results.json</button>
+      <div id="file-upload-area" class="collapsed">
+        <div class="drop-zone" id="drop-zone">
+          <p>Drag & drop results.json file here or click to select</p>
+          <input type="file" id="file-input" accept=".json" style="display: none;">
+        </div>
+        <p>Default file: <code>results.json</code> (same directory)</p>
+      </div>
+    </div>
+
+    <div class="global-controls">
+      <!-- 全局控制按钮放在一起 -->
+      <button id="toggle-groups-btn" class="toggle-groups-btn">Collapse All Groups</button>
+
+      <!-- 其他全局控制按钮 -->
+      <!-- 隐藏Chart Type选择框，但保留代码 -->
+      <!-- <div class="control-group">
+        <label>Chart Type:</label>
+        <select id="global-chart-type">
+          <option value="bar">Vertical Bar</option>
+          <option value="horizontalBar" selected>Horizontal Bar</option>
+        </select>
+      </div> -->
+      <div class="control-group">
+        <label>Renderer:</label>
+        <select id="global-renderer">
+          <option value="canvas">Canvas</option>
+          <option value="svg">SVG</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Sort By:</label>
+        <select id="global-sort-metric">
+          <option value="score">Score</option>
+          <option value="throughput">Throughput</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Sort Order:</label>
+        <select id="global-sort-order">
+          <option value="original">Original</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Show Error Lines:</label>
+        <select id="global-show-errors">
+          <option value="true">Show</option>
+          <option value="false">Hide</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Table of Contents -->
+  <nav id="toc" class="toc">
+    <h2>Table of Contents</h2>
+    <ul id="toc-list"></ul>
+  </nav>
+
+  <!-- Benchmark groups -->
+  <main id="benchmark-groups"></main>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading benchmark data...</p>
+  </div>
+</div>
+
+<script src="jmh-visualizer.js"></script>
+
+<!-- Footer -->
+<footer id="footer" class="footer">
+  <p>Powered by fs-tools and <span id="footer-author"></span></p>
+</footer>
+
+<script>
+  // 获取并显示作者和版本信息
+  fsTools.getToolInfo('jmh-visualizer', function(toolInfo) {
+    if (toolInfo) {
+      // 显示版本信息
+      const versionInfo = document.getElementById('version-info');
+      if (versionInfo) {
+        versionInfo.textContent = 'v' + toolInfo.version;
+      }
+
+      // 显示作者信息
+      const author = toolInfo.authors ? toolInfo.authors.join(', ') : '';
+      if (author) {
+        document.getElementById('author-info').textContent = 'Author: ' + author;
+        const footerAuthor = document.getElementById('footer-author');
+        if (footerAuthor) {
+          footerAuthor.textContent = author;
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

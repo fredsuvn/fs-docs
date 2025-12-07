@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "id": "index.html",
+      "enabled": true
+    },
+    {
+      "id": "jmh-visualizer",
+      "enabled": true
+    },
+    {
+      "id": "pixel-logo",
+      "enabled": true
+    }
+  ]
+}
