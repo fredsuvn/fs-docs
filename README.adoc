@@ -1,29 +1,19 @@
-= image:logo.svg[] Logo Art - My Poem Art Palace
+= image:favicon.svg[] fs-docs - Docs repo for fs
 :toc: macro
 :toclevels: 3
 Sun Qian <fredsuvn@163.com>
-:emaill: fredsuvn@163.com
-:url: https://github.com/fredsuvn/poem-art
-:me-url: https://github.com/fredsuvn
-:qq: QQ: 2510701977
+:url: https://github.com/fredsuvn/fs-docs
+:qq: link:https://qm.qq.com/q/wlkc2tmOaG[2510701977]
 :license: https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license]
-
-*Hi there, welcome to my _Poem Art Palace_!*
-
-*This is an amazing place collects a lot of genius poems written by a great poet -- ME!*
 
 toc::[]
 
-== Poem Arts
+== Docs
 
-* 灵光一动的诗集 -- link:src/随想.adoc[随想]
+== Contact
 
-== About Me
-
-* {emaill}
-* {me-url}
-* {qq}
-* {url}
+* Github: {url}
+* QQ group: {qq}
 
 == License
 
