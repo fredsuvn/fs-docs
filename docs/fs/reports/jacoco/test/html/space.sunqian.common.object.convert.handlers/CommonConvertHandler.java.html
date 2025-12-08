@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonConvertHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.common.object.convert.handlers</a> &gt; <span class="el_source">CommonConvertHandler.java</span></div><h1>CommonConvertHandler.java</h1><pre class="source lang-java linenums">package space.sunqian.common.object.convert.handlers;
+
+import space.sunqian.annotations.Nonnull;
+import space.sunqian.annotations.Nullable;
+import space.sunqian.common.Fs;
+import space.sunqian.common.base.chars.CharsKit;
+import space.sunqian.common.base.date.DateFormatter;
+import space.sunqian.common.base.enums.EnumKit;
+import space.sunqian.common.base.number.NumberKit;
+import space.sunqian.common.base.option.Option;
+import space.sunqian.common.collect.ArrayKit;
+import space.sunqian.common.collect.ArrayOperator;
+import space.sunqian.common.collect.CollectKit;
+import space.sunqian.common.collect.MapKit;
+import space.sunqian.common.io.BufferKit;
+import space.sunqian.common.io.IOOperator;
+import space.sunqian.common.object.convert.ConvertOption;
+import space.sunqian.common.object.convert.DataMapper;
+import space.sunqian.common.object.convert.ObjectConverter;
+import space.sunqian.common.object.data.ObjectBuilder;
+import space.sunqian.common.object.data.ObjectBuilderProvider;
+import space.sunqian.common.runtime.reflect.ClassKit;
+import space.sunqian.common.runtime.reflect.ReflectionException;
+import space.sunqian.common.runtime.reflect.TypeKit;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.AbstractList;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.IntFunction;
+
+/**
+ * The common implementation of {@link ObjectConverter.Handler}, also be the default last handler of
+ * {@link ObjectConverter#defaultConverter()}.
+ * &lt;p&gt;
+ * This handler providers the common conversion logic for all types. This is a table showing the conversion logic of
+ * this handler for different target types:
+ * &lt;table summary=&quot;Conversion Logic&quot;&gt;
+ * &lt;tr&gt;
+ *     &lt;th&gt;Target&lt;/th&gt;
+ *     &lt;th&gt;Source&lt;/th&gt;
+ *     &lt;th&gt;Conversion Logic&lt;/th&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td rowspan=&quot;5&quot;&gt;{@link String}, {@link CharSequence}&lt;/td&gt;
+ *     &lt;td&gt;{@link InputStream}, {@link ReadableByteChannel}, {@link Reader}, {@link ByteBuffer}, {@code byte[]}&lt;/td&gt;
+ *     &lt;td&gt;Using {@link ConvertOption#ioOperator(IOOperator)} and {@link ConvertOption#charset(Charset)}
+ *     to decode to string.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@code char[]}&lt;/td&gt;
+ *     &lt;td&gt;Using {@link String#String(char[])} to construct to string.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@link BigDecimal}&lt;/td&gt;
+ *     &lt;td&gt;Using {@link BigDecimal#toPlainString()}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Date and Time Objects&lt;/td&gt;
+ *     &lt;td&gt;Using {@link ConvertOption#timeFormatter(DateFormatter)} to handle.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Others&lt;/td&gt;
+ *     &lt;td&gt;Using {@link Object#toString()}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@code byte[]}, {@code char[]}, {@link ByteBuffer}, {@link CharBuffer}&lt;/td&gt;
+ *     &lt;td&gt;{@link String}&lt;/td&gt;
+ *     &lt;td&gt;Using {@link String#getBytes(Charset)} or {@link String#toCharArray()}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td rowspan=&quot;2&quot;&gt;Numbers&lt;/td&gt;
+ *     &lt;td&gt;{@link String}&lt;/td&gt;
+ *     &lt;td&gt;Using {@link NumberKit#toNumber(CharSequence, Class)}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Other Numbers&lt;/td&gt;
+ *     &lt;td&gt;Using {@link NumberKit#toNumber(Number, Class)}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@code long} and {@link Long}&lt;/td&gt;
+ *     &lt;td&gt;Date and Time&lt;/td&gt;
+ *     &lt;td&gt;Returns epoch milliseconds of the date or time object.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td rowspan=&quot;2&quot;&gt;{@code boolean} and {@link Boolean}&lt;/td&gt;
+ *     &lt;td&gt;Numbers&lt;/td&gt;
+ *     &lt;td&gt;{@code false} for {@code 0}, otherwise {@code true}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@link String}&lt;/td&gt;
+ *     &lt;td&gt;{@code true} for {@code equalsIgnoreCase(&quot;true&quot;)}, otherwise {@code false}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td rowspan=&quot;2&quot;&gt;Date and Time&lt;/td&gt;
+ *     &lt;td&gt;{@link String} and Other Date Time Objects&lt;/td&gt;
+ *     &lt;td&gt;Using {@link ConvertOption#timeFormatter(DateFormatter)} to handle.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;{@code long} and {@link Long}&lt;/td&gt;
+ *     &lt;td&gt;Treated as an epoch milliseconds, then using {@link ConvertOption#timeFormatter(DateFormatter)} to
+ *     handle.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Enums&lt;/td&gt;
+ *     &lt;td&gt;Any Objects&lt;/td&gt;
+ *     &lt;td&gt;Using {@link EnumKit#findEnum(Class, String)} with the name from {@link Object#toString()}.&lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Array and Collection Objects&lt;/td&gt;
+ *     &lt;td&gt;Array or Iterable Objects&lt;/td&gt;
+ *     &lt;td&gt;Array created using reflection. Collection created using its constructor, the supported collection types:
+ *     {@link Iterable}, {@link Collection}, {@link List}, {@link AbstractList}, {@link ArrayList}, {@link LinkedList},
+ *     {@link CopyOnWriteArrayList}, {@link Set}, {@link LinkedHashSet}, {@link HashSet}, {@link TreeSet},
+ *     {@link ConcurrentSkipListSet}. After creating the container, uses the {@code converter} parameter to handle
+ *     component types.
+ *     &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ *     &lt;td&gt;Map and Data Objects&lt;/td&gt;
+ *     &lt;td&gt;Any Objects&lt;/td&gt;
+ *     &lt;td&gt;Generating data object is based on {@link ConvertOption#builderProvider(ObjectBuilderProvider)} and
+ *     {@link ConvertOption#dataMapper(DataMapper)}. Generating map using its constructor, and copying properties
+ *     also using {@link ConvertOption#dataMapper(DataMapper)}. The supported map types:
+ *     {@link Map}, {@link AbstractMap}, {@link LinkedHashMap}, {@link HashMap}, {@link TreeMap}, {@link ConcurrentMap},
+ *     {@link ConcurrentHashMap}, {@link Hashtable}, {@link ConcurrentSkipListMap}.
+ *     &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;/table&gt;
+ * &lt;p&gt;
+ * Note that this handler typically creates new objects and does not perform the same handing as
+ * {@link AssignableConvertHandler}.
+ */
+<span class="fc" id="L169">public class CommonConvertHandler implements ObjectConverter.Handler {</span>
+
+    @Override
+    public Object convert(
+        @Nullable Object src,
+        @Nonnull Type srcType,
+        @Nonnull Type target,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (src == null) {</span>
+<span class="fc" id="L180">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (target instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L183">            Class&lt;?&gt; targetClass = (Class&lt;?&gt;) target;</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">            if (targetClass.isEnum()) {</span>
+                // to enum:
+<span class="fc" id="L186">                String name = src.toString();</span>
+<span class="fc" id="L187">                return EnumKit.findEnum(Fs.as(targetClass), name);</span>
+            }
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            if (srcType.equals(String.class)) {</span>
+<span class="fc bfc" id="L190" title="All 4 branches covered.">                if (target.equals(byte[].class) || target.equals(ByteBuffer.class)) {</span>
+<span class="fc" id="L191">                    Charset charset = Fs.nonnull(</span>
+<span class="fc" id="L192">                        Option.findValue(ConvertOption.CHARSET, options),</span>
+<span class="fc" id="L193">                        CharsKit.defaultCharset()</span>
+                    );
+<span class="fc" id="L195">                    byte[] bytes = ((String) src).getBytes(charset);</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                    return target.equals(ByteBuffer.class) ? ByteBuffer.wrap(bytes) : bytes;</span>
+                }
+<span class="fc bfc" id="L198" title="All 2 branches covered.">                if (target.equals(char[].class)) {</span>
+<span class="fc" id="L199">                    return ((String) src).toCharArray();</span>
+                }
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                if (target.equals(CharBuffer.class)) {</span>
+<span class="fc" id="L202">                    return CharBuffer.wrap((String) src);</span>
+                }
+            }
+<span class="fc bfc" id="L205" title="All 2 branches covered.">            if (targetClass.isArray()) {</span>
+                // to array
+<span class="fc" id="L207">                return toArray(src, srcType, targetClass, converter, options);</span>
+            }
+<span class="fc" id="L209">            ClassHandler classHandler = TargetClasses.get(targetClass);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            if (classHandler != null) {</span>
+<span class="fc" id="L211">                return classHandler.convert(src, srcType, targetClass, converter, options);</span>
+            }
+<span class="fc" id="L213">            IntFunction&lt;Collection&lt;Object&gt;&gt; collectionFunc = CollectionClasses.get(targetClass);</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">            if (collectionFunc != null) {</span>
+                // to collection
+<span class="fc" id="L216">                return toCollection(</span>
+<span class="fc" id="L217">                    src, srcType, collectionFunc, targetClass.getTypeParameters()[0], converter, options</span>
+                );
+            }
+            // to map or data object
+<span class="fc" id="L221">            return toDataObject(src, srcType, targetClass, target, converter, options);</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        } else if (target instanceof GenericArrayType) {</span>
+            // to generic array
+<span class="fc" id="L224">            return toArray(src, srcType, (GenericArrayType) target, converter, options);</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        } else if (target instanceof ParameterizedType) {</span>
+<span class="fc" id="L226">            ParameterizedType paramType = (ParameterizedType) target;</span>
+<span class="fc" id="L227">            Class&lt;?&gt; rawTarget = (Class&lt;?&gt;) paramType.getRawType();</span>
+<span class="fc" id="L228">            IntFunction&lt;Collection&lt;Object&gt;&gt; collectionFunc = CollectionClasses.get(rawTarget);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">            if (collectionFunc != null) {</span>
+                // to collection
+<span class="fc" id="L231">                return toCollection(</span>
+<span class="fc" id="L232">                    src, srcType, collectionFunc, paramType.getActualTypeArguments()[0], converter, options</span>
+                );
+            }
+            // to map or data object
+<span class="fc" id="L236">            return toDataObject(src, srcType, rawTarget, target, converter, options);</span>
+        }
+<span class="fc" id="L238">        return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+    }
+
+    private Object toArray(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Class&lt;?&gt; target,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L248">        return toArray(</span>
+            src,
+            srcType,
+            target,
+<span class="fc" id="L252">            target.getComponentType(),</span>
+            converter,
+            options
+        );
+    }
+
+    private Object toArray(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull GenericArrayType target,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L265">        Class&lt;?&gt; targetClass = Fs.asNonnull(TypeKit.toRuntimeClass(target));</span>
+<span class="fc" id="L266">        return toArray(</span>
+            src,
+            srcType,
+            targetClass,
+<span class="fc" id="L270">            target.getGenericComponentType(),</span>
+            converter,
+            options
+        );
+    }
+
+    private Object toArray(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Class&lt;?&gt; target,
+        @Nonnull Type targetComponentType,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc bfc" id="L284" title="All 2 branches covered.">        if (srcType instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L285">            Class&lt;?&gt; srcClass = (Class&lt;?&gt;) srcType;</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            if (srcClass.isArray()) {</span>
+<span class="fc" id="L287">                ArrayOperator srcOperator = ArrayOperator.of(srcClass);</span>
+<span class="fc" id="L288">                int size = srcOperator.size(src);</span>
+<span class="fc" id="L289">                Object newArray = ArrayKit.newArray(target.getComponentType(), size);</span>
+<span class="fc" id="L290">                Class&lt;?&gt; srcComponentType = srcClass.getComponentType();</span>
+<span class="fc" id="L291">                ArrayOperator targetOperator = ArrayOperator.of(target);</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">                for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L293">                    Object srcElement = srcOperator.get(src, i);</span>
+<span class="fc" id="L294">                    Object targetElement = converter.convert(srcElement, srcComponentType, targetComponentType, options);</span>
+<span class="fc" id="L295">                    targetOperator.set(newArray, i, targetElement);</span>
+                }
+<span class="fc" id="L297">                return newArray;</span>
+            }
+        }
+<span class="fc" id="L300">        Type srcComponentType = resolveComponentType(srcType);</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        if (srcComponentType == null) {</span>
+<span class="fc" id="L302">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+        Collection&lt;?&gt; srcCollection;
+<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (src instanceof Collection&lt;?&gt;) {</span>
+<span class="fc" id="L306">            srcCollection = (Collection&lt;?&gt;) src;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        } else if (src instanceof Iterable&lt;?&gt;) {</span>
+<span class="fc" id="L308">            Iterable&lt;?&gt; iter = (Iterable&lt;?&gt;) src;</span>
+<span class="fc" id="L309">            srcCollection = CollectKit.addAll(new ArrayList&lt;&gt;(), iter);</span>
+<span class="fc" id="L310">        } else {</span>
+<span class="fc" id="L311">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+<span class="fc" id="L313">        int size = srcCollection.size();</span>
+<span class="fc" id="L314">        Object newArray = ArrayKit.newArray(target.getComponentType(), size);</span>
+<span class="fc" id="L315">        ArrayOperator targetOperator = ArrayOperator.of(target);</span>
+<span class="fc" id="L316">        int i = 0;</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        for (Object srcElement : srcCollection) {</span>
+<span class="fc" id="L318">            Object targetElement = converter.convert(srcElement, srcComponentType, targetComponentType, options);</span>
+<span class="fc" id="L319">            targetOperator.set(newArray, i++, targetElement);</span>
+<span class="fc" id="L320">        }</span>
+<span class="fc" id="L321">        return newArray;</span>
+    }
+
+    private Object toCollection(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull IntFunction&lt;Collection&lt;Object&gt;&gt; collectionFunc,
+        @Nonnull Type targetComponentType,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (srcType instanceof Class&lt;?&gt;) {</span>
+<span class="fc" id="L333">            Class&lt;?&gt; srcClass = (Class&lt;?&gt;) srcType;</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">            if (srcClass.isArray()) {</span>
+<span class="fc" id="L335">                ArrayOperator srcOperator = ArrayOperator.of(srcClass);</span>
+<span class="fc" id="L336">                int size = srcOperator.size(src);</span>
+<span class="fc" id="L337">                Collection&lt;Object&gt; newCollection = collectionFunc.apply(size);</span>
+<span class="fc" id="L338">                Class&lt;?&gt; srcComponentType = srcClass.getComponentType();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">                for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L340">                    Object srcElement = srcOperator.get(src, i);</span>
+<span class="fc" id="L341">                    Object targetElement = converter.convert(srcElement, srcComponentType, targetComponentType, options);</span>
+<span class="fc" id="L342">                    newCollection.add(targetElement);</span>
+                }
+<span class="fc" id="L344">                return newCollection;</span>
+            }
+        }
+<span class="fc" id="L347">        Type srcComponentType = resolveComponentType(srcType);</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (srcComponentType == null) {</span>
+<span class="fc" id="L349">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+        Collection&lt;?&gt; srcCollection;
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (src instanceof Collection&lt;?&gt;) {</span>
+<span class="fc" id="L353">            srcCollection = (Collection&lt;?&gt;) src;</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        } else if (src instanceof Iterable&lt;?&gt;) {</span>
+<span class="fc" id="L355">            Iterable&lt;?&gt; iter = (Iterable&lt;?&gt;) src;</span>
+<span class="fc" id="L356">            srcCollection = CollectKit.addAll(new ArrayList&lt;&gt;(), iter);</span>
+<span class="fc" id="L357">        } else {</span>
+<span class="fc" id="L358">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+<span class="fc" id="L360">        int size = srcCollection.size();</span>
+<span class="fc" id="L361">        Collection&lt;Object&gt; newCollection = collectionFunc.apply(size);</span>
+<span class="fc" id="L362">        int i = 0;</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        for (Object srcElement : srcCollection) {</span>
+<span class="fc" id="L364">            Object targetElement = converter.convert(srcElement, srcComponentType, targetComponentType, options);</span>
+<span class="fc" id="L365">            newCollection.add(targetElement);</span>
+<span class="fc" id="L366">        }</span>
+<span class="fc" id="L367">        return newCollection;</span>
+    }
+
+    private @Nullable Type resolveComponentType(@Nonnull Type type) {
+        try {
+<span class="fc" id="L372">            return TypeKit.resolveActualTypeArguments(type, Iterable.class).get(0);</span>
+<span class="fc" id="L373">        } catch (ReflectionException e) {</span>
+<span class="fc" id="L374">            return null;</span>
+        }
+    }
+
+    private Object toDataObject(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Class&lt;?&gt; rawTarget,
+        @Nonnull Type target,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc" id="L386">        IntFunction&lt;Object&gt; mapFunc = MapClasses.get(rawTarget);</span>
+<span class="fc" id="L387">        DataMapper dataMapper = Fs.nonnull(</span>
+<span class="fc" id="L388">            Option.findValue(ConvertOption.DATA_MAPPER, options),</span>
+<span class="fc" id="L389">            DataMapper.defaultMapper()</span>
+        );
+<span class="fc bfc" id="L391" title="All 2 branches covered.">        if (mapFunc != null) {</span>
+<span class="fc" id="L392">            Object targetObject = mapFunc.apply(0);</span>
+<span class="fc" id="L393">            dataMapper.copyProperties(src, srcType, targetObject, target, converter, options);</span>
+<span class="fc" id="L394">            return targetObject;</span>
+        } else {
+<span class="fc" id="L396">            ObjectBuilderProvider builderProvider = Fs.nonnull(</span>
+<span class="fc" id="L397">                Option.findValue(ConvertOption.BUILDER_PROVIDER, options),</span>
+<span class="fc" id="L398">                ObjectBuilderProvider.defaultProvider()</span>
+            );
+<span class="fc" id="L400">            ObjectBuilder builder = builderProvider.builder(target);</span>
+<span class="fc bfc" id="L401" title="All 2 branches covered.">            if (builder == null) {</span>
+<span class="fc" id="L402">                return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+            }
+<span class="fc" id="L404">            Object targetBuilder = builder.newBuilder();</span>
+<span class="fc" id="L405">            dataMapper.copyProperties(src, srcType, targetBuilder, builder.builderType(), converter, options);</span>
+<span class="fc" id="L406">            return builder.build(targetBuilder);</span>
+        }
+    }
+
+    private static final class CollectionClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull IntFunction&lt;@Nonnull Collection&lt;Object&gt;&gt;&gt; CLASS_MAP;
+
+        static {
+<span class="fc" id="L415">            CLASS_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L416">            CLASS_MAP.put(Iterable.class, ArrayList::new);</span>
+<span class="fc" id="L417">            CLASS_MAP.put(Collection.class, HashSet::new);</span>
+<span class="fc" id="L418">            CLASS_MAP.put(List.class, ArrayList::new);</span>
+<span class="fc" id="L419">            CLASS_MAP.put(AbstractList.class, ArrayList::new);</span>
+<span class="fc" id="L420">            CLASS_MAP.put(ArrayList.class, ArrayList::new);</span>
+<span class="fc" id="L421">            CLASS_MAP.put(LinkedList.class, size -&gt; new LinkedList&lt;&gt;());</span>
+<span class="fc" id="L422">            CLASS_MAP.put(CopyOnWriteArrayList.class, size -&gt; new CopyOnWriteArrayList&lt;&gt;());</span>
+<span class="fc" id="L423">            CLASS_MAP.put(Set.class, HashSet::new);</span>
+<span class="fc" id="L424">            CLASS_MAP.put(LinkedHashSet.class, LinkedHashSet::new);</span>
+<span class="fc" id="L425">            CLASS_MAP.put(HashSet.class, HashSet::new);</span>
+<span class="fc" id="L426">            CLASS_MAP.put(TreeSet.class, size -&gt; new TreeSet&lt;&gt;());</span>
+<span class="fc" id="L427">            CLASS_MAP.put(ConcurrentSkipListSet.class, size -&gt; new ConcurrentSkipListSet&lt;&gt;());</span>
+<span class="fc" id="L428">        }</span>
+
+        public static @Nullable IntFunction&lt;@Nonnull Collection&lt;Object&gt;&gt; get(@Nonnull Class&lt;?&gt; target) {
+<span class="fc" id="L431">            return CLASS_MAP.get(target);</span>
+        }
+    }
+
+    private static final class MapClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull IntFunction&lt;@Nonnull Object&gt;&gt; CLASS_MAP;
+
+        static {
+<span class="fc" id="L440">            CLASS_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L441">            CLASS_MAP.put(Map.class, HashMap::new);</span>
+<span class="fc" id="L442">            CLASS_MAP.put(AbstractMap.class, HashMap::new);</span>
+<span class="fc" id="L443">            CLASS_MAP.put(LinkedHashMap.class, LinkedHashMap::new);</span>
+<span class="fc" id="L444">            CLASS_MAP.put(HashMap.class, HashMap::new);</span>
+<span class="fc" id="L445">            CLASS_MAP.put(TreeMap.class, size -&gt; new TreeMap&lt;&gt;());</span>
+<span class="fc" id="L446">            CLASS_MAP.put(ConcurrentMap.class, ConcurrentHashMap::new);</span>
+<span class="fc" id="L447">            CLASS_MAP.put(ConcurrentHashMap.class, ConcurrentHashMap::new);</span>
+<span class="fc" id="L448">            CLASS_MAP.put(Hashtable.class, Hashtable::new);</span>
+<span class="fc" id="L449">            CLASS_MAP.put(ConcurrentSkipListMap.class, size -&gt; new ConcurrentSkipListMap&lt;&gt;());</span>
+<span class="fc" id="L450">        }</span>
+
+        public static @Nullable IntFunction&lt;@Nonnull Object&gt; get(@Nonnull Class&lt;?&gt; target) {
+<span class="fc" id="L453">            return CLASS_MAP.get(target);</span>
+        }
+    }
+
+    private interface ClassHandler {
+        Object convert(
+            @Nonnull Object src,
+            @Nonnull Type srcType,
+            @Nonnull Class&lt;?&gt; target,
+            @Nonnull ObjectConverter converter,
+            @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+        ) throws Exception;
+    }
+
+    private static final class TargetClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull ClassHandler&gt; HANDLER_MAP;
+
+        static {
+<span class="fc" id="L472">            HANDLER_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L473">            HANDLER_MAP.put(String.class, StringClassHandler.INST);</span>
+<span class="fc" id="L474">            HANDLER_MAP.put(CharSequence.class, StringClassHandler.INST);</span>
+<span class="fc" id="L475">            HANDLER_MAP.put(boolean.class, BooleanClassHandler.INST);</span>
+<span class="fc" id="L476">            HANDLER_MAP.put(Boolean.class, BooleanClassHandler.INST);</span>
+<span class="fc" id="L477">            HANDLER_MAP.put(byte.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L478">            HANDLER_MAP.put(short.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L479">            HANDLER_MAP.put(char.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L480">            HANDLER_MAP.put(int.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L481">            HANDLER_MAP.put(long.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L482">            HANDLER_MAP.put(float.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L483">            HANDLER_MAP.put(double.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L484">            HANDLER_MAP.put(Byte.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L485">            HANDLER_MAP.put(Short.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L486">            HANDLER_MAP.put(Character.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L487">            HANDLER_MAP.put(Integer.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L488">            HANDLER_MAP.put(Long.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L489">            HANDLER_MAP.put(Float.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L490">            HANDLER_MAP.put(Double.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L491">            HANDLER_MAP.put(BigInteger.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L492">            HANDLER_MAP.put(BigDecimal.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L493">            HANDLER_MAP.put(Number.class, NumberClassHandler.INST);</span>
+<span class="fc" id="L494">            HANDLER_MAP.put(Date.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L495">            HANDLER_MAP.put(Instant.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L496">            HANDLER_MAP.put(LocalDateTime.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L497">            HANDLER_MAP.put(ZonedDateTime.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L498">            HANDLER_MAP.put(OffsetDateTime.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L499">            HANDLER_MAP.put(LocalDate.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L500">            HANDLER_MAP.put(LocalTime.class, TimeClassHandler.INST);</span>
+<span class="fc" id="L501">        }</span>
+
+        public static @Nullable CommonConvertHandler.ClassHandler get(@Nonnull Class&lt;?&gt; target) {
+<span class="fc" id="L504">            return HANDLER_MAP.get(target);</span>
+        }
+    }
+
+<span class="fc" id="L508">    private enum StringClassHandler implements ClassHandler {</span>
+
+<span class="fc" id="L510">        INST;</span>
+
+        @Override
+        public Object convert(
+            @Nonnull Object src,
+            @Nonnull Type srcType,
+            @Nonnull Class&lt;?&gt; target,
+            @Nonnull ObjectConverter converter,
+            @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+        ) throws Exception {
+<span class="fc bfc" id="L520" title="All 2 branches covered.">            if (src instanceof char[]) {</span>
+<span class="fc" id="L521">                return new String((char[]) src);</span>
+            }
+<span class="fc bfc" id="L523" title="All 2 branches covered.">            if (src instanceof BigDecimal) {</span>
+<span class="fc" id="L524">                return ((BigDecimal) src).toPlainString();</span>
+            }
+<span class="fc bfc" id="L526" title="All 2 branches covered.">            if (src instanceof Date) {</span>
+<span class="fc" id="L527">                DateFormatter dateFormatter = Fs.nonnull(</span>
+<span class="fc" id="L528">                    Option.findValue(ConvertOption.TIME_FORMATTER, options),</span>
+<span class="fc" id="L529">                    DateFormatter.defaultFormatter()</span>
+                );
+<span class="fc" id="L531">                return dateFormatter.format((Date) src);</span>
+            }
+<span class="fc bfc" id="L533" title="All 2 branches covered.">            if (src instanceof TemporalAccessor) {</span>
+<span class="fc" id="L534">                DateFormatter dateFormatter = Fs.nonnull(</span>
+<span class="fc" id="L535">                    Option.findValue(ConvertOption.TIME_FORMATTER, options),</span>
+<span class="fc" id="L536">                    DateFormatter.defaultFormatter()</span>
+                );
+<span class="fc" id="L538">                return dateFormatter.format((TemporalAccessor) src);</span>
+            }
+<span class="fc" id="L540">            Charset charset = Fs.nonnull(</span>
+<span class="fc" id="L541">                Option.findValue(ConvertOption.CHARSET, options),</span>
+<span class="fc" id="L542">                CharsKit.defaultCharset()</span>
+            );
+<span class="fc bfc" id="L544" title="All 2 branches covered.">            if (src instanceof byte[]) {</span>
+<span class="fc" id="L545">                return new String((byte[]) src, charset);</span>
+            }
+<span class="fc bfc" id="L547" title="All 2 branches covered.">            if (src instanceof ByteBuffer) {</span>
+<span class="fc" id="L548">                return BufferKit.string((ByteBuffer) src, charset);</span>
+            }
+<span class="fc" id="L550">            IOOperator ioOperator = Fs.nonnull(</span>
+<span class="fc" id="L551">                Option.findValue(ConvertOption.IO_OPERATOR, options),</span>
+<span class="fc" id="L552">                IOOperator.defaultOperator()</span>
+            );
+<span class="fc bfc" id="L554" title="All 2 branches covered.">            if (src instanceof Reader) {</span>
+<span class="fc" id="L555">                return ioOperator.string((Reader) src);</span>
+            }
+<span class="fc bfc" id="L557" title="All 2 branches covered.">            if (src instanceof InputStream) {</span>
+<span class="fc" id="L558">                return ioOperator.string((InputStream) src, charset);</span>
+            }
+<span class="fc bfc" id="L560" title="All 2 branches covered.">            if (src instanceof ReadableByteChannel) {</span>
+<span class="fc" id="L561">                return ioOperator.string((ReadableByteChannel) src, charset);</span>
+            }
+<span class="fc" id="L563">            return src.toString();</span>
+        }
+    }
+
+<span class="fc" id="L567">    private enum NumberClassHandler implements ClassHandler {</span>
+
+<span class="fc" id="L569">        INST;</span>
+
+        @Override
+        public Object convert(
+            @Nonnull Object src,
+            @Nonnull Type srcType,
+            @Nonnull Class&lt;?&gt; target,
+            @Nonnull ObjectConverter converter,
+            @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+        ) {
+<span class="fc bfc" id="L579" title="All 2 branches covered.">            if (src instanceof String) {</span>
+<span class="fc" id="L580">                return NumberKit.toNumber((String) src, target);</span>
+            }
+<span class="fc bfc" id="L582" title="All 2 branches covered.">            if (!(srcType instanceof Class&lt;?&gt;)) {</span>
+<span class="fc" id="L583">                return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+            }
+<span class="fc bfc" id="L585" title="All 4 branches covered.">            if (target.equals(Long.class) || target.equals(long.class)) {</span>
+<span class="fc bfc" id="L586" title="All 2 branches covered.">                if (srcType.equals(Date.class)) {</span>
+<span class="fc" id="L587">                    return ((Date) src).getTime();</span>
+                }
+<span class="fc bfc" id="L589" title="All 2 branches covered.">                if (TemporalAccessor.class.isAssignableFrom((Class&lt;?&gt;) srcType)) {</span>
+<span class="fc" id="L590">                    TemporalAccessor ta = (TemporalAccessor) src;</span>
+<span class="fc" id="L591">                    DateFormatter dateFormatter = Fs.nonnull(</span>
+<span class="fc" id="L592">                        Option.findValue(ConvertOption.TIME_FORMATTER, options),</span>
+<span class="fc" id="L593">                        DateFormatter.defaultFormatter()</span>
+                    );
+<span class="fc" id="L595">                    Date date = dateFormatter.convert(ta, Date.class);</span>
+<span class="fc" id="L596">                    return date.getTime();</span>
+                }
+            }
+<span class="fc bfc" id="L599" title="All 2 branches covered.">            if (Number.class.isAssignableFrom(ClassKit.wrapperClass((Class&lt;?&gt;) srcType))) {</span>
+<span class="fc" id="L600">                Number srcNum = (Number) src;</span>
+<span class="fc" id="L601">                return NumberKit.toNumber(srcNum, target);</span>
+            }
+<span class="fc" id="L603">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+    }
+
+<span class="fc" id="L607">    private enum BooleanClassHandler implements ClassHandler {</span>
+
+<span class="fc" id="L609">        INST;</span>
+
+        @Override
+        public Object convert(
+            @Nonnull Object src,
+            @Nonnull Type srcType,
+            @Nonnull Class&lt;?&gt; target,
+            @Nonnull ObjectConverter converter,
+            @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+        ) {
+<span class="fc bfc" id="L619" title="All 2 branches covered.">            if (src instanceof Boolean) {</span>
+<span class="fc" id="L620">                return src;</span>
+            }
+<span class="fc bfc" id="L622" title="All 2 branches covered.">            if (src instanceof Number) {</span>
+<span class="fc bfc" id="L623" title="All 2 branches covered.">                return ((Number) src).intValue() != 0;</span>
+            }
+<span class="fc bfc" id="L625" title="All 2 branches covered.">            if (src instanceof String) {</span>
+<span class="fc" id="L626">                return &quot;true&quot;.equalsIgnoreCase((String) src);</span>
+            }
+<span class="fc" id="L628">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+    }
+
+<span class="fc" id="L632">    private enum TimeClassHandler implements ClassHandler {</span>
+
+<span class="fc" id="L634">        INST;</span>
+
+        @Override
+        public Object convert(
+            @Nonnull Object src,
+            @Nonnull Type srcType,
+            @Nonnull Class&lt;?&gt; target,
+            @Nonnull ObjectConverter converter,
+            @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+        ) {
+<span class="fc" id="L644">            DateFormatter dateFormatter = Fs.nonnull(</span>
+<span class="fc" id="L645">                Option.findValue(ConvertOption.TIME_FORMATTER, options),</span>
+<span class="fc" id="L646">                DateFormatter.defaultFormatter()</span>
+            );
+<span class="fc bfc" id="L648" title="All 2 branches covered.">            if (srcType.equals(String.class)) {</span>
+<span class="fc" id="L649">                return dateFormatter.parse((String) src, target);</span>
+            }
+<span class="fc bfc" id="L651" title="All 2 branches covered.">            if (srcType.equals(Date.class)) {</span>
+<span class="fc" id="L652">                return dateFormatter.convert((Date) src, target);</span>
+            }
+<span class="fc bfc" id="L654" title="All 4 branches covered.">            if (srcType.equals(long.class) || srcType.equals(Long.class)) {</span>
+<span class="fc" id="L655">                Date date = new Date((Long) src);</span>
+<span class="fc" id="L656">                return dateFormatter.convert(date, target);</span>
+            }
+<span class="fc bfc" id="L658" title="All 2 branches covered.">            if (srcType instanceof Class&lt;?&gt;) {</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">                if (TemporalAccessor.class.isAssignableFrom((Class&lt;?&gt;) srcType)) {</span>
+<span class="fc" id="L660">                    return dateFormatter.convert((TemporalAccessor) src, target);</span>
+                }
+            }
+<span class="fc" id="L663">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

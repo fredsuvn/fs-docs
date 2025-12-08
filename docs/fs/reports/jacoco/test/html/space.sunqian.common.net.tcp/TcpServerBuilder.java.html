@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TcpServerBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.common.net.tcp</a> &gt; <span class="el_source">TcpServerBuilder.java</span></div><h1>TcpServerBuilder.java</h1><pre class="source lang-java linenums">package space.sunqian.common.net.tcp;
+
+import space.sunqian.annotations.Nonnull;
+import space.sunqian.annotations.Nullable;
+import space.sunqian.common.Check;
+import space.sunqian.common.Fs;
+import space.sunqian.common.base.function.callable.VoidCallable;
+import space.sunqian.common.collect.ListKit;
+import space.sunqian.common.io.IOKit;
+import space.sunqian.common.io.IOOperator;
+import space.sunqian.common.io.communicate.AbstractChannelContext;
+import space.sunqian.common.net.NetException;
+import space.sunqian.common.net.NetServer;
+
+import java.net.InetSocketAddress;
+import java.net.SocketOption;
+import java.net.StandardSocketOptions;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadFactory;
+
+/**
+ * Builder for building new instances of {@link TcpServer} by {@link ServerSocketChannel} and {@link SocketChannel}.
+ * &lt;p&gt;
+ * The server built by this builder requires a main thread and at least one worker thread, the main thread is
+ * responsible for accepting new client, and the worker threads are responsible for handling connected client. A client
+ * is always handled by one worker thread, so there is no client thread safety issues in the {@link TcpServerHandler}.
+ *
+ * @author sunqian
+ */
+<span class="fc" id="L39">public class TcpServerBuilder {</span>
+
+<span class="fc" id="L41">    private @Nonnull TcpServerHandler handler = TcpServerHandler.nullHandler();</span>
+<span class="fc" id="L42">    private int workerThreadNum = 1;</span>
+    private @Nullable ThreadFactory mainThreadFactory;
+    private @Nullable ThreadFactory workerThreadFactory;
+<span class="fc" id="L45">    private final @Nonnull Map&lt;SocketOption&lt;?&gt;, Object&gt; socketOptions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L46">    private long selectTimeout = 0;</span>
+<span class="fc" id="L47">    private int bufSize = IOKit.bufferSize();</span>
+
+    /**
+     * Sets the handler to handle server events. The default handler is {@link TcpServerHandler#nullHandler()}.
+     *
+     * @param handler the handler to handle server events
+     * @return this builder
+     */
+    public @Nonnull TcpServerBuilder handler(@Nonnull TcpServerHandler handler) {
+<span class="fc" id="L56">        this.handler = handler;</span>
+<span class="fc" id="L57">        return this;</span>
+    }
+
+    /**
+     * Sets the main thread factory to create main thread. The main thread is responsible for accepting new client, and
+     * then the worker thread will take over the already connected clients.
+     * &lt;p&gt;
+     * If the factory is not configured, the server will use {@link Thread#Thread(Runnable)}.
+     *
+     * @param mainThreadFactory the main thread factory
+     * @return this builder
+     */
+    public @Nonnull TcpServerBuilder mainThreadFactory(@Nonnull ThreadFactory mainThreadFactory) {
+<span class="fc" id="L70">        this.mainThreadFactory = mainThreadFactory;</span>
+<span class="fc" id="L71">        return this;</span>
+    }
+
+    /**
+     * Sets the worker thread factory to create worker thread. The main thread is responsible for accepting new client,
+     * and then the worker thread will take over the already connected clients.
+     * &lt;p&gt;
+     * If the factory is not configured, the server will use {@link Thread#Thread(Runnable)}.
+     *
+     * @param workerThreadFactory the worker thread factory
+     * @return this builder
+     */
+    public @Nonnull TcpServerBuilder workerThreadFactory(@Nonnull ThreadFactory workerThreadFactory) {
+<span class="fc" id="L84">        this.workerThreadFactory = workerThreadFactory;</span>
+<span class="fc" id="L85">        return this;</span>
+    }
+
+    /**
+     * Sets the number of worker thread. The default is {@code 1}.
+     *
+     * @param workThreadNum the number of worker thread, must {@code &gt;= 1}
+     * @return this builder
+     * @throws IllegalArgumentException if the number is negative or {@code 0}
+     * @see #workerThreadFactory(ThreadFactory)
+     */
+    public @Nonnull TcpServerBuilder workerThreadNum(int workThreadNum) throws IllegalArgumentException {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        Check.checkArgument(workThreadNum &gt;= 1, &quot;workThreadNum must &gt;= 1&quot;);</span>
+<span class="fc" id="L98">        this.workerThreadNum = workThreadNum;</span>
+<span class="fc" id="L99">        return this;</span>
+    }
+
+    /**
+     * Sets the buffer size for advanced IO operations. Note this buffer size is not the kernel network buffer size, it
+     * is an I/O advanced operations buffer size.
+     *
+     * @param bufSize the buffer size for advanced IO operations
+     * @return this builder
+     * @throws IllegalArgumentException if the buffer size is negative or {@code 0}
+     */
+    public @Nonnull TcpServerBuilder bufferSize(int bufSize) throws IllegalArgumentException {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        Check.checkArgument(bufSize &gt; 0, &quot;bufSize must be positive&quot;);</span>
+<span class="fc" id="L112">        this.bufSize = bufSize;</span>
+<span class="fc" id="L113">        return this;</span>
+    }
+
+    /**
+     * Sets a socket option. This method can be invoked multiple times to set different socket options.
+     *
+     * @param &lt;T&gt;   the type of the socket option value
+     * @param name  the socket option
+     * @param value the value of the socket option, a value of {@code null} may be a valid value for some socket
+     *              options.
+     * @return this builder
+     * @throws NetException If an error occurs
+     * @see StandardSocketOptions
+     */
+    public &lt;T&gt; @Nonnull TcpServerBuilder socketOption(@Nonnull SocketOption&lt;T&gt; name, T value) throws NetException {
+<span class="fc" id="L128">        socketOptions.put(name, value);</span>
+<span class="fc" id="L129">        return this;</span>
+    }
+
+    /**
+     * Sets the timeout for underlying {@link Selector#select(long)}, in milliseconds. This timeout must {@code &gt;= 0},
+     * and will affect the triggering interval of {@link TcpServerHandler#channelLoop(TcpContext)}. If it is {@code 0},
+     * there may be a large interval or even never triggering.
+     *
+     * @param selectTimeout the timeout for underlying {@link Selector#select(long)}, in milliseconds, must
+     *                      {@code &gt;= 0}
+     * @return this builder
+     * @throws IllegalArgumentException if the timeout is negative
+     */
+    public @Nonnull TcpServerBuilder selectTimeout(long selectTimeout) throws IllegalArgumentException {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        Check.checkArgument(selectTimeout &gt;= 0, &quot;selectTimeout must &gt;= 0&quot;);</span>
+<span class="fc" id="L144">        this.selectTimeout = selectTimeout;</span>
+<span class="fc" id="L145">        return this;</span>
+    }
+
+    /**
+     * Binds the server's socket to the automatically assigned address and configures the socket to listen for
+     * connections. And a new {@link TcpServer} instance is returned.
+     *
+     * @return a new {@link TcpServer} instance
+     * @throws NetException If an error occurs
+     */
+    public @Nonnull TcpServer bind() throws NetException {
+<span class="fc" id="L156">        return bind(null);</span>
+    }
+
+    /**
+     * Binds the server's socket to the specified local address and configures the socket to listen for connections. And
+     * a new {@link TcpServer} instance is returned.
+     *
+     * @param localAddress the local address the server is bound to, may be {@code null} to bind to the automatically
+     *                     assigned address
+     * @return a new {@link TcpServer} instance
+     * @throws NetException If an error occurs
+     */
+    public @Nonnull TcpServer bind(@Nullable InetSocketAddress localAddress) throws NetException {
+<span class="fc" id="L169">        return bind(localAddress, 0);</span>
+    }
+
+    /**
+     * Binds the server's socket to the specified local address and configures the socket to listen for connections. And
+     * a new {@link TcpServer} instance is returned.
+     * &lt;p&gt;
+     * The {@code backlog} is the maximum number of pending connections on the socket. If the {@code backlog} parameter
+     * has the value 0, or a negative value, then a default value is used.
+     *
+     * @param localAddress the local address the server is bound to, may be {@code null} to bind to the automatically
+     *                     assigned address
+     * @param backlog      the maximum number of pending connections
+     * @return a new {@link TcpServer} instance
+     * @throws NetException If an error occurs
+     */
+    public @Nonnull TcpServer bind(@Nullable InetSocketAddress localAddress, int backlog) throws NetException {
+<span class="fc" id="L186">        return Fs.uncheck(() -&gt; new TcpServerImpl(</span>
+                localAddress,
+                handler,
+                mainThreadFactory,
+                workerThreadFactory,
+                workerThreadNum,
+                socketOptions,
+                selectTimeout,
+                backlog,
+                bufSize
+            ),
+            NetException::new
+        );
+    }
+
+    private static final class TcpServerImpl implements TcpServer, Runnable {
+
+        private final @Nonnull ServerSocketChannel server;
+        private final @Nonnull Selector mainSelector;
+        private final long selectTimeout;
+        private final @Nonnull Thread mainThread;
+        private final @Nonnull WorkerImpl @Nonnull [] workers;
+        private final @Nonnull TcpServerHandler handler;
+        private final @Nonnull InetSocketAddress localAddress;
+        private final int bufSize;
+
+<span class="fc" id="L212">        private volatile boolean closed = false;</span>
+
+        @SuppressWarnings(&quot;resource&quot;)
+        private TcpServerImpl(
+            @Nullable InetSocketAddress localAddress,
+            @Nonnull TcpServerHandler handler,
+            @Nullable ThreadFactory mainthreadFactory,
+            @Nullable ThreadFactory workerthreadFactory,
+            int workThreadNum,
+            Map&lt;SocketOption&lt;?&gt;, Object&gt; socketOptions,
+            long selectTimeout,
+            int backlog,
+            int bufSize
+<span class="fc" id="L225">        ) throws Exception {</span>
+<span class="fc" id="L226">            this.server = ServerSocketChannel.open();</span>
+<span class="fc" id="L227">            this.mainSelector = Selector.open();</span>
+<span class="fc" id="L228">            this.handler = handler;</span>
+<span class="fc" id="L229">            this.mainThread = newThread(mainthreadFactory, this);</span>
+<span class="fc" id="L230">            this.workers = new WorkerImpl[workThreadNum];</span>
+<span class="fc" id="L231">            this.selectTimeout = selectTimeout;</span>
+<span class="fc" id="L232">            this.bufSize = bufSize;</span>
+<span class="fc" id="L233">            server.configureBlocking(false);</span>
+<span class="fc" id="L234">            socketOptions.forEach((name, value) -&gt;</span>
+<span class="fc" id="L235">                Fs.uncheck(() -&gt; server.setOption(Fs.as(name), value), NetException::new));</span>
+<span class="fc" id="L236">            server.register(mainSelector, SelectionKey.OP_ACCEPT);</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">            for (int i = 0; i &lt; workThreadNum; i++) {</span>
+<span class="fc" id="L238">                WorkerImpl worker = new WorkerImpl();</span>
+<span class="fc" id="L239">                workers[i] = worker;</span>
+<span class="fc" id="L240">                worker.thread = newThread(workerthreadFactory, worker);</span>
+            }
+<span class="fc" id="L242">            server.bind(localAddress, backlog);</span>
+<span class="fc" id="L243">            this.localAddress = (InetSocketAddress) server.getLocalAddress();</span>
+<span class="fc" id="L244">            mainThread.start();</span>
+<span class="fc" id="L245">        }</span>
+
+        private @Nonnull Thread newThread(@Nullable ThreadFactory factory, @Nonnull Runnable runnable) {
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            return factory == null ? new Thread(runnable) : factory.newThread(runnable);</span>
+        }
+
+        @Override
+        public void await() throws NetException {
+<span class="fc" id="L253">            Fs.uncheck(mainThread::join);</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">            for (WorkerImpl worker : workers) {</span>
+<span class="fc" id="L255">                Fs.uncheck(worker.thread::join);</span>
+            }
+<span class="fc" id="L257">        }</span>
+
+        @Override
+        public synchronized void close() throws NetException {
+<span class="fc bfc" id="L261" title="All 2 branches covered.">            if (closed) {</span>
+<span class="fc" id="L262">                return;</span>
+            }
+<span class="fc" id="L264">            Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L265">                    server.close();</span>
+<span class="fc" id="L266">                    mainSelector.close();</span>
+<span class="fc" id="L267">                    mainSelector.wakeup();</span>
+<span class="fc" id="L268">                    mainThread.interrupt();</span>
+<span class="fc" id="L269">                },</span>
+                NetException::new
+            );
+<span class="fc" id="L272">            releaseWorkers();</span>
+<span class="fc" id="L273">            closed = true;</span>
+<span class="fc" id="L274">        }</span>
+
+        @Override
+        public @Nonnull InetSocketAddress localAddress() throws NetException {
+<span class="fc" id="L278">            return localAddress;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;NetServer.@Nonnull Worker&gt; workers() {
+<span class="fc" id="L283">            return ListKit.list(workers);</span>
+        }
+
+        @Override
+        public boolean isClosed() {
+<span class="fc" id="L288">            return closed;</span>
+        }
+
+        @Override
+        public void run() {
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            for (WorkerImpl worker : workers) {</span>
+<span class="fc" id="L294">                worker.thread.start();</span>
+            }
+<span class="fc bfc" id="L296" title="All 2 branches covered.">            while (!mainThread.isInterrupted()) {</span>
+<span class="fc" id="L297">                doWork(this::doMainWork, closed);</span>
+            }
+<span class="fc" id="L299">            releaseWorkers();</span>
+<span class="fc" id="L300">            Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L301">                server.close();</span>
+<span class="fc" id="L302">                mainSelector.close();</span>
+<span class="fc" id="L303">            }, NetException::new);</span>
+<span class="fc" id="L304">        }</span>
+
+        private void doMainWork() throws Exception {
+<span class="fc" id="L307">            mainSelector.select();</span>
+<span class="fc" id="L308">            Set&lt;SelectionKey&gt; selectedKeys = mainSelector.selectedKeys();</span>
+<span class="fc" id="L309">            Iterator&lt;SelectionKey&gt; keys = selectedKeys.iterator();</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">            while (keys.hasNext()) {</span>
+<span class="fc" id="L311">                SelectionKey key = keys.next();</span>
+<span class="fc" id="L312">                keys.remove();</span>
+<span class="fc" id="L313">                handleAccept(key, workers);</span>
+                // key.cancel();
+<span class="fc" id="L315">            }</span>
+<span class="fc" id="L316">        }</span>
+
+        @SuppressWarnings(&quot;resource&quot;)
+        private void handleAccept(SelectionKey key, WorkerImpl[] workers) throws Exception {
+<span class="fc" id="L320">            ServerSocketChannel server = (ServerSocketChannel) key.channel();</span>
+<span class="fc" id="L321">            SocketChannel client = server.accept();</span>
+<span class="fc" id="L322">            int index = findWorker(workers);</span>
+<span class="fc" id="L323">            workers[index].registerClient(client);</span>
+<span class="fc" id="L324">            workers[index].selector.wakeup();</span>
+<span class="fc" id="L325">        }</span>
+
+        private int findWorker(WorkerImpl[] workers) {
+<span class="fc" id="L328">            int index = 0;</span>
+<span class="fc" id="L329">            int minClientCount = Integer.MAX_VALUE;</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">            for (int i = 0; i &lt; workers.length; i++) {</span>
+<span class="fc" id="L331">                int clientCount = workers[i].clientSet.size();</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">                if (clientCount &lt; minClientCount) {</span>
+<span class="fc" id="L333">                    minClientCount = clientCount;</span>
+<span class="fc" id="L334">                    index = i;</span>
+                }
+            }
+<span class="fc" id="L337">            return index;</span>
+        }
+
+        private void releaseWorkers() {
+<span class="fc bfc" id="L341" title="All 2 branches covered.">            for (WorkerImpl worker : workers) {</span>
+<span class="fc" id="L342">                worker.thread.interrupt();</span>
+            }
+<span class="fc bfc" id="L344" title="All 2 branches covered.">            for (WorkerImpl worker : workers) {</span>
+                try {
+<span class="fc" id="L346">                    worker.thread.join();</span>
+<span class="fc" id="L347">                } catch (InterruptedException ignored) {</span>
+<span class="fc" id="L348">                }</span>
+            }
+<span class="fc" id="L350">        }</span>
+
+        private void doWork(VoidCallable callable, boolean closed) {
+<span class="fc bfc" id="L353" title="All 2 branches covered.">            if (closed) {</span>
+<span class="fc" id="L354">                return;</span>
+            }
+            try {
+<span class="fc" id="L357">                callable.call();</span>
+<span class="fc" id="L358">            } catch (Exception e) {</span>
+<span class="fc" id="L359">                handler.exceptionCaught(null, e);</span>
+<span class="fc" id="L360">            }</span>
+<span class="fc" id="L361">        }</span>
+
+        private final class WorkerImpl implements Worker, Runnable {
+
+            private final @Nonnull Selector selector;
+<span class="fc" id="L366">            private final @Nonnull Set&lt;ContextImpl&gt; clientSet = new HashSet&lt;&gt;();</span>
+
+            // the thread this worker starts on
+            private Thread thread;
+
+<span class="fc" id="L371">            private volatile @Nonnull AcceptedEvent acceptedEvent = new AcceptedEvent();</span>
+
+<span class="fc" id="L373">            private WorkerImpl() {</span>
+<span class="fc" id="L374">                this.selector = Fs.uncheck(Selector::open, NetException::new);</span>
+<span class="fc" id="L375">            }</span>
+
+            public void registerClient(SocketChannel client) {
+<span class="fc" id="L378">                AcceptedEvent newAc = new AcceptedEvent(client);</span>
+<span class="fc" id="L379">                AcceptedEvent event = this.acceptedEvent;</span>
+                while (true) {
+<span class="fc" id="L381">                    AcceptedEvent next = event.next;</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">                    if (next == null) {</span>
+<span class="fc" id="L383">                        event.next = newAc;</span>
+<span class="fc" id="L384">                        break;</span>
+                    } else {
+<span class="fc" id="L386">                        event = next;</span>
+                    }
+<span class="fc" id="L388">                }</span>
+<span class="fc" id="L389">            }</span>
+
+            //@SuppressWarnings({&quot;InfiniteLoopStatement&quot;})
+            @Override
+            public void run() {
+<span class="fc" id="L394">                Thread thread = Thread.currentThread();</span>
+<span class="fc bfc" id="L395" title="All 2 branches covered.">                while (!thread.isInterrupted()) {</span>
+<span class="fc" id="L396">                    doWork(this::doWorkerWork, closed);</span>
+                }
+<span class="fc" id="L398">                releaseClients();</span>
+<span class="fc" id="L399">                Fs.uncheck(selector::close, NetException::new);</span>
+<span class="fc" id="L400">            }</span>
+
+            private void doWorkerWork() throws Exception {
+                // register read event
+<span class="fc" id="L404">                handleOpen();</span>
+                // read event
+<span class="fc" id="L406">                handleRead();</span>
+                // loop event
+<span class="fc" id="L408">                handleLoop();</span>
+                // remove closed client
+<span class="fc" id="L410">                handleClose();</span>
+<span class="fc" id="L411">            }</span>
+
+            private void handleOpen() throws Exception {
+<span class="fc" id="L414">                @Nonnull AcceptedEvent event = this.acceptedEvent;</span>
+                while (true) {
+<span class="fc" id="L416">                    SocketChannel channel = event.channel;</span>
+<span class="fc bfc" id="L417" title="All 2 branches covered.">                    if (channel != null) {</span>
+<span class="fc" id="L418">                        ContextImpl context = new ContextImpl(channel, bufSize);</span>
+<span class="fc" id="L419">                        clientSet.add(context);</span>
+<span class="fc" id="L420">                        registerRead(context);</span>
+<span class="fc" id="L421">                        event.channel = null;</span>
+<span class="fc" id="L422">                        TcpKit.channelOpen(handler, context);</span>
+                    }
+<span class="fc" id="L424">                    AcceptedEvent next = event.next;</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">                    if (next == null) {</span>
+<span class="fc" id="L426">                        this.acceptedEvent = event;</span>
+<span class="fc" id="L427">                        break;</span>
+                    } else {
+<span class="fc" id="L429">                        event = next;</span>
+                    }
+<span class="fc" id="L431">                }</span>
+<span class="fc" id="L432">            }</span>
+
+            @SuppressWarnings(&quot;resource&quot;)
+            private void registerRead(ContextImpl context) throws Exception {
+<span class="fc" id="L436">                SocketChannel channel = context.channel();</span>
+<span class="fc" id="L437">                channel.configureBlocking(false);</span>
+<span class="fc" id="L438">                channel.register(selector, SelectionKey.OP_READ, context);</span>
+<span class="fc" id="L439">            }</span>
+
+            private void handleRead() throws Exception {
+<span class="fc" id="L442">                int keysNum = selector.select(selectTimeout);</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">                if (keysNum == 0) {</span>
+<span class="fc" id="L444">                    return;</span>
+                }
+<span class="fc" id="L446">                Set&lt;SelectionKey&gt; selectedKeys = selector.selectedKeys();</span>
+<span class="fc" id="L447">                Iterator&lt;SelectionKey&gt; keys = selectedKeys.iterator();</span>
+<span class="fc bfc" id="L448" title="All 2 branches covered.">                while (keys.hasNext()) {</span>
+<span class="fc" id="L449">                    SelectionKey key = keys.next();</span>
+<span class="fc" id="L450">                    keys.remove();</span>
+<span class="fc" id="L451">                    TcpKit.channelRead(handler, (ContextImpl) key.attachment());</span>
+<span class="fc" id="L452">                }</span>
+<span class="fc" id="L453">            }</span>
+
+            private void handleLoop() {
+<span class="fc bfc" id="L456" title="All 2 branches covered.">                for (ContextImpl context : clientSet) {</span>
+<span class="fc" id="L457">                    TcpKit.channelLoop(handler, context);</span>
+<span class="fc" id="L458">                }</span>
+<span class="fc" id="L459">            }</span>
+
+            @SuppressWarnings(&quot;resource&quot;)
+            private void handleClose() {
+<span class="fc" id="L463">                Iterator&lt;ContextImpl&gt; iterator = clientSet.iterator();</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L465">                    ContextImpl context = iterator.next();</span>
+<span class="fc bfc" id="L466" title="All 2 branches covered.">                    if (!context.channel().isOpen()) {</span>
+<span class="fc" id="L467">                        context.close();</span>
+<span class="fc" id="L468">                        iterator.remove();</span>
+                    }
+<span class="fc" id="L470">                }</span>
+<span class="fc" id="L471">            }</span>
+
+            @Override
+            public int connectionNumber() {
+<span class="fc" id="L475">                return clientSet.size();</span>
+            }
+
+            @Override
+            public @Nonnull Thread thread() {
+<span class="fc" id="L480">                return thread;</span>
+            }
+
+            private void releaseClients() {
+<span class="fc bfc" id="L484" title="All 2 branches covered.">                for (ContextImpl context : clientSet) {</span>
+<span class="fc" id="L485">                    context.close();</span>
+<span class="fc" id="L486">                }</span>
+<span class="fc" id="L487">            }</span>
+
+            private final class ContextImpl extends AbstractChannelContext&lt;SocketChannel&gt; implements TcpContext {
+
+                // private final @Nonnull SocketChannel channel;
+                private final @Nonnull InetSocketAddress clientAddress;
+                private final @Nonnull InetSocketAddress serverAddress;
+                private final @Nonnull IOOperator ioOperator;
+
+<span class="fc" id="L496">                private volatile boolean closed = false;</span>
+
+<span class="fc" id="L498">                private ContextImpl(@Nonnull SocketChannel channel, int bufSize) throws IllegalArgumentException {</span>
+<span class="fc" id="L499">                    super(channel);</span>
+<span class="fc" id="L500">                    this.clientAddress = (InetSocketAddress) Fs.uncheck(channel::getRemoteAddress, NetException::new);</span>
+<span class="fc" id="L501">                    this.serverAddress = (InetSocketAddress) Fs.uncheck(channel::getLocalAddress, NetException::new);</span>
+<span class="fc" id="L502">                    this.ioOperator = IOOperator.get(bufSize);</span>
+<span class="fc" id="L503">                }</span>
+
+                @Override
+                public @Nonnull InetSocketAddress clientAddress() {
+<span class="fc" id="L507">                    return clientAddress;</span>
+                }
+
+                @Override
+                public @Nonnull InetSocketAddress serverAddress() {
+<span class="fc" id="L512">                    return serverAddress;</span>
+                }
+
+                @Override
+                public synchronized void close() throws NetException {
+<span class="fc bfc" id="L517" title="All 2 branches covered.">                    if (closed) {</span>
+<span class="fc" id="L518">                        return;</span>
+                    }
+<span class="fc" id="L520">                    Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L521">                        SocketChannel channel = channel();</span>
+<span class="fc" id="L522">                        channel.close();</span>
+<span class="fc" id="L523">                        channel.keyFor(selector).cancel();</span>
+<span class="fc" id="L524">                        TcpKit.channelClose(handler, this);</span>
+<span class="fc" id="L525">                    }, NetException::new);</span>
+<span class="fc" id="L526">                    closed = true;</span>
+<span class="fc" id="L527">                }</span>
+
+                @Override
+                protected @Nonnull IOOperator ioOperator() {
+<span class="fc" id="L531">                    return ioOperator;</span>
+                }
+            }
+        }
+
+        private static final class AcceptedEvent {
+
+            private volatile @Nullable SocketChannel channel;
+            private volatile @Nullable AcceptedEvent next;
+
+<span class="fc" id="L541">            private AcceptedEvent(@Nonnull SocketChannel channel) {</span>
+<span class="fc" id="L542">                this.channel = channel;</span>
+<span class="fc" id="L543">            }</span>
+
+<span class="fc" id="L545">            private AcceptedEvent() {</span>
+<span class="fc" id="L546">                this.channel = null;</span>
+<span class="fc" id="L547">            }</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

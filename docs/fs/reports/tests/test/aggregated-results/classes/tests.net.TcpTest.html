@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class tests.net.TcpTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class tests.net.TcpTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/tests.net.html">tests.net</a> &gt; TcpTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.342s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testTcp()</td>
+<td class="success">0.333s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testTcpOther()</td>
+<td class="success">0.009s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre id="class-stdout">server address: /127.0.0.1:35427
+client open: 0, addr: /127.0.0.1:46367
+client open: 1, addr: /127.0.0.1:37235
+client open: 2, addr: /127.0.0.1:47663
+client open: 3, addr: /127.0.0.1:42029
+client open: 4, addr: /127.0.0.1:43443
+client read: 0
+client exception: java.lang.Exception: loop
+	at tests.net.TcpTest$1.channelLoop(TcpTest.java:138)
+	at space.sunqian.common.net.tcp.TcpKit.channelLoop(TcpKit.java:38)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleLoop(TcpServerBuilder.java:457)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:408)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 1
+client exception: java.lang.Exception: loop
+	at tests.net.TcpTest$1.channelLoop(TcpTest.java:138)
+	at space.sunqian.common.net.tcp.TcpKit.channelLoop(TcpKit.java:38)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleLoop(TcpServerBuilder.java:457)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:408)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 2
+client exception: java.lang.Exception: loop
+	at tests.net.TcpTest$1.channelLoop(TcpTest.java:138)
+	at space.sunqian.common.net.tcp.TcpKit.channelLoop(TcpKit.java:38)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleLoop(TcpServerBuilder.java:457)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:408)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 3
+client exception: java.lang.Exception: loop
+	at tests.net.TcpTest$1.channelLoop(TcpTest.java:138)
+	at space.sunqian.common.net.tcp.TcpKit.channelLoop(TcpKit.java:38)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleLoop(TcpServerBuilder.java:457)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:408)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 4
+client exception: java.lang.Exception: loop
+	at tests.net.TcpTest$1.channelLoop(TcpTest.java:138)
+	at space.sunqian.common.net.tcp.TcpKit.channelLoop(TcpKit.java:38)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleLoop(TcpServerBuilder.java:457)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:408)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 4
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client read: 1
+client read: 0
+client exception: java.nio.channels.ClosedSelectorException
+	at sun.nio.ch.SelectorImpl.selectedKeys(SelectorImpl.java:74)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doMainWork(TcpServerBuilder.java:308)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.run(TcpServerBuilder.java:297)
+	at tests.net.TcpTest.lambda$null$0(TcpTest.java:59)
+	at java.lang.Thread.run(Thread.java:750)
+
+client read: 3
+client read: 4
+client exception: space.sunqian.common.io.IORuntimeException
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:2000)
+	at space.sunqian.common.io.ByteIOOperator.available(ByteIOOperator.java:589)
+	at space.sunqian.common.io.ByteIOOperator.availableBytes(ByteIOOperator.java:629)
+	at space.sunqian.common.io.communicate.AbstractChannelContext.availableBytes(AbstractChannelContext.java:56)
+	at tests.net.TcpTest$1.channelRead(TcpTest.java:121)
+	at space.sunqian.common.net.tcp.TcpKit.channelRead(TcpKit.java:30)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleRead(TcpServerBuilder.java:451)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:406)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:406)
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:1959)
+	... 12 more
+
+client close: 3
+client read: 2
+client read: 1
+client exception: space.sunqian.common.io.IORuntimeException
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:2000)
+	at space.sunqian.common.io.ByteIOOperator.available(ByteIOOperator.java:589)
+	at space.sunqian.common.io.ByteIOOperator.availableBytes(ByteIOOperator.java:629)
+	at space.sunqian.common.io.communicate.AbstractChannelContext.availableBytes(AbstractChannelContext.java:56)
+	at tests.net.TcpTest$1.channelRead(TcpTest.java:121)
+	at space.sunqian.common.net.tcp.TcpKit.channelRead(TcpKit.java:30)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleRead(TcpServerBuilder.java:451)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:406)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:406)
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:1959)
+	... 12 more
+
+client close: 2
+client exception: space.sunqian.common.io.IORuntimeException
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:2000)
+	at space.sunqian.common.io.ByteIOOperator.available(ByteIOOperator.java:589)
+	at space.sunqian.common.io.ByteIOOperator.availableBytes(ByteIOOperator.java:629)
+	at space.sunqian.common.io.communicate.AbstractChannelContext.availableBytes(AbstractChannelContext.java:56)
+	at tests.net.TcpTest$1.channelRead(TcpTest.java:121)
+	at space.sunqian.common.net.tcp.TcpKit.channelRead(TcpKit.java:30)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleRead(TcpServerBuilder.java:451)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:406)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:406)
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:1959)
+	... 12 more
+
+client exception: space.sunqian.common.io.IORuntimeException
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:2000)
+	at space.sunqian.common.io.ByteIOOperator.available(ByteIOOperator.java:589)
+	at space.sunqian.common.io.ByteIOOperator.availableBytes(ByteIOOperator.java:629)
+	at space.sunqian.common.io.communicate.AbstractChannelContext.availableBytes(AbstractChannelContext.java:56)
+	at tests.net.TcpTest$1.channelRead(TcpTest.java:121)
+	at space.sunqian.common.net.tcp.TcpKit.channelRead(TcpKit.java:30)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleRead(TcpServerBuilder.java:451)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:406)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:406)
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:1959)
+	... 12 more
+
+client close: 4
+client close: 0
+client exception: space.sunqian.common.io.IORuntimeException
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:2000)
+	at space.sunqian.common.io.ByteIOOperator.available(ByteIOOperator.java:589)
+	at space.sunqian.common.io.ByteIOOperator.availableBytes(ByteIOOperator.java:629)
+	at space.sunqian.common.io.communicate.AbstractChannelContext.availableBytes(AbstractChannelContext.java:56)
+	at tests.net.TcpTest$1.channelRead(TcpTest.java:121)
+	at space.sunqian.common.net.tcp.TcpKit.channelRead(TcpKit.java:30)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.handleRead(TcpServerBuilder.java:451)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.doWorkerWork(TcpServerBuilder.java:406)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.doWork(TcpServerBuilder.java:357)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl.access$800(TcpServerBuilder.java:201)
+	at space.sunqian.common.net.tcp.TcpServerBuilder$TcpServerImpl$WorkerImpl.run(TcpServerBuilder.java:396)
+	at tests.net.TcpTest.lambda$null$2(TcpTest.java:64)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:406)
+	at space.sunqian.common.io.IOKit.read0(IOKit.java:1959)
+	... 12 more
+
+client close: 1
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="class-stdout">Copy</button>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.2.1</a> at Dec 8, 2025, 7:07:18 AM</p>
+</div>
+</div>
+</body>
+</html>
