@@ -8,8 +8,6 @@ Sun Qian <fredsuvn@163.com>
 
 toc::[]
 
-== Docs
-
 == Contact
 
 * Github: {url}
