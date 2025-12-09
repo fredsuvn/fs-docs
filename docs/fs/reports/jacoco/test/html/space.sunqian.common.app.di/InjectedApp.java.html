@@ -6,7 +6,7 @@ import space.sunqian.common.Fs;
 import space.sunqian.common.app.SimpleApp;
 import space.sunqian.common.collect.CollectKit;
 import space.sunqian.common.collect.ListKit;
-import space.sunqian.common.runtime.reflect.TypeRef;
+import space.sunqian.common.reflect.TypeRef;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A dependency injection-based sub-interface of {@link SimpleApp}, built via {@link #newBuilder()}. See
@@ -31,7 +32,7 @@ public interface InjectedApp extends SimpleApp {
      * @return a new builder for {@link InjectedApp}
      */
     static @Nonnull Builder newBuilder() {
-<span class="fc" id="L34">        return new Builder();</span>
+<span class="fc" id="L35">        return new Builder();</span>
     }
 
     /**
@@ -63,90 +64,104 @@ public interface InjectedApp extends SimpleApp {
     List&lt;@Nonnull InjectedApp&gt; parentApps();
 
     /**
-     * Returns the resources that are directly owned by this app, excluding the resources inherited from parent apps.
+     * Returns the resource map that are directly owned by this app, excluding the resources inherited from parent
+     * apps.
      *
-     * @return the resources that are directly owned by this app, excluding the resources inherited from parent apps
+     * @return the resource map that are directly owned by this app, excluding the resources inherited from parent apps
      */
     @Nonnull
-    List&lt;@Nonnull InjectedResource&gt; localResources();
+    Map&lt;@Nonnull Type, @Nonnull InjectedResource&gt; localResources();
 
     /**
-     * Returns all resources that constitute this app, including the resources inherited from parent apps.
+     * Returns all resource map that constitute this app, including the resources inherited from parent apps.
      *
-     * @return all resources that constitute this app, including the resources inherited from parent apps
+     * @return all resource map that constitute this app, including the resources inherited from parent apps
      */
     @Nonnull
-    List&lt;@Nonnull InjectedResource&gt; resources();
+    Map&lt;@Nonnull Type, @Nonnull InjectedResource&gt; resources();
 
     /**
-     * Returns a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * Returns the resource whose type is assignable to the specified type, or {@code null} if no such resource exists.
+     * &lt;p&gt;
+     * This method first attempts to find a resource whose type exactly matches the specified type using
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource that can be
+     * assigned to the specified type from all resources that constitute this app.
+     *
+     * @param type the specified type
+     * @return the resource whose type is assignable to the specified type, or {@code null} if no such resource exists
+     */
+    @Nullable
+    InjectedResource getResource(@Nonnull Type type);
+
+    /**
+     * Returns the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists.
      * &lt;p&gt;
      * This method first attempts to find a resource whose type exactly matches the specified type using
-     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource instance that can
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource object that can
      * be assigned to the specified type from all resources that constitute this app.
      *
      * @param &lt;T&gt;  the specified type
      * @param type the specified type
-     * @return a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * @return the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists
      */
-    default &lt;T&gt; @Nullable T getResource(@Nonnull Class&lt;T&gt; type) {
-<span class="fc" id="L95">        return Fs.as(getResource((Type) type));</span>
+    default &lt;T&gt; @Nullable T getObject(@Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L110">        return Fs.as(getObject((Type) type));</span>
     }
 
     /**
-     * Returns a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * Returns the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists.
      * &lt;p&gt;
      * This method first attempts to find a resource whose type exactly matches the specified type using
-     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource instance that can
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource object that can
      * be assigned to the specified type from all resources that constitute this app.
      *
      * @param &lt;T&gt;  the specified type
      * @param type the {@link TypeRef} for the specified type
-     * @return a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * @return the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists
      */
-    default &lt;T&gt; @Nullable T getResource(@Nonnull TypeRef&lt;T&gt; type) {
-<span class="fc" id="L112">        return Fs.as(getResource(type.type()));</span>
+    default &lt;T&gt; @Nullable T getObject(@Nonnull TypeRef&lt;T&gt; type) {
+<span class="fc" id="L127">        return Fs.as(getObject(type.type()));</span>
     }
 
     /**
-     * Returns a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * Returns the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists.
      * &lt;p&gt;
      * This method first attempts to find a resource whose type exactly matches the specified type using
-     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource instance that can
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one resource object that can
      * be assigned to the specified type from all resources that constitute this app.
      *
      * @param type the specified type
-     * @return a resource instance whose type is assignable to the specified type, or {@code null} if no such resource
+     * @return the resource object whose type is assignable to the specified type, or {@code null} if no such resource
      * exists
      */
     @Nullable
-    Object getResource(@Nonnull Type type);
+    Object getObject(@Nonnull Type type);
 
     /**
      * Builder for {@link InjectedApp}.
      */
-<span class="fc" id="L133">    class Builder {</span>
+<span class="fc" id="L148">    class Builder {</span>
 
-<span class="fc" id="L135">        private static final @Nonnull List&lt;@Nonnull String&gt; RESOURCE_ANNOTATIONS =</span>
-<span class="fc" id="L136">            ListKit.list(&quot;javax.annotation.Resource&quot;, &quot;jakarta.annotation.Resource&quot;);</span>
-<span class="fc" id="L137">        private static final @Nonnull List&lt;@Nonnull String&gt; POST_CONSTRUCT_ANNOTATIONS =</span>
-<span class="fc" id="L138">            ListKit.list(&quot;javax.annotation.PostConstruct&quot;, &quot;jakarta.annotation.PostConstruct&quot;);</span>
-<span class="fc" id="L139">        private static final @Nonnull List&lt;@Nonnull String&gt; PRE_DESTROY_ANNOTATIONS =</span>
-<span class="fc" id="L140">            ListKit.list(&quot;javax.annotation.PreDestroy&quot;, &quot;jakarta.annotation.PreDestroy&quot;);</span>
+<span class="fc" id="L150">        private static final @Nonnull List&lt;@Nonnull String&gt; RESOURCE_ANNOTATIONS =</span>
+<span class="fc" id="L151">            ListKit.list(&quot;javax.annotation.Resource&quot;, &quot;jakarta.annotation.Resource&quot;);</span>
+<span class="fc" id="L152">        private static final @Nonnull List&lt;@Nonnull String&gt; POST_CONSTRUCT_ANNOTATIONS =</span>
+<span class="fc" id="L153">            ListKit.list(&quot;javax.annotation.PostConstruct&quot;, &quot;jakarta.annotation.PostConstruct&quot;);</span>
+<span class="fc" id="L154">        private static final @Nonnull List&lt;@Nonnull String&gt; PRE_DESTROY_ANNOTATIONS =</span>
+<span class="fc" id="L155">            ListKit.list(&quot;javax.annotation.PreDestroy&quot;, &quot;jakarta.annotation.PreDestroy&quot;);</span>
 
-<span class="fc" id="L142">        private final @Nonnull Collection&lt;Type&gt; resourceTypes = new LinkedHashSet&lt;&gt;();</span>
-<span class="fc" id="L143">        private final @Nonnull Collection&lt;@Nonnull InjectedApp&gt; parentApps = new LinkedHashSet&lt;&gt;();</span>
-<span class="fc" id="L144">        private final @Nonnull Collection&lt;@Nonnull String&gt; resourceAnnotations = new LinkedHashSet&lt;&gt;();</span>
-<span class="fc" id="L145">        private final @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations = new LinkedHashSet&lt;&gt;();</span>
-<span class="fc" id="L146">        private final @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L157">        private final @Nonnull Collection&lt;Type&gt; resourceTypes = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L158">        private final @Nonnull Collection&lt;@Nonnull InjectedApp&gt; parentApps = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L159">        private final @Nonnull Collection&lt;@Nonnull String&gt; resourceAnnotations = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L160">        private final @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L161">        private final @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations = new LinkedHashSet&lt;&gt;();</span>
 
-<span class="fc" id="L148">        private @Nonnull InjectedResource.Resolver resourceResolver = InjectedResource.defaultResolver();</span>
-<span class="fc" id="L149">        private @Nonnull InjectedResource.FieldSetter fieldSetter = InjectedResource.defaultFieldSetter();</span>
+<span class="fc" id="L163">        private @Nonnull InjectedResource.Resolver resourceResolver = InjectedResource.defaultResolver();</span>
+<span class="fc" id="L164">        private @Nonnull InjectedResource.FieldSetter fieldSetter = InjectedResource.defaultFieldSetter();</span>
 
         /**
          * Adds a resource annotation type that indicates a {@link Field} references a resource from the app.
@@ -159,8 +174,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder resourceAnnotation(@Nonnull Class&lt;? extends Annotation&gt; resourceAnnotation) {
-<span class="fc" id="L162">            this.resourceAnnotations.add(resourceAnnotation.getName());</span>
-<span class="fc" id="L163">            return this;</span>
+<span class="fc" id="L177">            this.resourceAnnotations.add(resourceAnnotation.getName());</span>
+<span class="fc" id="L178">            return this;</span>
         }
 
         /**
@@ -176,8 +191,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder postConstructAnnotation(@Nonnull Class&lt;? extends Annotation&gt; postConstructAnnotation) {
-<span class="fc" id="L179">            this.postConstructAnnotations.add(postConstructAnnotation.getName());</span>
-<span class="fc" id="L180">            return this;</span>
+<span class="fc" id="L194">            this.postConstructAnnotations.add(postConstructAnnotation.getName());</span>
+<span class="fc" id="L195">            return this;</span>
         }
 
         /**
@@ -193,8 +208,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder preDestroyAnnotation(@Nonnull Class&lt;? extends Annotation&gt; preDestroyAnnotation) {
-<span class="fc" id="L196">            this.preDestroyAnnotations.add(preDestroyAnnotation.getName());</span>
-<span class="fc" id="L197">            return this;</span>
+<span class="fc" id="L211">            this.preDestroyAnnotations.add(preDestroyAnnotation.getName());</span>
+<span class="fc" id="L212">            return this;</span>
         }
 
         /**
@@ -209,8 +224,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder resourceTypes(@Nonnull Type @Nonnull ... resourceTypes) {
-<span class="fc" id="L212">            CollectKit.addAll(this.resourceTypes, resourceTypes);</span>
-<span class="fc" id="L213">            return this;</span>
+<span class="fc" id="L227">            CollectKit.addAll(this.resourceTypes, resourceTypes);</span>
+<span class="fc" id="L228">            return this;</span>
         }
 
         /**
@@ -225,22 +240,7 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder resourceTypes(@Nonnull Iterable&lt;@Nonnull Type&gt; resourceTypes) {
-<span class="fc" id="L228">            CollectKit.addAll(this.resourceTypes, resourceTypes);</span>
-<span class="fc" id="L229">            return this;</span>
-        }
-
-        /**
-         * Adds parent apps to inherit and share its resources. If a resource type already exists in the parent app, the
-         * sub-app will not generate another instance of that type.
-         * &lt;p&gt;
-         * Once a parent app is shut down, its sub-apps are not automatically shut down along with it. The inherited
-         * resources will still be held by the sub-apps, but theirs pre-destroy methods will be executed.
-         *
-         * @param parentApps the parent apps
-         * @return this builder
-         */
-        public @Nonnull Builder parentApps(@Nullable InjectedApp @Nonnull ... parentApps) {
-<span class="fc" id="L243">            CollectKit.addAll(this.parentApps, parentApps);</span>
+<span class="fc" id="L243">            CollectKit.addAll(this.resourceTypes, resourceTypes);</span>
 <span class="fc" id="L244">            return this;</span>
         }
 
@@ -254,9 +254,24 @@ public interface InjectedApp extends SimpleApp {
          * @param parentApps the parent apps
          * @return this builder
          */
-        public @Nonnull Builder parentApps(@Nonnull Iterable&lt;@Nonnull InjectedApp&gt; parentApps) {
+        public @Nonnull Builder parentApps(@Nullable InjectedApp @Nonnull ... parentApps) {
 <span class="fc" id="L258">            CollectKit.addAll(this.parentApps, parentApps);</span>
 <span class="fc" id="L259">            return this;</span>
+        }
+
+        /**
+         * Adds parent apps to inherit and share its resources. If a resource type already exists in the parent app, the
+         * sub-app will not generate another instance of that type.
+         * &lt;p&gt;
+         * Once a parent app is shut down, its sub-apps are not automatically shut down along with it. The inherited
+         * resources will still be held by the sub-apps, but theirs pre-destroy methods will be executed.
+         *
+         * @param parentApps the parent apps
+         * @return this builder
+         */
+        public @Nonnull Builder parentApps(@Nonnull Iterable&lt;@Nonnull InjectedApp&gt; parentApps) {
+<span class="fc" id="L273">            CollectKit.addAll(this.parentApps, parentApps);</span>
+<span class="fc" id="L274">            return this;</span>
         }
 
         /**
@@ -266,8 +281,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder resourceResolver(@Nonnull InjectedResource.Resolver resourceResolver) {
-<span class="fc" id="L269">            this.resourceResolver = resourceResolver;</span>
-<span class="fc" id="L270">            return this;</span>
+<span class="fc" id="L284">            this.resourceResolver = resourceResolver;</span>
+<span class="fc" id="L285">            return this;</span>
         }
 
         /**
@@ -277,8 +292,8 @@ public interface InjectedApp extends SimpleApp {
          * @return this builder
          */
         public @Nonnull Builder fieldSetter(@Nonnull InjectedResource.FieldSetter fieldSetter) {
-<span class="fc" id="L280">            this.fieldSetter = fieldSetter;</span>
-<span class="fc" id="L281">            return this;</span>
+<span class="fc" id="L295">            this.fieldSetter = fieldSetter;</span>
+<span class="fc" id="L296">            return this;</span>
         }
 
         /**
@@ -302,16 +317,16 @@ public interface InjectedApp extends SimpleApp {
          */
         public @Nonnull InjectedApp build()
             throws InjectedResourceInitializationException, InjectedAppException {
-<span class="fc bfc" id="L305" title="All 2 branches covered.">            if (resourceAnnotations.isEmpty()) {</span>
-<span class="fc" id="L306">                resourceAnnotations.addAll(RESOURCE_ANNOTATIONS);</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">            if (resourceAnnotations.isEmpty()) {</span>
+<span class="fc" id="L321">                resourceAnnotations.addAll(RESOURCE_ANNOTATIONS);</span>
             }
-<span class="fc bfc" id="L308" title="All 2 branches covered.">            if (postConstructAnnotations.isEmpty()) {</span>
-<span class="fc" id="L309">                postConstructAnnotations.addAll(POST_CONSTRUCT_ANNOTATIONS);</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">            if (postConstructAnnotations.isEmpty()) {</span>
+<span class="fc" id="L324">                postConstructAnnotations.addAll(POST_CONSTRUCT_ANNOTATIONS);</span>
             }
-<span class="fc bfc" id="L311" title="All 2 branches covered.">            if (preDestroyAnnotations.isEmpty()) {</span>
-<span class="fc" id="L312">                preDestroyAnnotations.addAll(PRE_DESTROY_ANNOTATIONS);</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">            if (preDestroyAnnotations.isEmpty()) {</span>
+<span class="fc" id="L327">                preDestroyAnnotations.addAll(PRE_DESTROY_ANNOTATIONS);</span>
             }
-<span class="fc" id="L314">            return new InjectedAppImpl(</span>
+<span class="fc" id="L329">            return new InjectedAppImpl(</span>
                 resourceTypes,
                 parentApps,
                 resourceAnnotations,

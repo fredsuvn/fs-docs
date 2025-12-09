@@ -20,6 +20,7 @@ space.sunqian.common.base.math
 space.sunqian.common.base.number
 space.sunqian.common.base.option
 space.sunqian.common.base.process
+space.sunqian.common.base.random
 space.sunqian.common.base.res
 space.sunqian.common.base.string
 space.sunqian.common.base.system
@@ -29,6 +30,12 @@ space.sunqian.common.cache
 space.sunqian.common.codec
 space.sunqian.common.collect
 space.sunqian.common.concurrent
+space.sunqian.common.dynamic.aspect
+space.sunqian.common.dynamic.aspect.asm
+space.sunqian.common.dynamic.proxy
+space.sunqian.common.dynamic.proxy.asm
+space.sunqian.common.dynamic.proxy.jdk
+space.sunqian.common.invoke
 space.sunqian.common.io
 space.sunqian.common.io.communicate
 space.sunqian.common.io.file
@@ -40,13 +47,6 @@ space.sunqian.common.object.convert
 space.sunqian.common.object.convert.handlers
 space.sunqian.common.object.data
 space.sunqian.common.object.data.handlers
-space.sunqian.common.random
-space.sunqian.common.runtime.aspect
-space.sunqian.common.runtime.aspect.asm
-space.sunqian.common.runtime.invoke
-space.sunqian.common.runtime.proxy
-space.sunqian.common.runtime.proxy.asm
-space.sunqian.common.runtime.proxy.jdk
-space.sunqian.common.runtime.reflect
+space.sunqian.common.reflect
 space.sunqian.common.third.asm
 space.sunqian.common.third.protobuf

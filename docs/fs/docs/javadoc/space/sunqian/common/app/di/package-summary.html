@@ -102,8 +102,8 @@ loadScripts(document, 'script');</script>
          }
 
          @XPreDestroy
-         @InjectedDependsOn(BeforeDestroyService.class)
-         public void destroy() {
+         public void destroy(BeforeDestroyService beforeDestroyService) {
+             beforeDestroyService.doBeforeDestroyService();
              destroyService.doDestroy();
          }
      }
@@ -191,6 +191,7 @@ loadScripts(document, 'script');</script>
  construct
  do service...[proxied]
  before destroy
+ do before destroy
  destroy
  </code></pre>
  <p>
@@ -203,21 +204,37 @@ loadScripts(document, 'script');</script>
  <p>
  After configuration is complete, the <code>build</code> method executes the following process:
  <ol>
-   <li>Starting from the specified root type, scan each type's fields annotated as resources until all
-       resource types are found (the root type itself is included, and duplicate types are counted only once).</li>
-   <li>Instantiate each type using its no-argument constructor to create resource instances in singleton mode.</li>
-   <li>Inject resource instances into their corresponding fields.</li>
-   <li>After injection completes, identify all resource instances that implement the
-   <a href="InjectedAspect.html" title="interface in space.sunqian.common.app.di"><code>InjectedAspect</code></a> interface s AOP handlers.</li>
-   <li>Pass the remaining resource instances to each AOP handler sequentially to determine if they need to
+   <li>
+       Scan all resource types starting from the specified root type. The fields annotated as resources, and the
+       parameter types of the methods annotated as post-construct methods and pre-destroy methods, will also be
+       considered as resources.
+   </li>
+   <li>
+       Instantiate each type using its no-argument constructor to create resource instances in singleton mode.
+   </li>
+   <li>
+       Inject resource instances into their corresponding fields.
+   </li>
+   <li>
+       After injection completes, identify all resource instances that implement the
+   <a href="InjectedAspect.html" title="interface in space.sunqian.common.app.di"><code>InjectedAspect</code></a> interface s AOP handlers.
+   </li>
+   <li>
+       Pass the remaining resource instances to each AOP handler sequentially to determine if they need to
        generate aspect instances. If any handler matches, it will generate the aspect instance and the resource
        instance will not be passed to subsequent handlers. The newly generated aspect instance replaces the
-       original resource instance.</li>
-   <li>Re-execute the injection process to inject the aspect instances (which replaced the original resource
-       instances) into the corresponding fields.</li>
-   <li>Execute post-construct methods in dependency order as specified by
-   <a href="InjectedDependsOn.html" title="annotation interface in space.sunqian.common.app.di"><code>InjectedDependsOn</code></a> (if any). Note if any method execution fails, an exception is
-   thrown and already executed methods are not rolled back.</li>
+       original resource instance.
+   </li>
+   <li>
+       Re-execute the injection process to inject the aspect instances (which replaced the original resource
+       instances) into the corresponding fields.
+       </li>
+   <li>
+       Execute post-construct methods in dependency order (if any). The dependencies of each post-construct method are
+       determined by its parameter types, each parameter type is considered as a dependency. And when a post-construct
+       method is executed, all its dependency resource objects will be injected into it. Note if any post-construct
+       method execution fails, an exception will be thrown and all executed methods are not rolled back.
+   </li>
  </ol>
  <p>
  An app can be inherited from a parent app:
@@ -236,9 +253,11 @@ loadScripts(document, 'script');</script>
  one.
  <p>
  When <code>shutdown</code> method is executed, all <code>pre-destroy</code> methods in its app's resources are executed
- sequentially according to their dependency relationships. If an exception occurs during the execution, an exception
- will be thrown and the shutdown process will terminate immediately, and the remaining <code>pre-destroy</code> methods
- will not be executed.
+ sequentially according to their dependency relationships. The dependencies of each pre-destroy method are determined
+ by its parameter types, each parameter type is considered as a dependency. And when a pre-destroy method is executed,
+ all its dependency resource objects will be injected into it. If an exception occurs during the execution, an
+ exception will be thrown and the shutdown process will terminate immediately, and the remaining <code>pre-destroy</code>
+ methods will not be executed.
  <p>
  Once an app is shut down, it becomes invalid and cannot be restarted. However, its child-apps are not
  automatically shut down along with it. Child-apps that depend on resources from this app will generally continue to
@@ -262,7 +281,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab5" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab5', 2)" class="table-tab">Exceptions</button><button id="class-summary-tab7" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab7', 2)" class="table-tab">Annotation Interfaces</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab5" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab5', 2)" class="table-tab">Exceptions</button></div>
 <div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
@@ -281,35 +300,30 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InjectedAspect.html" title="interface in space.sunqian.common.app.di">InjectedAspect</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
-<div class="block">The aspect-oriented programming interface for <a href="InjectedApp.html" title="interface in space.sunqian.common.app.di"><code>InjectedApp</code></a>, extends <a href="../../runtime/aspect/AspectHandler.html" title="interface in space.sunqian.common.runtime.aspect"><code>AspectHandler</code></a>.</div>
+<div class="block">The aspect-oriented programming interface for <a href="InjectedApp.html" title="interface in space.sunqian.common.app.di"><code>InjectedApp</code></a>, extends <a href="../../dynamic/aspect/AspectHandler.html" title="interface in space.sunqian.common.dynamic.aspect"><code>AspectHandler</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="InjectedDependsOn.html" title="annotation interface in space.sunqian.common.app.di">InjectedDependsOn</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab7">
-<div class="block">This annotation is used for post-construct or pre-destroy methods, to declare dependent resources specified by
- <a href="InjectedDependsOn.html#value()"><code>InjectedDependsOn.value()</code></a>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InjectedResource.html" title="interface in space.sunqian.common.app.di">InjectedResource</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InjectedResource.html" title="interface in space.sunqian.common.app.di">InjectedResource</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Represents resource of <a href="InjectedApp.html" title="interface in space.sunqian.common.app.di"><code>InjectedApp</code></a>, consisting of a type and a singleton instance of that type.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InjectedResource.Descriptor.html" title="interface in space.sunqian.common.app.di">InjectedResource.Descriptor</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InjectedResource.Descriptor.html" title="interface in space.sunqian.common.app.di">InjectedResource.Descriptor</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Represents descriptor of resource type.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InjectedResource.FieldSetter.html" title="interface in space.sunqian.common.app.di">InjectedResource.FieldSetter</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InjectedResource.FieldSetter.html" title="interface in space.sunqian.common.app.di">InjectedResource.FieldSetter</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Represents setter for dependency field.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InjectedResource.Resolver.html" title="interface in space.sunqian.common.app.di">InjectedResource.Resolver</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InjectedResource.Resolver.html" title="interface in space.sunqian.common.app.di">InjectedResource.Resolver</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Represents resolver for <a href="InjectedResource.html" title="interface in space.sunqian.common.app.di"><code>InjectedResource</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab5"><a href="InjectedResourceDestructionException.html" title="class in space.sunqian.common.app.di">InjectedResourceDestructionException</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab5">
+<div class="col-first even-row-color class-summary class-summary-tab5"><a href="InjectedResourceDestructionException.html" title="class in space.sunqian.common.app.di">InjectedResourceDestructionException</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab5">
 <div class="block">Exception for failing to destroy resources during <a href="InjectedApp.html" title="interface in space.sunqian.common.app.di"><code>InjectedApp</code></a> shutdown.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab5"><a href="InjectedResourceInitializationException.html" title="class in space.sunqian.common.app.di">InjectedResourceInitializationException</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab5">
+<div class="col-first odd-row-color class-summary class-summary-tab5"><a href="InjectedResourceInitializationException.html" title="class in space.sunqian.common.app.di">InjectedResourceInitializationException</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab5">
 <div class="block">Exception for failing to initialize resources during <a href="InjectedApp.html" title="interface in space.sunqian.common.app.di"><code>InjectedApp</code></a> startup.</div>
 </div>
 </div>

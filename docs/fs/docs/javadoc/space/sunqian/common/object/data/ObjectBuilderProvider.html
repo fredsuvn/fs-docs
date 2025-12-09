@@ -191,7 +191,7 @@ loadScripts(document, 'script');</script>
  <p>
  The default <a href="ObjectBuilderProvider.html" title="interface in space.sunqian.common.object.data"><code>ObjectBuilderProvider</code></a> will cache the <a href="ObjectBuilder.html" title="interface in space.sunqian.common.object.data"><code>ObjectBuilder</code></a>s, which are created by its
  handlers, into a cache based on a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a> (so it is thread-safe). And it has only one handler,
- which uses <a href="../../runtime/invoke/Invocable.html#of(java.lang.reflect.Constructor)"><code>Invocable.of(Constructor)</code></a> with the empty constructor of the target class (if it has) to
+ which uses <a href="../../invoke/Invocable.html#of(java.lang.reflect.Constructor)"><code>Invocable.of(Constructor)</code></a> with the empty constructor of the target class (if it has) to
  implement <a href="ObjectBuilder.html#newBuilder()"><code>ObjectBuilder.newBuilder()</code></a> and directly returns the builder object itself on
  <a href="ObjectBuilder.html#build(java.lang.Object)"><code>ObjectBuilder.build(Object)</code></a>.</div>
 <dl class="notes">
