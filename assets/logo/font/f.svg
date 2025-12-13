@@ -4,9 +4,9 @@
   <g stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(0, 0)"
   >
+    <circle cx="32" cy="12" r="6"/>
     <path d="
-            M32,32 m5,-28
-            a13,8.5,0,0,0,-5,14
+            M32,32 m0,-14
             a20,36,0,0,1,-5,44
             "
     />
