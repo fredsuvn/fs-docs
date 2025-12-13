@@ -1,0 +1,21 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>fs-logo</title>
+  <g>
+    <path stroke="#98C379" stroke-width="1" fill="#3f3f3f" stroke-linecap="round" stroke-linejoin="round"
+          d="
+          M32,32 m-29.5,-31.5
+          l59,0 a2,2,0,0,1,2,2
+          l0,59 a2,2,0,0,1,-2,2
+          l-59,0 a2,2,0,0,1,-2,-2
+          l0,-59 a2,2,0,0,1,2,-2
+          Z
+          "
+    />
+    <text x="32" y="24" font-size="16" fill="#fefefe" text-anchor="middle">
+      Hello,
+    </text>
+    <text x="32" y="48" font-size="16" fill="#fefefe" text-anchor="middle">
+      fs!
+    </text>
+  </g>
+</svg>

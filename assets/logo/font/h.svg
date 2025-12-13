@@ -1,0 +1,29 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>fs-font-h</title>
+  <rect width="64" height="64" fill="#3f3f3f"/>
+  <g stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(0, 0)"
+  >
+    <path d="
+            M32,32 m-14,-26
+            l6,3 a5,5,0,0,1,3,5
+            l0,47
+            "
+    />
+    <path d="
+            M32,32 m14,-26
+            l-6,3 a5,5,0,0,0,-3,5
+            l0,47
+            "
+    />
+    <path d="
+            M32,32 m-11,-6
+            l18,0
+            a2,3,0,0,1,0,10
+            l-18,0
+            m-6,-5
+            l34,0
+            "
+    />
+  </g>
+</svg>
