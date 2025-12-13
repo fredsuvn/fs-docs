@@ -1,0 +1,19 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>fs-font-f</title>
+  <rect width="64" height="64" fill="#3f3f3f"/>
+  <g stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(0, 0)"
+  >
+    <path d="
+            M32,32 m5,-28
+            a13,8.5,0,0,0,-5,14
+            a20,36,0,0,1,-5,44
+            "
+    />
+    <path d="
+            M32,32 m8,-6
+            a18,64,-10,0,1,-14,0
+            "
+    />
+  </g>
+</svg>
