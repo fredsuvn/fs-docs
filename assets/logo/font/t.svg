@@ -1,25 +1,20 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <title>fs-font-h</title>
+  <title>fs-font-t</title>
   <rect width="64" height="64" fill="#3f3f3f"/>
-  <g id="letter-h-lower"
+  <g id="letter-t-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(0, 0)"
   >
     <path d="
-            M32,32 m-8,-26
-            l0,56
-            a8,34,0,0,1,16,0
+            M32,32 m0,-26
+            l0,44
             "
     />
     <path d="
-            M32,32 m0,-4
-            l0,34
+            M32,32 m8,-6
+            a12,12,0,0,1,-16,0
             "
     />
-    <path d="
-            M32,32 m-12,13
-            l24,0
-            "
-    />
+    <circle cx="32" cy="56" r="6"/>
   </g>
 </svg>
