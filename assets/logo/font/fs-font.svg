@@ -58,7 +58,7 @@
   <g id="letter-h-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(96, 0)"
-  >fsthd
+  >
     <path d="
             M32,32 m-8,-26
             l0,56
@@ -73,6 +73,17 @@
     <path d="
             M32,32 m-12,13
             l24,0
+            "
+    />
+  </g>
+  <g id="letter-d-lower"
+     stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(128, 0)"
+  >
+    <ellipse cx="32" cy="44" rx="8" ry="16"/>
+    <path d="
+            M32,32 m8,-25
+            l0,53
             "
     />
   </g>
