@@ -1,5 +1,5 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <title>fs-docs: logo</title>
+  <title>fs: logo</title>
   <!-- color blocks -->
   <path fill="#50a4ff"
         d="
@@ -35,7 +35,7 @@
           Z
           "
   />
-  <!-- chars: >fsd -->
+  <!-- chars: >fs_ -->
   <path stroke="#eeeeee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
         d="
           M48,16 m-6,-6
@@ -82,15 +82,10 @@
             "
     />
   </g>
-  <g id="letter-d-lower"
-     stroke="#3f3f3f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-     transform="translate(-16, 32) scale(1, 0.5)"
-  >
-    <ellipse cx="32" cy="44" rx="8" ry="16"/>
-    <path d="
-            M32,32 m8,-25
-            l0,53
-            "
-    />
-  </g>
+  <path stroke="#3f3f3f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+        d="
+          M16,48 m-6,10.5
+          l12,0
+          "
+  />
 </svg>
