@@ -21,6 +21,8 @@ import java.util.function.Function;
  * @param &lt;K&gt; the key type
  * @param &lt;V&gt; the value type
  * @author sunqian
+ * @implSpec Although the default implementations will call {@link #clean()} every time they execute other methods, it
+ * is recommended to take some measures to enable the {@link #clean()} to call regularly to clean invalid entries
  * @see AbstractSimpleCache
  */
 @ThreadSafe
@@ -37,7 +39,7 @@ public interface SimpleCache&lt;K, V&gt; {
      * @return a new {@link SimpleCache} based on {@link WeakReference}
      */
     static &lt;K, V&gt; @Nonnull SimpleCache&lt;K, V&gt; ofWeak() {
-<span class="fc" id="L40">        return CacheBack.ofWeak();</span>
+<span class="fc" id="L42">        return CacheBack.ofWeak();</span>
     }
 
     /**
@@ -51,7 +53,7 @@ public interface SimpleCache&lt;K, V&gt; {
      * @return a new {@link SimpleCache} based on {@link SoftReference}
      */
     static &lt;K, V&gt; @Nonnull SimpleCache&lt;K, V&gt; ofSoft() {
-<span class="fc" id="L54">        return CacheBack.ofSoft();</span>
+<span class="fc" id="L56">        return CacheBack.ofSoft();</span>
     }
 
     /**
@@ -65,7 +67,7 @@ public interface SimpleCache&lt;K, V&gt; {
      * @return a new {@link SimpleCache} based on {@link PhantomReference}
      */
     static &lt;K, V&gt; @Nonnull SimpleCache&lt;K, V&gt; ofPhantom() {
-<span class="fc" id="L68">        return CacheBack.ofPhantom();</span>
+<span class="fc" id="L70">        return CacheBack.ofPhantom();</span>
     }
 
     /**
@@ -78,7 +80,7 @@ public interface SimpleCache&lt;K, V&gt; {
      * @return a new {@link SimpleCache} based on strong reference
      */
     static &lt;K, V&gt; @Nonnull SimpleCache&lt;K, V&gt; ofStrong() {
-<span class="fc" id="L81">        return CacheBack.ofStrong();</span>
+<span class="fc" id="L83">        return CacheBack.ofStrong();</span>
     }
 
     /**

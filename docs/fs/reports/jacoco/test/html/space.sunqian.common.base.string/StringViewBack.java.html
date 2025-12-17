@@ -3,7 +3,7 @@
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.RetainedParam;
 import space.sunqian.annotations.ValueClass;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.base.exception.UnreachablePointException;
 
 final class StringViewBack {
@@ -33,14 +33,14 @@ final class StringViewBack {
 
         @Override
         public char charAt(int index) {
-<span class="fc" id="L36">            Check.checkInBounds(index, 0, length);</span>
+<span class="fc" id="L36">            Checker.checkInBounds(index, 0, length);</span>
 <span class="fc" id="L37">            Node node = findNode(index);</span>
 <span class="fc" id="L38">            return chars[node.charsIndex].charAt(node.charIndex);</span>
         }
 
         @Override
         public @Nonnull CharSequence subSequence(int start, int end) {
-<span class="fc" id="L43">            Check.checkInBounds(start, end, 0, length);</span>
+<span class="fc" id="L43">            Checker.checkInBounds(start, end, 0, length);</span>
 <span class="fc bfc" id="L44" title="All 2 branches covered.">            if (start == end) {</span>
 <span class="fc" id="L45">                Node node = findNode(start);</span>
 <span class="fc" id="L46">                return chars[node.charsIndex].subSequence(node.charIndex, node.charIndex);</span>

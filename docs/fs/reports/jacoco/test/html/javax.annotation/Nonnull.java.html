@@ -3,6 +3,7 @@
 import javax.annotation.meta.TypeQualifier;
 import javax.annotation.meta.TypeQualifierValidator;
 import javax.annotation.meta.When;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,7 +30,7 @@ public @interface Nonnull {
     /**
      * A validator for {@link Nonnull} annotations.
      */
-<span class="fc" id="L32">    class Checker implements TypeQualifierValidator&lt;Nonnull&gt; {</span>
+<span class="fc" id="L33">    class Checker implements TypeQualifierValidator&lt;Nonnull&gt; {</span>
 
         /**
          * Checks whether the given value is valid for the given qualifier.
@@ -39,9 +40,9 @@ public @interface Nonnull {
          * @return the validity of the value
          */
         public @Nonnull When forConstantValue(@Nonnull Nonnull qualifierArgument, Object value) {
-<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (value == null)</span>
-<span class="fc" id="L43">                return When.NEVER;</span>
-<span class="fc" id="L44">            return When.ALWAYS;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (value == null)</span>
+<span class="fc" id="L44">                return When.NEVER;</span>
+<span class="fc" id="L45">            return When.ALWAYS;</span>
         }
     }
 }

@@ -2,7 +2,7 @@
 
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.Nullable;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.Fs;
 import space.sunqian.common.base.function.callable.VoidCallable;
 import space.sunqian.common.collect.ListKit;
@@ -94,7 +94,7 @@ import java.util.concurrent.ThreadFactory;
      * @see #workerThreadFactory(ThreadFactory)
      */
     public @Nonnull TcpServerBuilder workerThreadNum(int workThreadNum) throws IllegalArgumentException {
-<span class="fc bfc" id="L97" title="All 2 branches covered.">        Check.checkArgument(workThreadNum &gt;= 1, &quot;workThreadNum must &gt;= 1&quot;);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        Checker.checkArgument(workThreadNum &gt;= 1, &quot;workThreadNum must &gt;= 1&quot;);</span>
 <span class="fc" id="L98">        this.workerThreadNum = workThreadNum;</span>
 <span class="fc" id="L99">        return this;</span>
     }
@@ -108,7 +108,7 @@ import java.util.concurrent.ThreadFactory;
      * @throws IllegalArgumentException if the buffer size is negative or {@code 0}
      */
     public @Nonnull TcpServerBuilder bufferSize(int bufSize) throws IllegalArgumentException {
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        Check.checkArgument(bufSize &gt; 0, &quot;bufSize must be positive&quot;);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        Checker.checkArgument(bufSize &gt; 0, &quot;bufSize must be positive&quot;);</span>
 <span class="fc" id="L112">        this.bufSize = bufSize;</span>
 <span class="fc" id="L113">        return this;</span>
     }
@@ -140,7 +140,7 @@ import java.util.concurrent.ThreadFactory;
      * @throws IllegalArgumentException if the timeout is negative
      */
     public @Nonnull TcpServerBuilder selectTimeout(long selectTimeout) throws IllegalArgumentException {
-<span class="fc bfc" id="L143" title="All 2 branches covered.">        Check.checkArgument(selectTimeout &gt;= 0, &quot;selectTimeout must &gt;= 0&quot;);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        Checker.checkArgument(selectTimeout &gt;= 0, &quot;selectTimeout must &gt;= 0&quot;);</span>
 <span class="fc" id="L144">        this.selectTimeout = selectTimeout;</span>
 <span class="fc" id="L145">        return this;</span>
     }

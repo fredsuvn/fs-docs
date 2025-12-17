@@ -2,7 +2,7 @@
 
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.Nullable;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.Fs;
 import space.sunqian.common.base.exception.UnreachablePointException;
 
@@ -91,7 +91,7 @@ public interface Rog&lt;T&gt; {
         public &lt;T1&gt; @Nonnull Builder&lt;T1&gt; weight(
             long weight, @Nonnull Supplier&lt;T&gt; supplier
         ) throws IllegalArgumentException {
-<span class="fc bfc" id="L94" title="All 2 branches covered.">            Check.checkArgument(weight &gt;= 0, &quot;weight must be non-negative&quot;);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            Checker.checkArgument(weight &gt;= 0, &quot;weight must be non-negative&quot;);</span>
 <span class="fc" id="L95">            weights.add(new Weight&lt;&gt;(weight, supplier));</span>
 <span class="fc" id="L96">            return Fs.as(this);</span>
         }

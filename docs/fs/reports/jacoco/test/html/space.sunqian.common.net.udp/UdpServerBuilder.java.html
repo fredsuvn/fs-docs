@@ -2,7 +2,7 @@
 
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.Nullable;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.Fs;
 import space.sunqian.common.base.function.callable.VoidCallable;
 import space.sunqian.common.io.BufferKit;
@@ -72,7 +72,7 @@ import java.util.concurrent.ThreadFactory;
      * @throws IllegalArgumentException If the max packet size is less than 1
      */
     public @Nonnull UdpServerBuilder maxPacketSize(int maxPacketSize) throws IllegalArgumentException {
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        Check.checkArgument(maxPacketSize &gt;= 1, &quot;maxPacketSize must &gt;= 1&quot;);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        Checker.checkArgument(maxPacketSize &gt;= 1, &quot;maxPacketSize must &gt;= 1&quot;);</span>
 <span class="fc" id="L76">        this.maxPacketSize = maxPacketSize;</span>
 <span class="fc" id="L77">        return this;</span>
     }

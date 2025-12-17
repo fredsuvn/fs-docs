@@ -2,7 +2,7 @@
 
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.Nullable;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.base.chars.CharsKit;
 import space.sunqian.common.base.exception.UnknownArrayTypeException;
 
@@ -683,8 +683,8 @@ public class StringKit {
 <span class="fc bfc" id="L683" title="All 2 branches covered.">        if (str instanceof String) {</span>
 <span class="fc" id="L684">            ((String) str).getChars(start, end, dst, off);</span>
         } else {
-<span class="fc" id="L686">            Check.checkInBounds(start, end, 0, str.length());</span>
-<span class="fc" id="L687">            Check.checkInBounds(off, off + end - start, 0, dst.length);</span>
+<span class="fc" id="L686">            Checker.checkInBounds(start, end, 0, str.length());</span>
+<span class="fc" id="L687">            Checker.checkInBounds(off, off + end - start, 0, dst.length);</span>
 <span class="fc bfc" id="L688" title="All 2 branches covered.">            if (start == end) {</span>
 <span class="fc" id="L689">                return;</span>
             }
@@ -717,8 +717,8 @@ public class StringKit {
 <span class="fc bfc" id="L717" title="All 2 branches covered.">        if (src instanceof String) {</span>
 <span class="fc" id="L718">            ((String) src).getChars(srcOff, srcOff + len, dst, dstOff);</span>
         } else {
-<span class="fc" id="L720">            Check.checkOffLen(srcOff, len, src.length());</span>
-<span class="fc" id="L721">            Check.checkOffLen(dstOff, len, dst.length);</span>
+<span class="fc" id="L720">            Checker.checkOffLen(srcOff, len, src.length());</span>
+<span class="fc" id="L721">            Checker.checkOffLen(dstOff, len, dst.length);</span>
 <span class="fc bfc" id="L722" title="All 2 branches covered.">            if (len == 0) {</span>
 <span class="fc" id="L723">                return;</span>
             }

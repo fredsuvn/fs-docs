@@ -3,7 +3,7 @@
 import space.sunqian.annotations.Nonnull;
 import space.sunqian.annotations.Nullable;
 import space.sunqian.annotations.RetainedParam;
-import space.sunqian.common.Check;
+import space.sunqian.common.base.Checker;
 import space.sunqian.common.Fs;
 import space.sunqian.common.base.chars.CharsKit;
 import space.sunqian.common.io.BufferKit;
@@ -402,7 +402,7 @@ public interface HttpReq {
          * @throws IllegalArgumentException if there exists invalid arguments
          */
         public @Nonnull HttpReq build() throws IllegalArgumentException {
-<span class="fc bfc" id="L405" title="All 2 branches covered.">            Check.checkArgument(url != null, &quot;The url can not be null.&quot;);</span>
+<span class="fc bfc" id="L405" title="All 2 branches covered.">            Checker.checkArgument(url != null, &quot;The url can not be null.&quot;);</span>
             // CheckKit.checkArgument(method != null, &quot;The method can not be null.&quot;);
 <span class="fc" id="L407">            return new HttpReqImpl(</span>
                 url,
