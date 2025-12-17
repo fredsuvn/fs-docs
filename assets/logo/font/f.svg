@@ -5,16 +5,14 @@
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(0, 0)"
   >
-    <circle cx="32" cy="12" r="6"/>
+    <circle cx="32" cy="14" r="6"/>
     <path d="
-            M32,32 m0,-14
-            a20,36,0,0,1,-5,44
-            M32,32 m8,-6
-            a18,64,-10,0,1,-14,0
+            M32,32 m0,-12
+            a20,36,0,0,1,-5,40
             "
     />
     <path d="
-            M32,32 m8,-6
+            M32,32 m8,-4
             a18,64,-10,0,1,-14,0
             "
     />

@@ -5,10 +5,10 @@
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(0, 0)"
   >
-    <ellipse cx="32" cy="44" rx="8" ry="16"/>
+    <ellipse cx="32" cy="44" rx="8" ry="12"/>
     <path d="
-            M32,32 m8,-25
-            l0,53
+            M32,32 m8,-24
+            l0,48
             "
     />
   </g>
