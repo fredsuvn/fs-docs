@@ -1,10 +1,10 @@
 <svg width="640" height="640" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
   <title>fs-font</title>
-  <rect width="640" height="640" fill="#3f3f3f"/>
   <g id="letter-f-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(0, 0)"
   >
+    <rect width="64" height="64" stroke="#fefefe" stroke-width="0.5" fill="#3f3f3f"/>
     <circle cx="32" cy="12" r="6"/>
     <path d="
             M32,32 m0,-14
@@ -19,8 +19,9 @@
   </g>
   <g id="letter-s-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-     transform="translate(32, 0)"
+     transform="translate(64, 0)"
   >
+    <rect width="64" height="64" stroke="#fefefe" stroke-width="0.5" fill="#3f3f3f"/>
     <path d="
           M32,32 m0,-8
           a32,24,0,0,0,-1,16
@@ -41,8 +42,9 @@
   </g>
   <g id="letter-t-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-     transform="translate(64, 0)"
+     transform="translate(128, 0)"
   >
+    <rect width="64" height="64" stroke="#fefefe" stroke-width="0.5" fill="#3f3f3f"/>
     <path d="
             M32,32 m0,-26
             l0,44
@@ -57,8 +59,9 @@
   </g>
   <g id="letter-h-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-     transform="translate(96, 0)"
+     transform="translate(192, 0)"
   >
+    <rect width="64" height="64" stroke="#fefefe" stroke-width="0.5" fill="#3f3f3f"/>
     <path d="
             M32,32 m-8,-26
             l0,56
@@ -78,8 +81,9 @@
   </g>
   <g id="letter-d-lower"
      stroke="#fefefe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-     transform="translate(128, 0)"
+     transform="translate(256, 0)"
   >
+    <rect width="64" height="64" stroke="#fefefe" stroke-width="0.5" fill="#3f3f3f"/>
     <ellipse cx="32" cy="44" rx="8" ry="16"/>
     <path d="
             M32,32 m8,-25
