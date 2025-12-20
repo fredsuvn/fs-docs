@@ -2,6 +2,8 @@ javax.annotation
 javax.annotation.concurrent
 javax.annotation.meta
 space.sunqian.annotations
+space.sunqian.asm
+space.sunqian.asm.signature
 space.sunqian.common
 space.sunqian.common.app
 space.sunqian.common.app.di

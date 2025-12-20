@@ -27,8 +27,10 @@ import java.lang.reflect.Method;
 
     /**
      * Using &lt;a href=&quot;https://asm.ow2.io/&quot;&gt;ASM&lt;/a&gt; to implement {@link Invocable}.
+     * &lt;p&gt;
+     * Note it uses the built-in asm package: {@code space.sunqian.asm}.
      */
-<span class="fc" id="L31">    ASM,</span>
+<span class="fc" id="L33">    ASM,</span>
     ;
 
     /**
@@ -38,7 +40,7 @@ import java.lang.reflect.Method;
      * @return the recommended implementation for the specified method in current environment
      */
     public static @Nonnull InvocationMode recommended(@Nonnull Method method) {
-<span class="fc" id="L41">        return recommended(method, ClassKit.isStatic(method));</span>
+<span class="fc" id="L43">        return recommended(method, ClassKit.isStatic(method));</span>
     }
 
     /**
@@ -48,15 +50,15 @@ import java.lang.reflect.Method;
      * @return the recommended implementation for the specified constructor in current environment
      */
     public static @Nonnull InvocationMode recommended(@Nonnull Constructor&lt;?&gt; constructor) {
-<span class="fc" id="L51">        return recommended(constructor, true);</span>
+<span class="fc" id="L53">        return recommended(constructor, true);</span>
     }
 
     private static @Nonnull InvocationMode recommended(@Nonnull Executable executable, boolean isStatic) {
-<span class="fc" id="L55">        int paramCount = executable.getParameterCount();</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (isStatic) {</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">            return paramCount &lt;= ByMethodHandle.MAX_STATIC_ARGS_NUM ? METHOD_HANDLE : REFLECTION;</span>
+<span class="fc" id="L57">        int paramCount = executable.getParameterCount();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (isStatic) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            return paramCount &lt;= ByMethodHandle.MAX_STATIC_ARGS_NUM ? METHOD_HANDLE : REFLECTION;</span>
         }
-<span class="fc bfc" id="L59" title="All 2 branches covered.">        return paramCount &lt;= ByMethodHandle.MAX_INST_ARGS_NUM ? METHOD_HANDLE : REFLECTION;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        return paramCount &lt;= ByMethodHandle.MAX_INST_ARGS_NUM ? METHOD_HANDLE : REFLECTION;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -35,6 +35,7 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>
 <li><a href="../../../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -83,8 +84,8 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">AsmAspectMaker</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../AspectMaker.html" title="interface in space.sunqian.common.dynamic.aspect">AspectMaker</a></span></div>
-<div class="block">The <a href="https://asm.ow2.io/">ASM</a> implementation for <a href="../AspectMaker.html" title="interface in space.sunqian.common.dynamic.aspect"><code>AspectMaker</code></a>. The runtime environment must have
- asm package <code>org.objectweb.asm</code>.
+<div class="block">The <a href="https://asm.ow2.io/">ASM</a> implementation for <a href="../AspectMaker.html" title="interface in space.sunqian.common.dynamic.aspect"><code>AspectMaker</code></a>. This implementation uses the
+ built-in asm package: <code>space.sunqian.asm</code>.
  <p>
  This implementation uses inheritance to implement proxy, just like the keywords: <code>extends</code>. That means the
  superclass, which is the advised class, cannot be <code>final</code> and must be inheritable, and must have an empty
