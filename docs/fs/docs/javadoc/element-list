@@ -2,11 +2,11 @@ javax.annotation
 javax.annotation.concurrent
 javax.annotation.meta
 space.sunqian.annotations
-space.sunqian.asm
-space.sunqian.asm.signature
 space.sunqian.common
 space.sunqian.common.app
 space.sunqian.common.app.di
+space.sunqian.common.asm
+space.sunqian.common.asm.signature
 space.sunqian.common.base
 space.sunqian.common.base.bytes
 space.sunqian.common.base.chars

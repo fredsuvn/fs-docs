@@ -108,6 +108,18 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Decodes the given buffer of hex string to the original bytes.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#decodeToString(java.lang.String)" class="member-name-link">decodeToString</a><wbr>(<a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Decodes the given hex string to the original bytes, and then convert to string with the
+ <a href="../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#decodeToString(java.lang.String,java.nio.charset.Charset)" class="member-name-link">decodeToString</a><wbr>(<a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hex,
+ <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Decodes the given hex string to the original bytes, and then convert to string with the given charset.</div>
+</div>
 </div>
 </div>
 </div>
@@ -168,6 +180,46 @@ loadScripts(document, 'script');</script>
 <dd><code>hex</code> - the given hex string</dd>
 <dt>Returns:</dt>
 <dd>the original bytes</dd>
+<dt>Throws:</dt>
+<dd><code><a href="HexKit.HexException.html" title="class in space.sunqian.common.codec">HexKit.HexException</a></code> - if any error occurs</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="decodeToString(java.lang.String,java.nio.charset.Charset)">
+<h3>decodeToString</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a>
+</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">decodeToString</span><wbr><span class="parameters">(<a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a>
+ <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hex,
+ <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a>
+ <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</span>
+                                throws <span class="exceptions"><a href="HexKit.HexException.html" title="class in space.sunqian.common.codec">HexKit.HexException</a></span></div>
+<div class="block">Decodes the given hex string to the original bytes, and then convert to string with the given charset.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>hex</code> - the given hex string</dd>
+<dd><code>charset</code> - the charset to use</dd>
+<dt>Returns:</dt>
+<dd>the original string</dd>
+<dt>Throws:</dt>
+<dd><code><a href="HexKit.HexException.html" title="class in space.sunqian.common.codec">HexKit.HexException</a></code> - if any error occurs</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="decodeToString(java.lang.String)">
+<h3>decodeToString</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a>
+</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">decodeToString</span><wbr><span class="parameters">(<a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a>
+ <a href="../../annotations/Nonnull.html" title="annotation interface in space.sunqian.annotations">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hex)</span>
+                                throws <span class="exceptions"><a href="HexKit.HexException.html" title="class in space.sunqian.common.codec">HexKit.HexException</a></span></div>
+<div class="block">Decodes the given hex string to the original bytes, and then convert to string with the
+ <a href="../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>hex</code> - the given hex string</dd>
+<dt>Returns:</dt>
+<dd>the original string decoded with the <a href="../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a></dd>
 <dt>Throws:</dt>
 <dd><code><a href="HexKit.HexException.html" title="class in space.sunqian.common.codec">HexKit.HexException</a></code> - if any error occurs</dd>
 </dl>
