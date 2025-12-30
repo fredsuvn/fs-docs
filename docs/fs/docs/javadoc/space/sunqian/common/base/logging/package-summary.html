@@ -71,9 +71,9 @@ loadScripts(document, 'script');</script>
  <ul>
      <li><a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging"><code>SimpleLogger</code></a></li>
  </ul>
- Classes:
+ Utilities:
  <ul>
-     <li><a href="LogString.html" title="class in space.sunqian.common.base.logging"><code>LogString</code></a></li>
+     <li><a href="LogKit.html" title="class in space.sunqian.common.base.logging"><code>LogKit</code></a></li>
  </ul></div>
 </section>
 <section class="summary">
@@ -98,10 +98,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LogString.html" title="class in space.sunqian.common.base.logging">LogString</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LogKit.html" title="class in space.sunqian.common.base.logging">LogKit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">LogString is used to encapsulate a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link"><code>Supplier</code></a>, and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a> will only be called when
- <a href="LogString.html#toString()"><code>LogString.toString()</code></a> of <a href="LogString.html" title="class in space.sunqian.common.base.logging"><code>LogString</code></a> is called.</div>
+<div class="block">Utilities for logging.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab1"><a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging">SimpleLogger</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
@@ -110,7 +109,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab3"><a href="SimpleLogger.Level.html" title="enum class in space.sunqian.common.base.logging">SimpleLogger.Level</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab3">
-<div class="block">Level of <a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging"><code>SimpleLogger</code></a>, contains a <code>value</code>, which is used to compare, and a <code>name</code>.</div>
+<div class="block">Level of <a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging"><code>SimpleLogger</code></a>, including: <a href="SimpleLogger.Level.html#FATAL"><code>SimpleLogger.Level.FATAL</code></a>, <a href="SimpleLogger.Level.html#ERROR"><code>SimpleLogger.Level.ERROR</code></a>, <a href="SimpleLogger.Level.html#WARN"><code>SimpleLogger.Level.WARN</code></a>, <a href="SimpleLogger.Level.html#INFO"><code>SimpleLogger.Level.INFO</code></a>,
+ <a href="SimpleLogger.Level.html#DEBUG"><code>SimpleLogger.Level.DEBUG</code></a>, and <a href="SimpleLogger.Level.html#TRACE"><code>SimpleLogger.Level.TRACE</code></a>, from highest to lowest level.</div>
 </div>
 </div>
 </div>

@@ -5,8 +5,8 @@ import space.sunqian.annotations.Nullable;
 import space.sunqian.common.Fs;
 import space.sunqian.common.base.chars.CharsKit;
 import space.sunqian.common.base.date.DateFormatter;
-import space.sunqian.common.base.enums.EnumKit;
-import space.sunqian.common.base.number.NumberKit;
+import space.sunqian.common.base.lang.EnumKit;
+import space.sunqian.common.base.number.NumKit;
 import space.sunqian.common.base.option.Option;
 import space.sunqian.common.collect.ArrayKit;
 import space.sunqian.common.collect.ArrayOperator;
@@ -105,11 +105,11 @@ import java.util.function.IntFunction;
  * &lt;tr&gt;
  *     &lt;td rowspan=&quot;2&quot;&gt;Numbers&lt;/td&gt;
  *     &lt;td&gt;{@link String}&lt;/td&gt;
- *     &lt;td&gt;Using {@link NumberKit#toNumber(CharSequence, Class)}.&lt;/td&gt;
+ *     &lt;td&gt;Using {@link NumKit#toNumber(CharSequence, Class)}.&lt;/td&gt;
  * &lt;/tr&gt;
  * &lt;tr&gt;
  *     &lt;td&gt;Other Numbers&lt;/td&gt;
- *     &lt;td&gt;Using {@link NumberKit#toNumber(Number, Class)}.&lt;/td&gt;
+ *     &lt;td&gt;Using {@link NumKit#toNumber(Number, Class)}.&lt;/td&gt;
  * &lt;/tr&gt;
  * &lt;tr&gt;
  *     &lt;td&gt;{@code long} and {@link Long}&lt;/td&gt;
@@ -576,7 +576,7 @@ import java.util.function.IntFunction;
             @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
         ) {
 <span class="fc bfc" id="L578" title="All 2 branches covered.">            if (src instanceof String) {</span>
-<span class="fc" id="L579">                return NumberKit.toNumber((String) src, target);</span>
+<span class="fc" id="L579">                return NumKit.toNumber((String) src, target);</span>
             }
 <span class="fc bfc" id="L581" title="All 2 branches covered.">            if (!(srcType instanceof Class&lt;?&gt;)) {</span>
 <span class="fc" id="L582">                return ObjectConverter.Status.HANDLER_CONTINUE;</span>
@@ -597,7 +597,7 @@ import java.util.function.IntFunction;
             }
 <span class="fc bfc" id="L598" title="All 2 branches covered.">            if (Number.class.isAssignableFrom(ClassKit.wrapperClass((Class&lt;?&gt;) srcType))) {</span>
 <span class="fc" id="L599">                Number srcNum = (Number) src;</span>
-<span class="fc" id="L600">                return NumberKit.toNumber(srcNum, target);</span>
+<span class="fc" id="L600">                return NumKit.toNumber(srcNum, target);</span>
             }
 <span class="fc" id="L602">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
         }

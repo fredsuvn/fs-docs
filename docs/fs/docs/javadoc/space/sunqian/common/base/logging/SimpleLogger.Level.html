@@ -88,10 +88,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public static enum </span><span class="element-name type-name-label">SimpleLogger.Level</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="SimpleLogger.Level.html" title="enum class in space.sunqian.common.base.logging">SimpleLogger.Level</a>&gt;</span></div>
-<div class="block">Level of <a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging"><code>SimpleLogger</code></a>, contains a <code>value</code>, which is used to compare, and a <code>name</code>.
- <p>
- From high to low, it is: <a href="#FATAL"><code>FATAL</code></a>, <a href="#ERROR"><code>ERROR</code></a>, <a href="#WARN"><code>WARN</code></a>, <a href="#INFO"><code>INFO</code></a>, <a href="#DEBUG"><code>DEBUG</code></a>, and
- <a href="#TRACE"><code>TRACE</code></a>.</div>
+<div class="block">Level of <a href="SimpleLogger.html" title="interface in space.sunqian.common.base.logging"><code>SimpleLogger</code></a>, including: <a href="#FATAL"><code>FATAL</code></a>, <a href="#ERROR"><code>ERROR</code></a>, <a href="#WARN"><code>WARN</code></a>, <a href="#INFO"><code>INFO</code></a>,
+ <a href="#DEBUG"><code>DEBUG</code></a>, and <a href="#TRACE"><code>TRACE</code></a>, from highest to lowest level.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -122,7 +120,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code><a href="#FATAL" class="member-name-link">FATAL</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The highest level for fatal error.</div>
+<div class="block">The level for fatal error, it is the highest level.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#INFO" class="member-name-link">INFO</a></code></div>
 <div class="col-last odd-row-color">
@@ -130,7 +128,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code><a href="#TRACE" class="member-name-link">TRACE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The lowest level for tracing.</div>
+<div class="block">The level for tracing, it is the lowest level.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#WARN" class="member-name-link">WARN</a></code></div>
 <div class="col-last odd-row-color">
@@ -144,22 +142,12 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#levelName()" class="member-name-link">levelName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the name of this level.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#levelValue()" class="member-name-link">levelValue</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of this level.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SimpleLogger.Level.html" title="enum class in space.sunqian.common.base.logging">SimpleLogger.Level</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -195,7 +183,7 @@ the order they are declared.</div>
 <section class="detail" id="FATAL">
 <h3>FATAL</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="SimpleLogger.Level.html" title="enum class in space.sunqian.common.base.logging">SimpleLogger.Level</a></span>&nbsp;<span class="element-name">FATAL</span></div>
-<div class="block">The highest level for fatal error.</div>
+<div class="block">The level for fatal error, it is the highest level.</div>
 </section>
 </li>
 <li>
@@ -230,7 +218,7 @@ the order they are declared.</div>
 <section class="detail" id="TRACE">
 <h3>TRACE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="SimpleLogger.Level.html" title="enum class in space.sunqian.common.base.logging">SimpleLogger.Level</a></span>&nbsp;<span class="element-name">TRACE</span></div>
-<div class="block">The lowest level for tracing.</div>
+<div class="block">The level for tracing, it is the lowest level.</div>
 </section>
 </li>
 </ul>
@@ -269,28 +257,6 @@ not permitted.)</div>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if this enum class has no constant with the specified name</dd>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if the argument is null</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="levelValue()">
-<h3>levelValue</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">levelValue</span>()</div>
-<div class="block">Returns the value of this level.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the value of this level</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="levelName()">
-<h3>levelName</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">levelName</span>()</div>
-<div class="block">Returns the name of this level.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the name of this level</dd>
 </dl>
 </section>
 </li>

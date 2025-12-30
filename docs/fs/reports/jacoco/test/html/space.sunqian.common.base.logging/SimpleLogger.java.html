@@ -16,7 +16,7 @@ public interface SimpleLogger {
      * @return a system default logger with level of {@link Level#INFO} and appender of {@link System#out}
      */
     static @Nonnull SimpleLogger system() {
-<span class="fc" id="L19">        return LoggingBack.SYSTEM;</span>
+<span class="fc" id="L19">        return LogKit.SYSTEM;</span>
     }
 
     /**
@@ -27,7 +27,7 @@ public interface SimpleLogger {
      * @return a new logger with the given log level and appender
      */
     static @Nonnull SimpleLogger newLogger(@Nonnull SimpleLogger.Level level, @Nonnull Appendable appendable) {
-<span class="fc" id="L30">        return LoggingBack.newLogger(level, appendable);</span>
+<span class="fc" id="L30">        return LogKit.newLogger(level, appendable);</span>
     }
 
     /**
@@ -93,68 +93,46 @@ public interface SimpleLogger {
     Level level();
 
     /**
-     * Level of {@link SimpleLogger}, contains a {@code value}, which is used to compare, and a {@code name}.
-     * &lt;p&gt;
-     * From high to low, it is: {@link #FATAL}, {@link #ERROR}, {@link #WARN}, {@link #INFO}, {@link #DEBUG}, and
-     * {@link #TRACE}.
+     * Level of {@link SimpleLogger}, including: {@link #FATAL}, {@link #ERROR}, {@link #WARN}, {@link #INFO},
+     * {@link #DEBUG}, and {@link #TRACE}, from highest to lowest level.
      */
-<span class="fc" id="L101">    enum Level {</span>
+<span class="fc" id="L99">    enum Level {</span>
 
         /**
-         * The highest level for fatal error.
+         * The level for fatal error, it is the highest level.
          */
-<span class="fc" id="L106">        FATAL(5, &quot;FATAL&quot;),</span>
+<span class="fc" id="L104">        FATAL(5),</span>
 
         /**
          * The level for error.
          */
-<span class="fc" id="L111">        ERROR(4, &quot;ERROR&quot;),</span>
+<span class="fc" id="L109">        ERROR(4),</span>
 
         /**
          * The level for warning.
          */
-<span class="fc" id="L116">        WARN(3, &quot;WARN&quot;),</span>
+<span class="fc" id="L114">        WARN(3),</span>
 
         /**
          * The middle level.
          */
-<span class="fc" id="L121">        INFO(2, &quot;INFO&quot;),</span>
+<span class="fc" id="L119">        INFO(2),</span>
 
         /**
          * The level for debug.
          */
-<span class="fc" id="L126">        DEBUG(1, &quot;DEBUG&quot;),</span>
+<span class="fc" id="L124">        DEBUG(1),</span>
 
         /**
-         * The lowest level for tracing.
+         * The level for tracing, it is the lowest level.
          */
-<span class="fc" id="L131">        TRACE(0, &quot;TRACE&quot;);;</span>
+<span class="fc" id="L129">        TRACE(0);;</span>
 
-        private final int value;
-        private final String name;
+        final int value;
 
-<span class="fc" id="L136">        Level(int value, String name) {</span>
-<span class="fc" id="L137">            this.value = value;</span>
-<span class="fc" id="L138">            this.name = name;</span>
-<span class="fc" id="L139">        }</span>
-
-        /**
-         * Returns the value of this level.
-         *
-         * @return the value of this level
-         */
-        public int levelValue() {
-<span class="fc" id="L147">            return value;</span>
-        }
-
-        /**
-         * Returns the name of this level.
-         *
-         * @return the name of this level
-         */
-        public String levelName() {
-<span class="fc" id="L156">            return name;</span>
-        }
+<span class="fc" id="L133">        Level(int value) {</span>
+<span class="fc" id="L134">            this.value = value;</span>
+<span class="fc" id="L135">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
