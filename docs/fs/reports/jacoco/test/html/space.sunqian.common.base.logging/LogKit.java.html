@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogKit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.common.base.logging</a> &gt; <span class="el_source">LogKit.java</span></div><h1>LogKit.java</h1><pre class="source lang-java linenums">package space.sunqian.common.base.logging;
 
 import space.sunqian.annotations.Nonnull;
-import space.sunqian.annotations.Nullable;
-import space.sunqian.common.Fs;
-import space.sunqian.common.base.date.DateKit;
 
-import java.util.Date;
 import java.util.function.Supplier;
 
 /**
@@ -14,117 +10,6 @@ import java.util.function.Supplier;
  * @author sunqian
  */
 public class LogKit {
-
-    // Implementation of SimpleLogger
-
-<span class="fc" id="L20">    static @Nonnull SimpleLogger SYSTEM = newLogger(SimpleLogger.Level.INFO, System.out);</span>
-
-    static @Nonnull SimpleLogger newLogger(@Nonnull SimpleLogger.Level level, @Nonnull Appendable appendable) {
-<span class="fc" id="L23">        return new SimpleLoggerImpl(level, appendable);</span>
-    }
-
-    private static final class SimpleLoggerImpl implements SimpleLogger {
-
-<span class="fc" id="L28">        private static final @Nonnull StackTraceElement NULL_TRACE = new StackTraceElement(</span>
-            &quot;null&quot;, &quot;null&quot;, &quot;null&quot;, -1);
-
-        private final @Nonnull Level level;
-        private final @Nonnull Appendable appendable;
-
-<span class="fc" id="L34">        private SimpleLoggerImpl(@Nonnull Level level, @Nonnull Appendable appendable) {</span>
-<span class="fc" id="L35">            this.level = level;</span>
-<span class="fc" id="L36">            this.appendable = appendable;</span>
-<span class="fc" id="L37">        }</span>
-
-        @Override
-        public void fatal(Object... message) {
-<span class="fc" id="L41">            log(Level.FATAL, &quot;fatal&quot;, message);</span>
-<span class="fc" id="L42">        }</span>
-
-        @Override
-        public void error(Object... message) {
-<span class="fc" id="L46">            log(Level.ERROR, &quot;error&quot;, message);</span>
-<span class="fc" id="L47">        }</span>
-
-        @Override
-        public void warn(Object... message) {
-<span class="fc" id="L51">            log(Level.WARN, &quot;warn&quot;, message);</span>
-<span class="fc" id="L52">        }</span>
-
-        @Override
-        public void info(Object... message) {
-<span class="fc" id="L56">            log(Level.INFO, &quot;info&quot;, message);</span>
-<span class="fc" id="L57">        }</span>
-
-        @Override
-        public void debug(Object... message) {
-<span class="fc" id="L61">            log(Level.DEBUG, &quot;debug&quot;, message);</span>
-<span class="fc" id="L62">        }</span>
-
-        @Override
-        public void trace(Object... message) {
-<span class="fc" id="L66">            log(Level.TRACE, &quot;trace&quot;, message);</span>
-<span class="fc" id="L67">        }</span>
-
-        @Override
-        public @Nonnull Level level() {
-<span class="fc" id="L71">            return level;</span>
-        }
-
-        private void log(Level level, @Nonnull String methodName, Object... message) {
-<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (level.value &lt; this.level.value) {</span>
-<span class="fc" id="L76">                return;</span>
-            }
-            try {
-<span class="fc" id="L79">                StackTraceElement[] stackElements = Thread.currentThread().getStackTrace();</span>
-<span class="fc" id="L80">                StackTraceElement caller = Fs.nonnull(getCallerTrace(methodName, stackElements), NULL_TRACE);</span>
-<span class="fc" id="L81">                appendable.append(DateKit.format(new Date()))</span>
-<span class="fc" id="L82">                    .append(&quot;[&quot;)</span>
-<span class="fc" id="L83">                    .append(level.name())</span>
-<span class="fc" id="L84">                    .append(&quot;]&quot;);</span>
-<span class="fc" id="L85">                appendable.append(&quot;@&quot;)</span>
-<span class="fc" id="L86">                    .append(caller.getClassName())</span>
-<span class="fc" id="L87">                    .append(&quot;.&quot;)</span>
-<span class="fc" id="L88">                    .append(caller.getMethodName())</span>
-<span class="fc" id="L89">                    .append(&quot;(&quot;)</span>
-<span class="fc" id="L90">                    .append(String.valueOf(caller.getLineNumber()))</span>
-<span class="fc" id="L91">                    .append(&quot;)&quot;);</span>
-<span class="fc" id="L92">                Thread thread = Thread.currentThread();</span>
-<span class="fc" id="L93">                appendable.append(&quot;-&quot;)</span>
-<span class="fc" id="L94">                    .append(&quot;[&quot;)</span>
-<span class="fc" id="L95">                    .append(thread.getName())</span>
-<span class="fc" id="L96">                    .append(&quot;]: &quot;);</span>
-<span class="fc bfc" id="L97" title="All 2 branches covered.">                for (Object o : message) {</span>
-<span class="fc" id="L98">                    appendable.append(String.valueOf(o));</span>
-                }
-<span class="fc" id="L100">                appendable.append(System.lineSeparator());</span>
-<span class="fc" id="L101">            } catch (Exception e) {</span>
-<span class="fc" id="L102">                throw new IllegalStateException(e);</span>
-<span class="fc" id="L103">            }</span>
-<span class="fc" id="L104">        }</span>
-
-        private @Nullable StackTraceElement getCallerTrace(
-            @Nonnull String methodName,
-            @Nonnull StackTraceElement[] stackElements
-        ) {
-<span class="fc" id="L110">            int i = -1;</span>
-<span class="fc bfc" id="L111" title="All 2 branches covered.">            for (StackTraceElement element : stackElements) {</span>
-<span class="fc" id="L112">                i++;</span>
-<span class="fc" id="L113">                if (</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">                    getClass().getName().equals(element.getClassName())</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">                        &amp;&amp; methodName.equals(element.getMethodName())</span>
-                ) {
-<span class="fc" id="L117">                    break;</span>
-                }
-            }
-<span class="fc bfc" id="L120" title="All 4 branches covered.">            if (i &lt; 0 || i + 1 &gt;= stackElements.length) {</span>
-<span class="fc" id="L121">                return null;</span>
-            }
-<span class="fc" id="L123">            return stackElements[i + 1];</span>
-        }
-    }
-
-    // For lazy toString for logging
 
     /**
      * Returns an object that encapsulates a specified {@link Supplier}, and {@link Supplier#get()} will only be called
@@ -135,20 +20,20 @@ public class LogKit {
      * @return an object that encapsulates the specified {@link Supplier}
      */
     public static @Nonnull Object lazyToString(@Nonnull Supplier&lt;@Nonnull String&gt; supplier) {
-<span class="fc" id="L138">        return new LazyToString(supplier);</span>
+<span class="fc" id="L23">        return new LazyToString(supplier);</span>
     }
 
     private static final class LazyToString {
 
         private final @Nonnull Supplier&lt;@Nonnull String&gt; supplier;
 
-<span class="fc" id="L145">        private LazyToString(@Nonnull Supplier&lt;@Nonnull String&gt; supplier) {</span>
-<span class="fc" id="L146">            this.supplier = supplier;</span>
-<span class="fc" id="L147">        }</span>
+<span class="fc" id="L30">        private LazyToString(@Nonnull Supplier&lt;@Nonnull String&gt; supplier) {</span>
+<span class="fc" id="L31">            this.supplier = supplier;</span>
+<span class="fc" id="L32">        }</span>
 
         @Override
         public @Nonnull String toString() {
-<span class="fc" id="L151">            return supplier.get();</span>
+<span class="fc" id="L36">            return supplier.get();</span>
         }
     }
 

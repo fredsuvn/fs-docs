@@ -87,8 +87,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AbstractObjectSchemaHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../ObjectSchemaParser.Handler.html" title="interface in space.sunqian.common.object.data">ObjectSchemaParser.Handler</a></span></div>
-<div class="block">This is a skeletal implementation of the <a href="../ObjectSchemaParser.Handler.html" title="interface in space.sunqian.common.object.data"><code>ObjectSchemaParser.Handler</code></a> to minimize the effort required to
- implement the interface.
+<div class="block">This is a skeletal implementation of <a href="../ObjectSchemaParser.Handler.html" title="interface in space.sunqian.common.object.data"><code>ObjectSchemaParser.Handler</code></a> to minimize the effort required to implement
+ the interface.
  <p>
  This class uses <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html#getMethods()" title="class or interface in java.lang" class="external-link"><code>Class.getMethods()</code></a> to find out all methods (the synthetic method will be filtered out), then
  passes each of them to <a href="#resolveAccessor(java.lang.reflect.Method)"><code>resolveAccessor(Method)</code></a> to resolve property accessor infos. This class will perform

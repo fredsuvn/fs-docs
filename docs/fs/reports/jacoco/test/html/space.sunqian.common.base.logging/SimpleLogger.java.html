@@ -16,7 +16,7 @@ public interface SimpleLogger {
      * @return a system default logger with level of {@link Level#INFO} and appender of {@link System#out}
      */
     static @Nonnull SimpleLogger system() {
-<span class="fc" id="L19">        return LogKit.SYSTEM;</span>
+<span class="fc" id="L19">        return SimpleLoggerImpl.SYSTEM;</span>
     }
 
     /**
@@ -27,7 +27,7 @@ public interface SimpleLogger {
      * @return a new logger with the given log level and appender
      */
     static @Nonnull SimpleLogger newLogger(@Nonnull SimpleLogger.Level level, @Nonnull Appendable appendable) {
-<span class="fc" id="L30">        return LogKit.newLogger(level, appendable);</span>
+<span class="fc" id="L30">        return new SimpleLoggerImpl(level, appendable);</span>
     }
 
     /**
@@ -37,7 +37,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void fatal(Object... message);
+    void fatal(Object @Nonnull ... message);
 
     /**
      * Logs the given message with {@link Level#ERROR} level. The message will be output on a single line in the order
@@ -46,7 +46,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void error(Object... message);
+    void error(Object @Nonnull ... message);
 
     /**
      * Logs the given message with {@link Level#WARN} level. The message will be output on a single line in the order of
@@ -55,7 +55,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void warn(Object... message);
+    void warn(Object @Nonnull ... message);
 
     /**
      * Logs the given message with {@link Level#INFO} level. The message will be output on a single line in the order of
@@ -64,7 +64,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void info(Object... message);
+    void info(Object @Nonnull ... message);
 
     /**
      * Logs the given message with {@link Level#DEBUG} level. The message will be output on a single line in the order
@@ -73,7 +73,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void debug(Object... message);
+    void debug(Object @Nonnull ... message);
 
     /**
      * Logs the given message with {@link Level#TRACE} level. The message will be output on a single line in the order
@@ -82,7 +82,7 @@ public interface SimpleLogger {
      *
      * @param message the given message
      */
-    void trace(Object... message);
+    void trace(Object @Nonnull ... message);
 
     /**
      * Returns the level of this logger.
@@ -104,7 +104,7 @@ public interface SimpleLogger {
 <span class="fc" id="L104">        FATAL(5),</span>
 
         /**
-         * The level for error.
+         * The error level.
          */
 <span class="fc" id="L109">        ERROR(4),</span>
 
@@ -114,7 +114,7 @@ public interface SimpleLogger {
 <span class="fc" id="L114">        WARN(3),</span>
 
         /**
-         * The middle level.
+         * The info level.
          */
 <span class="fc" id="L119">        INFO(2),</span>
 
@@ -128,11 +128,21 @@ public interface SimpleLogger {
          */
 <span class="fc" id="L129">        TRACE(0);;</span>
 
-        final int value;
+        private final int value;
 
 <span class="fc" id="L133">        Level(int value) {</span>
 <span class="fc" id="L134">            this.value = value;</span>
 <span class="fc" id="L135">        }</span>
+
+        /**
+         * Returns the value of this level. The more severe, the higher the value (e.g. {@link #FATAL} has the highest
+         * value 5, while {@link #TRACE} has the lowest value 0).
+         *
+         * @return the value of this level
+         */
+        int value() {
+<span class="fc" id="L144">            return value;</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

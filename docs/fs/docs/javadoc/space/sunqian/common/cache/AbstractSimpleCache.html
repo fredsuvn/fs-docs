@@ -88,8 +88,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AbstractSimpleCache&lt;K,<wbr>V&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="SimpleCache.html" title="interface in space.sunqian.common.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span></div>
-<div class="block">This is a skeletal implementation of the <a href="SimpleCache.html" title="interface in space.sunqian.common.cache"><code>SimpleCache</code></a> to minimize the effort required to implement the
- interface. To implement a cache, just need to override the <a href="#generate(K,java.lang.Object)"><code>generate(Object, Object)</code></a> and <a href="SimpleCache.html#clean()"><code>SimpleCache.clean()</code></a>.
+<div class="block">This is a skeletal implementation of <a href="SimpleCache.html" title="interface in space.sunqian.common.cache"><code>SimpleCache</code></a> to minimize the effort required to implement the interface.
+ To implement a cache, just need to override the <a href="#generate(K,java.lang.Object)"><code>generate(Object, Object)</code></a> and <a href="SimpleCache.html#clean()"><code>SimpleCache.clean()</code></a>.
  <p>
  This implementation is based on an underlying <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentMap</code></a>, which is a protected field: <a href="#cacheMap"><code>cacheMap</code></a>.
  The type of <a href="#cacheMap"><code>cacheMap</code></a>'s value is <a href="AbstractSimpleCache.Value.html" title="interface in space.sunqian.common.cache"><code>AbstractSimpleCache.Value</code></a>, which wraps the actual value to be cached. Every time this
