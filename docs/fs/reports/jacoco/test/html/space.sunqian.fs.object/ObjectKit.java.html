@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectKit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object</a> &gt; <span class="el_source">ObjectKit.java</span></div><h1>ObjectKit.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.base.exception.UnknownArrayTypeException;
+
+import java.util.Arrays;
+import java.util.Objects;
+
+/**
+ * Object utilities.
+ *
+ * @author sunqian
+ */
+public class ObjectKit {
+
+    /**
+     * Returns whether the given objects are equal. If the given objects are arrays, uses {@code Arrays.equals} or
+     * {@link Arrays#deepEquals(Object[], Object[])} if necessary.
+     * &lt;p&gt;
+     * This method is equivalent to ({@link #equalsWith(Object, Object, boolean, boolean)}):
+     * {@code equalsWith(a, b, true, true)}.
+     *
+     * @param a the given object a
+     * @param b the given object b
+     * @return whether the given objects are equal
+     */
+    public static boolean equals(@Nullable Object a, @Nullable Object b) {
+<span class="fc" id="L29">        return equalsWith(a, b, true, true);</span>
+    }
+
+    /**
+     * Returns whether the given objects are equal each other by {@link #equals(Object, Object)}.
+     *
+     * @param objects the given objects
+     * @return whether the given objects are equal
+     */
+    public static boolean equalsAll(@Nullable Object @Nonnull ... objects) {
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (int i = 0; i &lt; objects.length - 1; i++) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (!equals(objects[i], objects[i + 1])) {</span>
+<span class="fc" id="L41">                return false;</span>
+            }
+        }
+<span class="fc" id="L44">        return true;</span>
+    }
+
+    /**
+     * Returns whether the given objects are equal. This method follows the following logic:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         If {@code a == b}, returns {@code true};
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         If the {@code arrayEquals} is {@code true}:
+     *         &lt;ul&gt;
+     *             &lt;li&gt;
+     *                 If the {@code deep} is {@code true}, uses {@link Arrays#deepEquals(Object[], Object[])} for
+     *                 them. Otherwise, uses {@code Arrays.equals}.
+     *             &lt;/li&gt;
+     *         &lt;/ul&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         Returns {@link Objects#equals(Object, Object)} otherwise.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param a           the given object a
+     * @param b           the given object b
+     * @param arrayEquals the arrayEquals option
+     * @param deep        the deep option
+     * @return whether the given objects are equal
+     */
+    public static boolean equalsWith(@Nullable Object a, @Nullable Object b, boolean arrayEquals, boolean deep) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (a == b) {</span>
+<span class="fc" id="L75">            return true;</span>
+        }
+<span class="fc bfc" id="L77" title="All 4 branches covered.">        if (a == null || b == null) {</span>
+<span class="fc" id="L78">            return false;</span>
+        }
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (!arrayEquals) {</span>
+<span class="fc" id="L81">            return Objects.equals(a, b);</span>
+        }
+<span class="fc" id="L83">        Class&lt;?&gt; typeA = a.getClass();</span>
+<span class="fc" id="L84">        Class&lt;?&gt; typeB = b.getClass();</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">        if (typeA.isArray() &amp;&amp; Objects.equals(typeA, typeB)) {</span>
+<span class="fc" id="L86">            return equalsArray(a, b, deep);</span>
+        }
+<span class="fc" id="L88">        return Objects.equals(a, b);</span>
+    }
+
+    private static boolean equalsArray(@Nonnull Object a, @Nonnull Object b, boolean deep) {
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (a instanceof Object[]) {</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            return deep ? Arrays.deepEquals((Object[]) a, (Object[]) b) : Arrays.equals((Object[]) a, (Object[]) b);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        } else if (a instanceof boolean[]) {</span>
+<span class="fc" id="L95">            return Arrays.equals((boolean[]) a, (boolean[]) b);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        } else if (a instanceof byte[]) {</span>
+<span class="fc" id="L97">            return Arrays.equals((byte[]) a, (byte[]) b);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        } else if (a instanceof short[]) {</span>
+<span class="fc" id="L99">            return Arrays.equals((short[]) a, (short[]) b);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        } else if (a instanceof char[]) {</span>
+<span class="fc" id="L101">            return Arrays.equals((char[]) a, (char[]) b);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        } else if (a instanceof int[]) {</span>
+<span class="fc" id="L103">            return Arrays.equals((int[]) a, (int[]) b);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        } else if (a instanceof long[]) {</span>
+<span class="fc" id="L105">            return Arrays.equals((long[]) a, (long[]) b);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        } else if (a instanceof float[]) {</span>
+<span class="fc" id="L107">            return Arrays.equals((float[]) a, (float[]) b);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        } else if (a instanceof double[]) {</span>
+<span class="fc" id="L109">            return Arrays.equals((double[]) a, (double[]) b);</span>
+        }
+<span class="fc" id="L111">        throw new UnknownArrayTypeException(a.getClass());</span>
+    }
+
+    /**
+     * Returns the hashcode of the given object. If the given object is array, uses {@code Arrays.hashCode} or
+     * {@link Arrays#deepHashCode(Object[])} if necessary.
+     * &lt;p&gt;
+     * This method is equivalent to ({@link #hashWith(Object, boolean, boolean)}): {@code hashWith(obj, true, true)}.
+     *
+     * @param obj the given object
+     * @return the hashcode of the given object
+     */
+    public static int hashCode(@Nullable Object obj) {
+<span class="fc" id="L124">        return hashWith(obj, true, true);</span>
+    }
+
+    /**
+     * Returns the hashcode of the given objects via {@link Arrays#deepHashCode(Object[])}.
+     *
+     * @param objs the given objects
+     * @return the hashcode of the given objects via {@link Arrays#deepHashCode(Object[])}
+     */
+    public static int hashAll(@Nullable Object @Nonnull ... objs) {
+<span class="fc" id="L134">        return Arrays.deepHashCode(objs);</span>
+    }
+
+    /**
+     * Returns the hashcode of the given object. This method follows the following logic:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         If the given object is not an array, returns {@link Objects#hashCode(Object)}.
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         If the {@code arrayHash} is {@code true}:
+     *         &lt;ul&gt;
+     *             &lt;li&gt;
+     *                 If the {@code deep} is {@code true}, uses {@link Arrays#deepHashCode(Object[])} for them.
+     *                 Otherwise, uses {@code Arrays.hashCode}.
+     *             &lt;/li&gt;
+     *         &lt;/ul&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         Returns {@link Objects#hashCode(Object)} otherwise.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param obj       the given object
+     * @param arrayHash the arrayHash option
+     * @param deep      the deep option
+     * @return the hashcode of the given object
+     */
+    public static int hashWith(@Nullable Object obj, boolean arrayHash, boolean deep) {
+<span class="fc bfc" id="L163" title="All 4 branches covered.">        if (obj == null || !arrayHash) {</span>
+<span class="fc" id="L164">            return Objects.hashCode(obj);</span>
+        }
+<span class="fc" id="L166">        Class&lt;?&gt; cls = obj.getClass();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (cls.isArray()) {</span>
+<span class="fc" id="L168">            return hashArray(obj, deep);</span>
+        }
+<span class="fc" id="L170">        return obj.hashCode();</span>
+    }
+
+    private static int hashArray(@Nonnull Object obj, boolean deep) {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (obj instanceof Object[]) {</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">            return deep ? Arrays.deepHashCode((Object[]) obj) : Arrays.hashCode((Object[]) obj);</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (obj instanceof boolean[]) {</span>
+<span class="fc" id="L178">            return Arrays.hashCode((boolean[]) obj);</span>
+        }
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (obj instanceof byte[]) {</span>
+<span class="fc" id="L181">            return Arrays.hashCode((byte[]) obj);</span>
+        }
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (obj instanceof short[]) {</span>
+<span class="fc" id="L184">            return Arrays.hashCode((short[]) obj);</span>
+        }
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (obj instanceof char[]) {</span>
+<span class="fc" id="L187">            return Arrays.hashCode((char[]) obj);</span>
+        }
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (obj instanceof int[]) {</span>
+<span class="fc" id="L190">            return Arrays.hashCode((int[]) obj);</span>
+        }
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (obj instanceof long[]) {</span>
+<span class="fc" id="L193">            return Arrays.hashCode((long[]) obj);</span>
+        }
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (obj instanceof float[]) {</span>
+<span class="fc" id="L196">            return Arrays.hashCode((float[]) obj);</span>
+        }
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (obj instanceof double[]) {</span>
+<span class="fc" id="L199">            return Arrays.hashCode((double[]) obj);</span>
+        }
+<span class="fc" id="L201">        throw new UnknownArrayTypeException(obj.getClass());</span>
+    }
+
+    /**
+     * Returns the identity hashcode of the given object, this method is equivalent to
+     * {@link System#identityHashCode(Object)}.
+     *
+     * @param obj the given object
+     * @return the identity hashcode of the given object
+     */
+    public static int id(@Nullable Object obj) {
+<span class="fc" id="L212">        return System.identityHashCode(obj);</span>
+    }
+
+    private ObjectKit() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

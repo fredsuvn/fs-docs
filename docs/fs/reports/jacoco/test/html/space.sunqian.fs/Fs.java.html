@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Fs.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs</a> &gt; <span class="el_source">Fs.java</span></div><h1>Fs.java</h1><pre class="source lang-java linenums">package space.sunqian.fs;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.base.exception.AwaitingException;
+import space.sunqian.fs.base.function.callable.BooleanCallable;
+import space.sunqian.fs.base.function.callable.VoidCallable;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.process.ProcessKit;
+import space.sunqian.fs.base.string.StringKit;
+import space.sunqian.fs.base.thread.ThreadKit;
+import space.sunqian.fs.base.value.Ret;
+import space.sunqian.fs.collect.ArrayKit;
+import space.sunqian.fs.collect.ListKit;
+import space.sunqian.fs.collect.MapKit;
+import space.sunqian.fs.collect.SetKit;
+import space.sunqian.fs.collect.StreamKit;
+import space.sunqian.fs.io.IORuntimeException;
+import space.sunqian.fs.object.ObjectKit;
+import space.sunqian.fs.object.convert.ConvertOption;
+import space.sunqian.fs.object.convert.DataMapper;
+import space.sunqian.fs.object.convert.ObjectConvertException;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.object.convert.UnsupportedObjectConvertException;
+import space.sunqian.fs.object.data.ObjectSchema;
+import space.sunqian.fs.reflect.TypeRef;
+
+import java.lang.reflect.Type;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.RandomAccess;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+/**
+ * The core utility class of this library, provides support methods for {@link Object}, such as {@code equals} and
+ * {@code hashCode}. And many methods to improve language convenience, such as {@code nonnull}, {@code uncheck}. And
+ * shortcuts to other commonly used methods in this lib, such as {@link #list(Object[])},
+ * {@link #copyProperties(Object, Object, Option[])}, {@link #convert(Object, Class, Option[])}, etc.
+ *
+ * @author sunqian
+ */
+public class Fs {
+
+    /**
+     * Name of this lib.
+     */
+    public static final @Nonnull String LIB_NAME = &quot;fs&quot;;
+
+    /**
+     * Version of this lib.
+     */
+    public static final @Nonnull String LIB_VERSION = &quot;0.0.0&quot;;
+
+    /**
+     * String value for {@code null}.
+     */
+<span class="fc" id="L72">    public static final @Nonnull String NULL_STRING = Objects.toString(null);</span>
+
+    /**
+     * Casts and returns the given object as the specified type {@code T}. This method is equivalent to:
+     * &lt;pre&gt;{@code
+     * return (T) obj;
+     * }&lt;/pre&gt;
+     *
+     * @param obj the given object
+     * @param &lt;T&gt; the specified type
+     * @return the given object as the specified type {@code T}
+     */
+    @SuppressWarnings(&quot;noinspection unchecked&quot;)
+    public static &lt;T&gt; T as(@Nullable Object obj) {
+<span class="fc" id="L86">        return (T) obj;</span>
+    }
+
+    /**
+     * Directly returns the given object itself. The given object is annotated by {@link Nullable}, but the return value
+     * is annotated by {@link Nonnull}. This method is used to suppress some IDE or compilation warnings.
+     *
+     * @param obj the given object
+     * @param &lt;T&gt; the type of the given object
+     * @return the given object itself
+     */
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static &lt;T&gt; @Nonnull T asNonnull(@Nullable T obj) {
+<span class="fc" id="L99">        return obj;</span>
+    }
+
+    /**
+     * Returns the default value if the given object is {@code null}, or the given object itself if it is not
+     * {@code null}. This method is equivalent to:
+     * &lt;pre&gt;{@code
+     * return obj == null ? defaultValue : obj;
+     * }&lt;/pre&gt;
+     * &lt;p&gt;
+     * Note this method does not guarantee that the returned value must be {@code nonnull}.
+     *
+     * @param obj          the given object
+     * @param defaultValue the default value
+     * @param &lt;T&gt;          the type of the returned value
+     * @return the default value if the given object is {@code null}, or the given object itself if it is not
+     * {@code null}
+     */
+    public static &lt;T&gt; T nonnull(@Nullable T obj, T defaultValue) {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        return obj == null ? defaultValue : obj;</span>
+    }
+
+    /**
+     * Returns the value computed from the specified supplier if the given object is {@code null}, or the given object
+     * itself if it is not {@code null}. This method is equivalent to:
+     * &lt;pre&gt;{@code
+     * return obj == null ? supplier.get() : obj;
+     * }&lt;/pre&gt;
+     * &lt;p&gt;
+     * Note this method does not guarantee that the returned value must be {@code nonnull}.
+     *
+     * @param obj      the given object
+     * @param supplier the specified supplier
+     * @param &lt;T&gt;      the type of the returned value
+     * @return the value computed from the specified supplier if the given object is {@code null}, or the given object
+     * itself if it is not {@code null}
+     */
+    public static &lt;T&gt; T nonnull(@Nullable T obj, Supplier&lt;? extends T&gt; supplier) {
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        return obj == null ? supplier.get() : obj;</span>
+    }
+
+    /**
+     * Runs the given action and wraps any exception into an unchecked exception, the unchecked exception is generated
+     * by the given unchecked exception generator. The logic as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     action.call();
+     * } catch (Exception e) {
+     *     throw unchecked.apply(e);
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @param action    the given action
+     * @param unchecked the given unchecked exception generator
+     */
+    public static void uncheck(
+        @Nonnull VoidCallable action,
+        @Nonnull Function&lt;? super @Nonnull Exception, ? extends @Nonnull RuntimeException&gt; unchecked
+    ) {
+        try {
+<span class="fc" id="L159">            action.call();</span>
+<span class="fc" id="L160">        } catch (Exception e) {</span>
+<span class="fc" id="L161">            throw unchecked.apply(e);</span>
+<span class="fc" id="L162">        }</span>
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Runs the given action and wraps any exception into an unchecked exception, the unchecked exception is generated
+     * by the given unchecked exception generator. The logic as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     return action.call();
+     * } catch (Exception e) {
+     *     throw unchecked.apply(e);
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @param action    the given action
+     * @param unchecked the given unchecked exception generator
+     * @param &lt;T&gt;       the type of the result
+     * @return the result of the given action
+     */
+    public static &lt;T&gt; T uncheck(
+        @Nonnull Callable&lt;T&gt; action,
+        @Nonnull Function&lt;? super @Nonnull Exception, ? extends @Nonnull RuntimeException&gt; unchecked
+    ) {
+        try {
+<span class="fc" id="L186">            return action.call();</span>
+<span class="fc" id="L187">        } catch (Exception e) {</span>
+<span class="fc" id="L188">            throw unchecked.apply(e);</span>
+        }
+    }
+
+    /**
+     * Runs the given action and ignores any exception thrown by the action. The logic as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     action.call();
+     * } catch (Exception ignored) {
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @param action the given action
+     */
+    public static void uncheck(@Nonnull VoidCallable action) {
+        try {
+<span class="fc" id="L205">            action.call();</span>
+<span class="fc" id="L206">        } catch (Exception ignored) {</span>
+<span class="fc" id="L207">        }</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Calls the given action and returns the result. If any exception is thrown, returns the default value. The logic
+     * as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     return action.call();
+     * } catch (Exception e) {
+     *     return defaultValue;
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @param action       the given action
+     * @param defaultValue the default value
+     * @param &lt;T&gt;          the type of the result
+     * @return the result of the given action, or the default value if any exception is thrown
+     */
+    public static &lt;T&gt; T call(@Nonnull Callable&lt;T&gt; action, T defaultValue) {
+        try {
+<span class="fc" id="L228">            return action.call();</span>
+<span class="fc" id="L229">        } catch (Exception e) {</span>
+<span class="fc" id="L230">            return defaultValue;</span>
+        }
+    }
+
+    /**
+     * Calls the given action and returns the result wrapped by {@link Ret}. The logic as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     T ret = action.call();
+     *     return Ret.of(ret);
+     * } catch (Throwable e) {
+     *     return Ret.of(e);
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @param action the given action
+     * @param &lt;T&gt;    the type of the result
+     * @return the result of the given action wrapped by {@link Ret}
+     */
+    public static &lt;T&gt; Ret&lt;T&gt; call(@Nonnull Callable&lt;T&gt; action) {
+        try {
+<span class="fc" id="L251">            T ret = action.call();</span>
+<span class="fc" id="L252">            return Ret.of(ret);</span>
+<span class="fc" id="L253">        } catch (Throwable e) {</span>
+<span class="fc" id="L254">            return Ret.of(e);</span>
+        }
+    }
+
+    /**
+     * Executes the given task until it returns {@code true} or throws an exception. The original exception will be
+     * wrapped by {@link AwaitingException} then thrown, using {@link AwaitingException#getCause()} can get the original
+     * exception. The logic of this method is as follows:
+     * &lt;pre&gt;{@code
+     * try {
+     *     while (true) {
+     *         if (task.call()) {
+     *             return;
+     *         }
+     *     }
+     * } catch (Exception e) {
+     *     throw new AwaitingException(e);
+     * }
+     * }&lt;/pre&gt;
+     * &lt;p&gt;
+     * Note this method may cause high CPU usage. When the task determines to return {@code false}, consider adding some
+     * measures (such as sleep the current thread in a very short time) to avoid it.
+     *
+     * @param task the given task to be executed
+     * @throws AwaitingException if an error occurs while awaiting
+     */
+    public static void until(@Nonnull BooleanCallable task) throws AwaitingException {
+        try {
+            while (true) {
+<span class="fc bfc" id="L283" title="All 2 branches covered.">                if (task.call()) {</span>
+<span class="fc" id="L284">                    return;</span>
+                }
+            }
+<span class="fc" id="L287">        } catch (Exception e) {</span>
+<span class="fc" id="L288">            throw new AwaitingException(e);</span>
+        }
+    }
+
+    //---------------- Equals Begin ----------------//
+
+    /**
+     * Returns whether the given objects are equal. If the given objects are arrays, uses {@code Arrays.equals} or
+     * {@link Arrays#deepEquals(Object[], Object[])} if necessary.
+     * &lt;p&gt;
+     * This method is equivalent to ({@link #equalsWith(Object, Object, boolean, boolean)}):
+     * {@code equalsWith(a, b, true, true)}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#equals(Object, Object)}.
+     *
+     * @param a the given object a
+     * @param b the given object b
+     * @return whether the given objects are equal
+     */
+    public static boolean equals(@Nullable Object a, @Nullable Object b) {
+<span class="fc" id="L308">        return ObjectKit.equals(a, b);</span>
+    }
+
+    /**
+     * Returns whether the given objects are equal each other by {@link #equals(Object, Object)}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#equalsAll(Object[])}.
+     *
+     * @param objects the given objects
+     * @return whether the given objects are equal
+     */
+    public static boolean equalsAll(@Nullable Object @Nonnull ... objects) {
+<span class="fc" id="L320">        return ObjectKit.equalsAll(objects);</span>
+    }
+
+    /**
+     * Returns whether the given objects are equal. This method follows the following logic:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         If {@code a == b}, returns {@code true};
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         If the {@code arrayEquals} is {@code true}:
+     *         &lt;ul&gt;
+     *             &lt;li&gt;
+     *                 If the {@code deep} is {@code true}, uses {@link Arrays#deepEquals(Object[], Object[])} for
+     *                 them. Otherwise, uses {@code Arrays.equals}.
+     *             &lt;/li&gt;
+     *         &lt;/ul&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         Returns {@link Objects#equals(Object, Object)} otherwise.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#equalsWith(Object, Object, boolean, boolean)}.
+     *
+     * @param a           the given object a
+     * @param b           the given object b
+     * @param arrayEquals the arrayEquals option
+     * @param deep        the deep option
+     * @return whether the given objects are equal
+     */
+    public static boolean equalsWith(@Nullable Object a, @Nullable Object b, boolean arrayEquals, boolean deep) {
+<span class="fc" id="L352">        return ObjectKit.equalsWith(a, b, arrayEquals, deep);</span>
+    }
+
+    //---------------- Equals End ----------------//
+
+    //---------------- Hashcode Begin ----------------//
+
+    /**
+     * Returns the hashcode of the given object. If the given object is array, uses {@code Arrays.hashCode} or
+     * {@link Arrays#deepHashCode(Object[])} if necessary.
+     * &lt;p&gt;
+     * This method is equivalent to ({@link #hashWith(Object, boolean, boolean)}): {@code hashWith(obj, true, true)}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#hashCode(Object)}.
+     *
+     * @param obj the given object
+     * @return the hashcode of the given object
+     */
+    public static int hashCode(@Nullable Object obj) {
+<span class="fc" id="L371">        return ObjectKit.hashCode(obj);</span>
+    }
+
+    /**
+     * Returns the hashcode of the given objects via {@link Arrays#deepHashCode(Object[])}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#hashAll(Object[])}.
+     *
+     * @param objs the given objects
+     * @return the hashcode of the given objects via {@link Arrays#deepHashCode(Object[])}
+     */
+    public static int hashAll(@Nullable Object @Nonnull ... objs) {
+<span class="fc" id="L383">        return ObjectKit.hashAll(objs);</span>
+    }
+
+    /**
+     * Returns the hashcode of the given object. This method follows the following logic:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         If the given object is not an array, returns {@link Objects#hashCode(Object)}.
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         If the {@code arrayHash} is {@code true}:
+     *         &lt;ul&gt;
+     *             &lt;li&gt;
+     *                 If the {@code deep} is {@code true}, uses {@link Arrays#deepHashCode(Object[])} for them.
+     *                 Otherwise, uses {@code Arrays.hashCode}.
+     *             &lt;/li&gt;
+     *         &lt;/ul&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         Returns {@link Objects#hashCode(Object)} otherwise.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#hashWith(Object, boolean, boolean)}.
+     *
+     * @param obj       the given object
+     * @param arrayHash the arrayHash option
+     * @param deep      the deep option
+     * @return the hashcode of the given object
+     */
+    public static int hashWith(@Nullable Object obj, boolean arrayHash, boolean deep) {
+<span class="fc" id="L414">        return ObjectKit.hashWith(obj, arrayHash, deep);</span>
+    }
+
+    /**
+     * Returns the identity hashcode of the given object, this method is equivalent to
+     * {@link System#identityHashCode(Object)}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectKit#id(Object)}.
+     *
+     * @param obj the given object
+     * @return the identity hashcode of the given object
+     */
+    public static int id(@Nullable Object obj) {
+<span class="fc" id="L427">        return ObjectKit.id(obj);</span>
+    }
+
+    //---------------- Hashcode End ----------------//
+
+    //---------------- ToString Begin ----------------//
+
+    /**
+     * Returns the {@code toString} of the given object. If the given object is array, uses {@code Arrays.toString} or
+     * {@link Arrays#deepToString(Object[])} if necessary.
+     * &lt;p&gt;
+     * This method is equivalent to ({@link #toStringWith(Object, boolean, boolean)}):
+     * {@code toStringWith(obj, true, true)}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link StringKit#toString(Object)}.
+     *
+     * @param obj the given object
+     * @return the {@code toString} of the given object
+     */
+    public static @Nonnull String toString(@Nullable Object obj) {
+<span class="fc" id="L447">        return StringKit.toString(obj);</span>
+    }
+
+    /**
+     * Returns the {@code toString} of the given objects via {@link Arrays#deepToString(Object[])}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link StringKit#toStringAll(Object[])}.
+     *
+     * @param objs the given objects
+     * @return the {@code toString} of the given objects via {@link Arrays#deepToString(Object[])}
+     */
+    public static @Nonnull String toStringAll(@Nullable Object @Nonnull ... objs) {
+<span class="fc" id="L459">        return StringKit.toStringAll(objs);</span>
+    }
+
+    /**
+     * Returns the {@code toString} of the given object. This method follows the following logic:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         If the given object is not an array, returns {@link Objects#toString(Object)}.
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         If the {@code arrayToString} is {@code true}:
+     *         &lt;ul&gt;
+     *             &lt;li&gt;
+     *                 If the {@code deep} is {@code true}, uses {@link Arrays#deepToString(Object[])} for them.
+     *                 Otherwise, uses {@code Arrays.toString}.
+     *             &lt;/li&gt;
+     *         &lt;/ul&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         Returns {@link Objects#toString(Object)} otherwise.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link StringKit#toStringWith(Object, boolean, boolean)}.
+     *
+     * @param obj           the given object
+     * @param arrayToString the arrayToString option
+     * @param deep          the deep option
+     * @return the {@code toString} of the given object
+     */
+    public static @Nonnull String toStringWith(@Nullable Object obj, boolean arrayToString, boolean deep) {
+<span class="fc" id="L490">        return StringKit.toStringWith(obj, arrayToString, deep);</span>
+    }
+
+    //---------------- ToString End ----------------//
+
+    //---------------- Copy Properties Begin ----------------//
+
+    /**
+     * Copy properties from the given source object to the given destination object. The object can be a {@link Map} or
+     * a non-map object which can be parsed to {@link ObjectSchema}.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link DataMapper#copyProperties(Object, Object, Option[])}.
+     *
+     * @param src     the given source object
+     * @param dst     the given destination object
+     * @param options the options for copying properties
+     * @throws ObjectConvertException if an error occurs during copying properties
+     * @see DataMapper
+     */
+    public static void copyProperties(
+        @Nonnull Object src, @Nonnull Object dst, @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectConvertException {
+<span class="fc" id="L515">        DataMapper.defaultMapper().copyProperties(src, dst, options);</span>
+<span class="fc" id="L516">    }</span>
+
+    /**
+     * Copy properties from the given source object to the given destination object. The object can be a {@link Map} or
+     * a non-map object which can be parsed to {@link ObjectSchema}.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link DataMapper#copyProperties(Object, Object, ObjectConverter, Option[])}.
+     *
+     * @param src       the given source object
+     * @param dst       the given destination object
+     * @param converter the converter for converting values of the properties if needed
+     * @param options   the options for copying properties
+     * @throws ObjectConvertException if an error occurs during copying properties
+     * @see DataMapper
+     */
+    public static void copyProperties(
+        @Nonnull Object src,
+        @Nonnull Object dst,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectConvertException {
+<span class="fc" id="L540">        DataMapper.defaultMapper().copyProperties(src, dst, converter, options);</span>
+<span class="fc" id="L541">    }</span>
+
+    /**
+     * Copy properties from the given source object to the given destination object. The object can be a {@link Map} or
+     * a non-map object which can be parsed to {@link ObjectSchema}.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link DataMapper#copyProperties(Object, Type, Object, Type, Option[])}.
+     *
+     * @param src     the given source object
+     * @param srcType specifies the type of the given source object
+     * @param dst     the given destination object
+     * @param dstType specifies the type of the given destination object
+     * @param options the options for copying properties
+     * @throws ObjectConvertException if an error occurs during copying properties
+     * @see DataMapper
+     */
+    public static void copyProperties(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Object dst,
+        @Nonnull Type dstType,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectConvertException {
+<span class="fc" id="L567">        DataMapper.defaultMapper().copyProperties(</span>
+            src,
+            srcType,
+            dst,
+            dstType,
+            options
+        );
+<span class="fc" id="L574">    }</span>
+
+    /**
+     * Copy properties from the given source object to the given destination object. The object can be a {@link Map} or
+     * a non-map object which can be parsed to {@link ObjectSchema}.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the
+     * {@link DataMapper#copyProperties(Object, Type, Object, Type, ObjectConverter, Option[])}.
+     *
+     * @param src       the given source object
+     * @param srcType   specifies the type of the given source object
+     * @param dst       the given destination object
+     * @param dstType   specifies the type of the given destination object
+     * @param converter the converter for converting values of the properties if needed
+     * @param options   the options for copying properties
+     * @throws ObjectConvertException if an error occurs during copying properties
+     * @see DataMapper
+     */
+    public static void copyProperties(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Object dst,
+        @Nonnull Type dstType,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectConvertException {
+<span class="fc" id="L603">        DataMapper.defaultMapper().copyProperties(</span>
+            src,
+            srcType,
+            dst,
+            dstType,
+            converter,
+            options
+        );
+<span class="fc" id="L611">    }</span>
+
+    //---------------- Copy Properties End ----------------//
+
+    //---------------- Object Conversion Begin ----------------//
+
+    /**
+     * Converts the given source object from the specified type to the target type.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectConverter#convert(Object, Class, Option[])}.
+     *
+     * @param src     the given source object
+     * @param target  the specified type of the target object
+     * @param options the other conversion options
+     * @param &lt;T&gt;     the target type
+     * @return the converted object, {@code null} is permitted
+     * @throws UnsupportedObjectConvertException if the conversion from the specified type to the target type is not
+     *                                           supported
+     * @throws ObjectConvertException            if the conversion failed
+     * @see ObjectConverter
+     */
+    public static &lt;T&gt; T convert(
+        @Nullable Object src,
+        @Nonnull Class&lt;? extends T&gt; target,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws UnsupportedObjectConvertException, ObjectConvertException {
+<span class="fc" id="L640">        return ObjectConverter.defaultConverter().convert(src, target, options);</span>
+    }
+
+    /**
+     * Converts the given source object from the specified type to the target type.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectConverter#convert(Object, TypeRef, Option[])}.
+     *
+     * @param src     the given source object
+     * @param target  the specified type ref of the target object
+     * @param options the other conversion options
+     * @param &lt;T&gt;     the target type
+     * @return the converted object, {@code null} is permitted
+     * @throws UnsupportedObjectConvertException if the conversion from the specified type to the target type is not
+     *                                           supported
+     * @throws ObjectConvertException            if the conversion failed
+     * @see ObjectConverter
+     */
+    public static &lt;T&gt; T convert(
+        @Nullable Object src,
+        @Nonnull TypeRef&lt;? extends T&gt; target,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws UnsupportedObjectConvertException, ObjectConvertException {
+<span class="fc" id="L666">        return ObjectConverter.defaultConverter().convert(src, target, options);</span>
+    }
+
+    /**
+     * Converts the given source object from the specified type to the target type.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectConverter#convert(Object, Type, Class, Option[])}.
+     *
+     * @param src     the given source object
+     * @param srcType the specified type of the given source object
+     * @param target  the specified type of the target object
+     * @param options the other conversion options
+     * @param &lt;T&gt;     the target type
+     * @return the converted object, {@code null} is permitted
+     * @throws UnsupportedObjectConvertException if the conversion from the specified type to the target type is not
+     *                                           supported
+     * @throws ObjectConvertException            if the conversion failed
+     * @see ObjectConverter
+     */
+    public static &lt;T&gt; T convert(
+        @Nullable Object src,
+        @Nonnull Type srcType,
+        @Nonnull Class&lt;? extends T&gt; target,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws UnsupportedObjectConvertException, ObjectConvertException {
+<span class="fc" id="L694">        return ObjectConverter.defaultConverter().convert(src, srcType, target, options);</span>
+    }
+
+    /**
+     * Converts the given source object from the specified type to the target type.
+     * &lt;p&gt;
+     * The options parameter can be empty, in which case the default behavior will be used, or built-in options in
+     * {@link ConvertOption} or other custom options for custom implementations.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ObjectConverter#convert(Object, Type, TypeRef, Option[])}.
+     *
+     * @param src     the given source object
+     * @param srcType the specified type of the given source object
+     * @param target  the specified type ref of the target object
+     * @param options the other conversion options
+     * @param &lt;T&gt;     the target type
+     * @return the converted object, {@code null} is permitted
+     * @throws UnsupportedObjectConvertException if the conversion from the specified type to the target type is not
+     *                                           supported
+     * @throws ObjectConvertException            if the conversion failed
+     * @see ObjectConverter
+     */
+    public static &lt;T&gt; T convert(
+        @Nullable Object src,
+        @Nonnull Type srcType,
+        @Nonnull TypeRef&lt;? extends T&gt; target,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws UnsupportedObjectConvertException, ObjectConvertException {
+<span class="fc" id="L722">        return ObjectConverter.defaultConverter().convert(src, srcType, target, options);</span>
+    }
+
+    //---------------- Object Conversion End ----------------//
+
+    //---------------- Collection Begin ----------------//
+
+    /**
+     * Directly returns the given variable arguments as an array.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ArrayKit#array(Object[])}.
+     *
+     * @param elements the given variable arguments
+     * @param &lt;T&gt;      the component type
+     * @return the given variable arguments as an array
+     * @see ArrayKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; T @Nonnull [] array(T @Nonnull @RetainedParam ... elements) {
+<span class="fc" id="L741">        return ArrayKit.array(elements);</span>
+    }
+
+    /**
+     * Returns an immutable list backed by the given array. The returned list is immutable but the backing array is not,
+     * changes to the backing array &quot;write through&quot; to the returned list. The returned list is serializable and
+     * implements {@link RandomAccess}.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ListKit#list(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return an immutable list backed by the given array
+     * @see ListKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull @Immutable List&lt;T&gt; list(T @Nonnull @RetainedParam ... array) {
+<span class="fc" id="L758">        return ListKit.list(array);</span>
+    }
+
+    /**
+     * Returns a new {@link ArrayList} initialing with the given array.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ListKit#arrayList(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return a new {@link ArrayList} initialing with the given array
+     * @see ListKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull ArrayList&lt;T&gt; arrayList(T @Nonnull ... array) {
+<span class="fc" id="L773">        return ListKit.arrayList(array);</span>
+    }
+
+    /**
+     * Returns a new {@link LinkedList} initialing with the given array.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ListKit#linkedList(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return a new {@link LinkedList} initialing with the given array
+     * @see ListKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull LinkedList&lt;T&gt; linkedList(T @Nonnull ... array) {
+<span class="fc" id="L788">        return ListKit.linkedList(array);</span>
+    }
+
+    /**
+     * Returns a new immutable set of which content is added from the given array. The content of the set is added in
+     * array order, and the duplicate elements will be ignored. The behavior of this method is equivalent to:
+     * &lt;pre&gt;{@code
+     * return Collections.unmodifiableSet(linkedHashSet(array));
+     * }&lt;/pre&gt;
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link SetKit#set(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return a new immutable set of which content is added from the given array
+     * @see SetKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull @Immutable Set&lt;T&gt; set(T @Nonnull ... array) {
+<span class="fc" id="L807">        return SetKit.set(array);</span>
+    }
+
+    /**
+     * Returns a new {@link HashSet} initialing with the given array.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link SetKit#hashSet(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return a new {@link HashSet} initialing with the given array
+     * @see SetKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull HashSet&lt;T&gt; hashSet(T @Nonnull ... array) {
+<span class="fc" id="L822">        return SetKit.hashSet(array);</span>
+    }
+
+    /**
+     * Returns a new {@link LinkedHashSet} initialing with the given array.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link SetKit#linkedHashSet(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;T&gt;   the component type
+     * @return a new {@link LinkedHashSet} initialing with the given array
+     * @see SetKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull LinkedHashSet&lt;T&gt; linkedHashSet(T @Nonnull ... array) {
+<span class="fc" id="L837">        return SetKit.linkedHashSet(array);</span>
+    }
+
+    /**
+     * Returns a new immutable map of which content is added from the given array.
+     * &lt;p&gt;
+     * Every two elements of the array form a key-value pair, that means, the {@code array[0]} and {@code array[1]} will
+     * be the first key-value pair, the {@code array[2]} and {@code array[3]} will be the second key-value pair, and so
+     * on. If the length of the array is odd and the last key cannot match the value, then the last pair will be the
+     * key-{@code null} pair to put.
+     * &lt;p&gt;
+     * The behavior of this method is equivalent to:
+     * &lt;pre&gt;{@code
+     *  return Collections.unmodifiableMap(linkedHashMap(array));
+     *  }&lt;/pre&gt;
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link MapKit#map(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;K&gt;   the key type
+     * @param &lt;V&gt;   the value type
+     * @return a new {@link HashMap} initialing with the given array
+     * @see MapKit
+     */
+    public static &lt;K, V&gt; @Nonnull @Immutable Map&lt;K, V&gt; map(Object @Nonnull ... array) {
+<span class="fc" id="L862">        return MapKit.map(array);</span>
+    }
+
+    /**
+     * Returns a new {@link HashMap} initialing with the given array.
+     * &lt;p&gt;
+     * Every two elements of the array form a key-value pair, that means, the {@code array[0]} and {@code array[1]} will
+     * be the first key-value pair, the {@code array[2]} and {@code array[3]} will be the second key-value pair, and so
+     * on. If the length of the array is odd and the last key cannot match the value, then the last pair will be the
+     * key-{@code null} pair to put.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link MapKit#hashMap(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;K&gt;   the key type
+     * @param &lt;V&gt;   the value type
+     * @return a new {@link HashMap} initialing with the given array
+     * @see MapKit
+     */
+    public static &lt;K, V&gt; @Nonnull HashMap&lt;K, V&gt; hashMap(Object @Nonnull ... array) {
+<span class="fc" id="L882">        return MapKit.hashMap(array);</span>
+    }
+
+    /**
+     * Returns a new {@link LinkedHashMap} initialing with the given array
+     * &lt;p&gt;
+     * Every two elements of the array form a key-value pair, that means, the {@code array[0]} and {@code array[1]} will
+     * be the first key-value pair, the {@code array[2]} and {@code array[3]} will be the second key-value pair, and so
+     * on. If the length of the array is odd and the last key cannot match the value, then the last pair will be the
+     * key-{@code null} pair to put.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link MapKit#linkedHashMap(Object[])}.
+     *
+     * @param array the given array
+     * @param &lt;K&gt;   the key type
+     * @param &lt;V&gt;   the value type
+     * @return a new {@link HashMap} initialing with the given array
+     * @see MapKit
+     */
+    public static &lt;K, V&gt; @Nonnull LinkedHashMap&lt;K, V&gt; linkedHashMap(Object @Nonnull ... array) {
+<span class="fc" id="L902">        return MapKit.linkedHashMap(array);</span>
+    }
+
+    /**
+     * Returns a {@link Stream} from the given elements.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link StreamKit#stream(Object[])}.
+     *
+     * @param elements the given elements
+     * @param &lt;T&gt;      the component type
+     * @return a {@link Stream} from the given elements
+     * @see StreamKit
+     */
+    @SafeVarargs
+    public static &lt;T&gt; @Nonnull Stream&lt;T&gt; stream(T @Nonnull ... elements) {
+<span class="fc" id="L917">        return StreamKit.stream(elements);</span>
+    }
+
+    /**
+     * Returns a {@link Stream} from the given elements.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link StreamKit#stream(Iterable)}.
+     *
+     * @param elements the given elements
+     * @param &lt;T&gt;      the component type
+     * @return a {@link Stream} from the given elements
+     * @see StreamKit
+     */
+    public static &lt;T&gt; @Nonnull Stream&lt;T&gt; stream(@Nonnull Iterable&lt;T&gt; elements) {
+<span class="fc" id="L931">        return StreamKit.stream(elements);</span>
+    }
+
+    //---------------- Collection End ----------------//
+
+    //---------------- Thread Begin ----------------//
+
+    /**
+     * Sleeps the current thread for the specified milliseconds.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ThreadKit#sleep(long)}.
+     *
+     * @param millis the specified milliseconds
+     * @throws AwaitingException if the current thread is interrupted or an error occurs while sleeping
+     * @see ThreadKit
+     */
+    public static void sleep(long millis) throws AwaitingException {
+<span class="fc" id="L948">        ThreadKit.sleep(millis);</span>
+<span class="fc" id="L949">    }</span>
+
+    /**
+     * Sleeps the current thread for the specified duration.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ThreadKit#sleep(Duration)}.
+     *
+     * @param duration the specified duration
+     * @throws AwaitingException if the current thread is interrupted or an error occurs while sleeping
+     * @see ThreadKit
+     */
+    public static void sleep(@Nonnull Duration duration) throws AwaitingException {
+<span class="fc" id="L961">        ThreadKit.sleep(duration);</span>
+<span class="fc" id="L962">    }</span>
+
+    //---------------- Thread End ----------------//
+
+    //---------------- Process Begin ----------------//
+
+    /**
+     * Starts a new process with the specified command, returns the process.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ProcessKit#start(String)}.
+     *
+     * @param command the specified command
+     * @return the process
+     * @throws IORuntimeException if any error occurs
+     * @see ProcessKit
+     */
+    public static @Nonnull Process process(@Nonnull String command) throws IORuntimeException {
+<span class="fc" id="L979">        return ProcessKit.start(command);</span>
+    }
+
+    /**
+     * Starts a new process with the specified command and arguments, returns the process.
+     * &lt;p&gt;
+     * This method is a shortcut to the {@link ProcessKit#start(String...)}.
+     *
+     * @param command the specified command and arguments
+     * @return the process
+     * @throws IORuntimeException if any error occurs
+     * @see ProcessKit
+     */
+    public static @Nonnull Process process(@Nonnull String @Nonnull ... command) throws IORuntimeException {
+<span class="fc" id="L993">        return ProcessKit.start(command);</span>
+    }
+
+    //---------------- Process End ----------------//
+
+    private Fs() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

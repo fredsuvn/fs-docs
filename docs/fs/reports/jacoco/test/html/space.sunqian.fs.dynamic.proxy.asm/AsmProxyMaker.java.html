@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsmProxyMaker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.dynamic.proxy.asm</a> &gt; <span class="el_source">AsmProxyMaker.java</span></div><h1>AsmProxyMaker.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.dynamic.proxy.asm;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.annotation.ThreadSafe;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.asm.ClassWriter;
+import space.sunqian.fs.asm.FieldVisitor;
+import space.sunqian.fs.asm.Label;
+import space.sunqian.fs.asm.MethodVisitor;
+import space.sunqian.fs.asm.Opcodes;
+import space.sunqian.fs.base.system.JvmKit;
+import space.sunqian.fs.base.value.IntVar;
+import space.sunqian.fs.dynamic.proxy.ProxyException;
+import space.sunqian.fs.dynamic.proxy.ProxyHandler;
+import space.sunqian.fs.dynamic.proxy.ProxyInvoker;
+import space.sunqian.fs.dynamic.proxy.ProxyKit;
+import space.sunqian.fs.dynamic.proxy.ProxyMaker;
+import space.sunqian.fs.dynamic.proxy.ProxySpec;
+import space.sunqian.fs.reflect.BytesClassLoader;
+import space.sunqian.fs.reflect.ClassKit;
+import space.sunqian.fs.third.asm.AsmKit;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * The &lt;a href=&quot;https://asm.ow2.io/&quot;&gt;ASM&lt;/a&gt; implementation for {@link ProxyMaker}. This implementation uses the
+ * built-in asm package: {@code space.sunqian.fs.third.asm}.
+ * &lt;p&gt;
+ * This implementation uses inheritance to implement proxy, just like the keywords: {@code extends} and
+ * {@code implements}. That means the superclass, which is the proxied class, cannot be {@code final} and must be
+ * inheritable, and must have an empty constructor to ensure that the {@link ProxySpec#newInstance()} can execute
+ * correctly.
+ * &lt;p&gt;
+ * When the {@link #make(Class, List, ProxyHandler)} is called, and if there are methods with the same name and JVM
+ * descriptor, this implementation only passes the first one encountered to the
+ * {@link ProxyHandler#needsProxy(Method)}.
+ * &lt;p&gt;
+ * Note the generated proxy class is {@code final}.
+ *
+ * @author sunqian
+ */
+@ThreadSafe
+<span class="fc" id="L52">public class AsmProxyMaker implements ProxyMaker {</span>
+
+<span class="fc" id="L54">    private static final @Nonnull String INVOKER_NAME = JvmKit.toInternalName(ProxyInvoker.class);</span>
+<span class="fc" id="L55">    private static final @Nonnull String INVOKERS_DESCRIPTOR = JvmKit.toDescriptor(ProxyInvoker[].class);</span>
+<span class="fc" id="L56">    private static final @Nonnull String HANDLER_NAME = JvmKit.toInternalName(ProxyHandler.class);</span>
+<span class="fc" id="L57">    private static final @Nonnull String HANDLER_DESCRIPTOR = JvmKit.toDescriptor(ProxyHandler.class);</span>
+<span class="fc" id="L58">    private static final @Nonnull String METHODS_DESCRIPTOR = JvmKit.toDescriptor(Method[].class);</span>
+    private static final @Nonnull String INVOKER_SIMPLE_NAME = &quot;AsmInvoker&quot;;
+    private static final @Nonnull String SUPER_INVOKER_NAME_PREFIX = &quot;access$super$&quot;;
+<span class="fc" id="L61">    private static final @Nonnull Method HANDLER_INVOKE = Fs.uncheck(</span>
+<span class="fc" id="L62">        () -&gt; ProxyHandler.class.getMethod(&quot;invoke&quot;, Object.class, Method.class, ProxyInvoker.class, Object[].class),</span>
+        AsmProxyException::new
+    );
+<span class="fc" id="L65">    private static final @Nonnull String HANDLER_INVOKE_DESCRIPTOR = JvmKit.toDescriptor(HANDLER_INVOKE);</span>
+<span class="fc" id="L66">    private static final @Nonnull Method INVOKER_INVOKE = Fs.uncheck(</span>
+<span class="fc" id="L67">        () -&gt; ProxyInvoker.class.getMethod(&quot;invoke&quot;, Object.class, Object[].class),</span>
+        AsmProxyException::new
+    );
+<span class="fc" id="L70">    private static final @Nonnull String INVOKER_INVOKE_DESCRIPTOR = JvmKit.toDescriptor(INVOKER_INVOKE);</span>
+<span class="fc" id="L71">    private static final @Nonnull String @Nullable [] INVOKER_INVOKE_EXCEPTIONS = AsmKit.getExceptions(INVOKER_INVOKE);</span>
+<span class="fc" id="L72">    private static final @Nonnull Method INVOKER_INVOKE_SUPER = Fs.uncheck(</span>
+<span class="fc" id="L73">        () -&gt; ProxyInvoker.class.getMethod(&quot;invokeSuper&quot;, Object.class, Object[].class),</span>
+        AsmProxyException::new
+    );
+<span class="fc" id="L76">    private static final @Nonnull String INVOKER_INVOKE_SUPER_DESCRIPTOR = JvmKit.toDescriptor(INVOKER_INVOKE_SUPER);</span>
+<span class="fc" id="L77">    private static final @Nonnull String @Nullable [] INVOKER_INVOKE_SUPER_EXCEPTIONS = AsmKit.getExceptions(INVOKER_INVOKE_SUPER);</span>
+
+    @Override
+    public @Nonnull ProxySpec make(
+        @Nullable Class&lt;?&gt; proxiedClass,
+        @Nonnull @RetainedParam List&lt;@Nonnull Class&lt;?&gt;&gt; interfaces,
+        @Nonnull ProxyHandler proxyHandler
+    ) throws AsmProxyException {
+        try {
+<span class="fc" id="L86">            Package pkg = AsmProxyMaker.class.getPackage();</span>
+            // proxy class internal name
+<span class="fc" id="L88">            String proxyName = AsmKit.newClassInternalName(pkg);</span>
+            // proxy class descriptor
+<span class="fc" id="L90">            String proxyDescriptor = &quot;L&quot; + proxyName + &quot;;&quot;;</span>
+            // proxy class's superclass, which is the proxied class
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            Class&lt;?&gt; proxySuperClass = proxiedClass == null ? Object.class : proxiedClass;</span>
+<span class="fc" id="L93">            String proxySuperName = JvmKit.toInternalName(proxySuperClass);</span>
+            // proxy class's interfaces, which is the proxied interfaces
+<span class="fc" id="L95">            String[] proxyInterfaces = {};</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            if (!interfaces.isEmpty()) {</span>
+<span class="fc" id="L97">                proxyInterfaces = interfaces.stream().map(JvmKit::toInternalName).toArray(String[]::new);</span>
+            }
+            // ProxyInvoker's class internal name (inner class's simple name)
+<span class="fc" id="L100">            String invokerSimpleName = INVOKER_SIMPLE_NAME;</span>
+<span class="fc" id="L101">            String invokerName = proxyName + &quot;$&quot; + invokerSimpleName;</span>
+            // proxied methods
+<span class="fc" id="L103">            Map&lt;Method, ProxyMethodInfo&gt; proxiedMethodMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L104">            Map&lt;Class&lt;?&gt;, List&lt;Method&gt;&gt; proxiableMethods = ProxyKit.getProxiableMethods(</span>
+                proxiedClass,
+                interfaces,
+                proxyHandler
+            );
+<span class="fc" id="L109">            IntVar methodCount = IntVar.of(0);</span>
+<span class="fc" id="L110">            proxiableMethods.forEach((type, methods) -&gt; {</span>
+<span class="fc" id="L111">                String ownerName = JvmKit.toInternalName(type);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">                for (Method method : methods) {</span>
+<span class="fc" id="L113">                    proxiedMethodMap.put(</span>
+                        method,
+<span class="fc" id="L115">                        buildProxyMethodInfo(</span>
+                            method,
+                            ownerName,
+                            proxyDescriptor,
+<span class="fc" id="L119">                            type.isInterface(),</span>
+<span class="fc" id="L120">                            methodCount.getAndIncrement()</span>
+                        )
+                    );
+<span class="fc" id="L123">                }</span>
+<span class="fc" id="L124">            });</span>
+<span class="fc" id="L125">            ProxyClassInfo pcInfo = new ProxyClassInfo(</span>
+                proxyName,
+                proxyDescriptor,
+                proxySuperName,
+                proxyInterfaces,
+                invokerSimpleName,
+                invokerName,
+<span class="fc" id="L132">                new ArrayList&lt;&gt;(proxiedMethodMap.values())</span>
+            );
+<span class="fc" id="L134">            byte[] proxyClassBytes = generateProxyClass(pcInfo);</span>
+<span class="fc" id="L135">            byte[] invokerClassBytes = generateInvokerClass(pcInfo);</span>
+            // using new class loader to help collect unused classes
+<span class="fc" id="L137">            BytesClassLoader loader = ClassKit.newClassLoader();</span>
+<span class="fc" id="L138">            Class&lt;?&gt; proxyClass = loader.loadClass(null, proxyClassBytes);</span>
+<span class="fc" id="L139">            loader.loadClass(null, invokerClassBytes);</span>
+<span class="fc" id="L140">            return new AsmProxySpec(</span>
+                proxyClass,
+                proxySuperClass,
+                interfaces,
+                proxyHandler,
+<span class="fc" id="L145">                proxiedMethodMap.keySet().toArray(new Method[0])</span>
+            );
+<span class="fc" id="L147">        } catch (Exception e) {</span>
+<span class="fc" id="L148">            throw new AsmProxyException(e);</span>
+        }
+    }
+
+    private @Nonnull ProxyMethodInfo buildProxyMethodInfo(
+        @Nonnull Method method,
+        @Nonnull String ownerName,
+        @Nonnull String proxyDescriptor,
+        boolean isInterface,
+        int methodIndex
+    ) {
+<span class="fc" id="L159">        String descriptor = JvmKit.toDescriptor(method);</span>
+<span class="fc" id="L160">        String signature = JvmKit.toSignature(method);</span>
+<span class="fc" id="L161">        String[] exceptions = AsmKit.getExceptions(method);</span>
+<span class="fc" id="L162">        String superInvokerName = SUPER_INVOKER_NAME_PREFIX + methodIndex;// access$001</span>
+<span class="fc" id="L163">        String superInvokerDescriptor = descriptor.replace(&quot;(&quot;, &quot;(&quot; + proxyDescriptor);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        String superInvokerSignature =</span>
+<span class="fc" id="L165">            signature == null ? null : signature.replace(&quot;(&quot;, &quot;(&quot; + proxyDescriptor);</span>
+<span class="fc" id="L166">        return new ProxyMethodInfo(</span>
+            method,
+            ownerName,
+            descriptor,
+            signature,
+            exceptions,
+            superInvokerName,
+            superInvokerDescriptor,
+            superInvokerSignature,
+            isInterface
+        );
+    }
+
+    private byte @Nonnull [] generateProxyClass(@Nonnull ProxyClassInfo pcInfo) throws Exception {
+<span class="fc" id="L180">        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);</span>
+<span class="fc" id="L181">        classWriter.visit(</span>
+            Opcodes.V1_8,
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+<span class="fc" id="L184">            pcInfo.proxyName,</span>
+            null,
+<span class="fc" id="L186">            pcInfo.proxySuperName,</span>
+<span class="fc" id="L187">            pcInfo.proxyInterfaces</span>
+        );
+<span class="fc" id="L189">        classWriter.visitInnerClass(</span>
+<span class="fc" id="L190">            pcInfo.innerName,</span>
+<span class="fc" id="L191">            pcInfo.proxyName,</span>
+<span class="fc" id="L192">            pcInfo.innerSimpleName,</span>
+            Opcodes.ACC_PRIVATE
+        );
+        {
+<span class="fc" id="L196">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;handler&quot;,
+                HANDLER_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L203">            visitor.visitEnd();</span>
+        }
+        {
+<span class="fc" id="L206">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;methods&quot;,
+                METHODS_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L213">            visitor.visitEnd();</span>
+        }
+        {
+<span class="fc" id="L216">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;invokers&quot;,
+                INVOKERS_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L223">            visitor.visitEnd();</span>
+        }
+        {
+<span class="fc" id="L226">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                Opcodes.ACC_PUBLIC,
+                AsmKit.CONSTRUCTOR_NAME,
+                &quot;(&quot; + HANDLER_DESCRIPTOR + METHODS_DESCRIPTOR + &quot;)V&quot;,
+                null,
+                null
+            );
+<span class="fc" id="L233">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L234">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESPECIAL,
+<span class="fc" id="L236">                pcInfo.proxySuperName,</span>
+                AsmKit.CONSTRUCTOR_NAME,
+                AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR,
+                false
+            );
+<span class="fc" id="L241">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L242">            visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L243">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.proxyName, &quot;handler&quot;, HANDLER_DESCRIPTOR);</span>
+<span class="fc" id="L244">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L245">            visitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L246">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.proxyName, &quot;methods&quot;, METHODS_DESCRIPTOR);</span>
+<span class="fc" id="L247">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L248">            visitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L249">            visitor.visitInsn(Opcodes.ARRAYLENGTH);</span>
+<span class="fc" id="L250">            visitor.visitTypeInsn(Opcodes.ANEWARRAY, INVOKER_NAME);</span>
+<span class="fc" id="L251">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.proxyName, &quot;invokers&quot;, INVOKERS_DESCRIPTOR);</span>
+<span class="fc" id="L252">            visitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L253">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L254">            visitor.visitEnd();</span>
+        }
+<span class="fc" id="L256">        int i = 0;</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        for (ProxyMethodInfo pmInfo : pcInfo.methods) {</span>
+<span class="fc" id="L258">            generateProxyMethod(classWriter, pcInfo, pmInfo, i);</span>
+<span class="fc" id="L259">            generateSuperInvoker(classWriter, pmInfo);</span>
+<span class="fc" id="L260">            i++;</span>
+<span class="fc" id="L261">        }</span>
+<span class="fc" id="L262">        classWriter.visitEnd();</span>
+<span class="fc" id="L263">        return classWriter.toByteArray();</span>
+    }
+
+    private void generateProxyMethod(
+        @Nonnull ClassWriter classWriter,
+        @Nonnull ProxyClassInfo pcInfo,
+        @Nonnull ProxyMethodInfo pmInfo,
+        int i
+    ) throws Exception {
+<span class="fc" id="L272">        MethodVisitor visitor = classWriter.visitMethod(</span>
+            Opcodes.ACC_PUBLIC,
+<span class="fc" id="L274">            pmInfo.method.getName(),</span>
+<span class="fc" id="L275">            pmInfo.descriptor,</span>
+<span class="fc" id="L276">            pmInfo.signature,</span>
+<span class="fc" id="L277">            pmInfo.exceptions</span>
+        );
+        // ProxyInvoker invoker = invokers[i];
+<span class="fc" id="L280">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L281">        visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.proxyName, &quot;invokers&quot;, INVOKERS_DESCRIPTOR);</span>
+<span class="fc" id="L282">        AsmKit.visitConst(visitor, i);</span>
+<span class="fc" id="L283">        visitor.visitInsn(Opcodes.AALOAD);</span>
+<span class="fc" id="L284">        int invokerPos = AsmKit.paramSize(pmInfo.method.getParameters()) + 1;</span>
+<span class="fc" id="L285">        visitor.visitVarInsn(Opcodes.ASTORE, invokerPos);</span>
+<span class="fc" id="L286">        visitor.visitVarInsn(Opcodes.ALOAD, invokerPos);</span>
+        // if (invoker == null)
+<span class="fc" id="L288">        Label ifNonnull = new Label();</span>
+<span class="fc" id="L289">        visitor.visitJumpInsn(Opcodes.IFNONNULL, ifNonnull);</span>
+        // new Invoker1(i);
+<span class="fc" id="L291">        visitor.visitTypeInsn(Opcodes.NEW, pcInfo.innerName);</span>
+        // new Invoker1(i).init();
+<span class="fc" id="L293">        visitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L294">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L295">        AsmKit.visitConst(visitor, i);</span>
+<span class="fc" id="L296">        visitor.visitMethodInsn(</span>
+            Opcodes.INVOKESPECIAL,
+<span class="fc" id="L298">            pcInfo.innerName,</span>
+            AsmKit.CONSTRUCTOR_NAME,
+<span class="fc" id="L300">            &quot;(&quot; + pcInfo.proxyDescriptor + &quot;I)V&quot;,</span>
+            false
+        );
+<span class="fc" id="L303">        visitor.visitVarInsn(Opcodes.ASTORE, invokerPos);</span>
+        // get invokers
+<span class="fc" id="L305">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L306">        visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.proxyName, &quot;invokers&quot;, INVOKERS_DESCRIPTOR);</span>
+        // invokers[i] = invoker;
+<span class="fc" id="L308">        AsmKit.visitConst(visitor, i);</span>
+<span class="fc" id="L309">        visitor.visitVarInsn(Opcodes.ALOAD, invokerPos);</span>
+<span class="fc" id="L310">        visitor.visitInsn(Opcodes.AASTORE);</span>
+        // endif
+<span class="fc" id="L312">        visitor.visitLabel(ifNonnull);</span>
+<span class="fc" id="L313">        visitor.visitFrame(Opcodes.F_APPEND, 1, new String[]{INVOKER_NAME}, 0, null);</span>
+        // get handler
+<span class="fc" id="L315">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L316">        visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.proxyName, &quot;handler&quot;, HANDLER_DESCRIPTOR);</span>
+        // get this
+<span class="fc" id="L318">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+        // get methods[i]
+<span class="fc" id="L320">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L321">        visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.proxyName, &quot;methods&quot;, METHODS_DESCRIPTOR);</span>
+<span class="fc" id="L322">        AsmKit.visitConst(visitor, i);</span>
+<span class="fc" id="L323">        visitor.visitInsn(Opcodes.AALOAD);</span>
+        // get invoker
+<span class="fc" id="L325">        visitor.visitVarInsn(Opcodes.ALOAD, invokerPos);</span>
+        // new Object[params.size]
+<span class="fc" id="L327">        AsmKit.visitConst(visitor, pmInfo.method.getParameterCount());</span>
+<span class="fc" id="L328">        visitor.visitTypeInsn(Opcodes.ANEWARRAY, AsmKit.OBJECT_NAME);</span>
+        // set array
+<span class="fc" id="L330">        int aIndex = 0;</span>
+<span class="fc" id="L331">        int pIndex = 1;</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        for (Parameter parameter : pmInfo.method.getParameters()) {</span>
+            // array[i] = param[i]
+<span class="fc" id="L334">            visitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L335">            AsmKit.visitConst(visitor, aIndex++);</span>
+<span class="fc" id="L336">            AsmKit.visitLoad(visitor, parameter.getType(), pIndex);</span>
+<span class="fc" id="L337">            AsmKit.wrapToObject(visitor, parameter.getType());</span>
+<span class="fc" id="L338">            visitor.visitInsn(Opcodes.AASTORE);</span>
+<span class="fc" id="L339">            pIndex += AsmKit.varSize(parameter.getType());</span>
+        }
+        // return handler.invoke(this, methods[0], invoker, args);
+<span class="fc" id="L342">        visitor.visitMethodInsn(</span>
+            Opcodes.INVOKEINTERFACE,
+            HANDLER_NAME,
+<span class="fc" id="L345">            HANDLER_INVOKE.getName(),</span>
+            HANDLER_INVOKE_DESCRIPTOR,
+            true
+        );
+        // object -&gt; primitive/object
+<span class="fc" id="L350">        AsmKit.convertObjectTo(visitor, pmInfo.method.getReturnType());</span>
+<span class="fc" id="L351">        AsmKit.visitReturn(visitor, pmInfo.method.getReturnType(), true, false);</span>
+<span class="fc" id="L352">        visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L353">        visitor.visitEnd();</span>
+<span class="fc" id="L354">    }</span>
+
+    private void generateSuperInvoker(
+        @Nonnull ClassWriter classWriter,
+        @Nonnull ProxyMethodInfo pmInfo
+    ) {
+<span class="fc" id="L360">        MethodVisitor visitor = classWriter.visitMethod(</span>
+            Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC,
+<span class="fc" id="L362">            pmInfo.superInvokerName,</span>
+<span class="fc" id="L363">            pmInfo.superInvokerDescriptor,</span>
+<span class="fc" id="L364">            pmInfo.superInvokerSignature,</span>
+<span class="fc" id="L365">            pmInfo.exceptions</span>
+        );
+<span class="fc" id="L367">        visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L368">        int pIndex = 1;</span>
+<span class="fc bfc" id="L369" title="All 2 branches covered.">        for (Parameter parameter : pmInfo.method.getParameters()) {</span>
+<span class="fc" id="L370">            AsmKit.visitLoad(visitor, parameter.getType(), pIndex);</span>
+<span class="fc" id="L371">            pIndex += AsmKit.varSize(parameter.getType());</span>
+        }
+<span class="fc" id="L373">        visitor.visitMethodInsn(</span>
+            Opcodes.INVOKESPECIAL,
+<span class="fc" id="L375">            pmInfo.ownerName,</span>
+<span class="fc" id="L376">            pmInfo.method.getName(),</span>
+<span class="fc" id="L377">            pmInfo.descriptor,</span>
+<span class="fc" id="L378">            pmInfo.isInterface</span>
+        );
+<span class="fc" id="L380">        AsmKit.visitReturn(visitor, pmInfo.method.getReturnType(), false, false);</span>
+<span class="fc" id="L381">        visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L382">        visitor.visitEnd();</span>
+<span class="fc" id="L383">    }</span>
+
+    private byte @Nonnull [] generateInvokerClass(@Nonnull ProxyClassInfo pcInfo) {
+<span class="fc" id="L386">        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);</span>
+<span class="fc" id="L387">        classWriter.visit(</span>
+            Opcodes.V1_8,
+            Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+<span class="fc" id="L390">            pcInfo.innerName,</span>
+            null,
+            AsmKit.OBJECT_NAME,
+            new String[]{INVOKER_NAME}
+        );
+<span class="fc" id="L395">        classWriter.visitInnerClass(</span>
+<span class="fc" id="L396">            pcInfo.innerName,</span>
+<span class="fc" id="L397">            pcInfo.proxyName,</span>
+<span class="fc" id="L398">            pcInfo.innerSimpleName,</span>
+            Opcodes.ACC_PRIVATE
+        );
+        {
+            // int index;
+<span class="fc" id="L403">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;index&quot;,
+                &quot;I&quot;,
+                null,
+                null
+            );
+<span class="fc" id="L410">            visitor.visitEnd();</span>
+        }
+        {
+            // outer class, which is the proxy class;
+<span class="fc" id="L414">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC,
+                &quot;this$0&quot;,
+<span class="fc" id="L417">                pcInfo.proxyDescriptor,</span>
+                null,
+                null);
+<span class="fc" id="L420">            visitor.visitEnd();</span>
+        }
+        {
+            // constructor
+<span class="fc" id="L424">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                0,
+                AsmKit.CONSTRUCTOR_NAME,
+<span class="fc" id="L427">                &quot;(&quot; + pcInfo.proxyDescriptor + &quot;I)V&quot;,</span>
+                null,
+                null
+            );
+<span class="fc" id="L431">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L432">            visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L433">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.innerName, &quot;this$0&quot;, pcInfo.proxyDescriptor);</span>
+<span class="fc" id="L434">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L435">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESPECIAL,
+                AsmKit.OBJECT_NAME,
+                AsmKit.CONSTRUCTOR_NAME,
+                AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR,
+                false
+            );
+<span class="fc" id="L442">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L443">            visitor.visitVarInsn(Opcodes.ILOAD, 2);</span>
+<span class="fc" id="L444">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.innerName, &quot;index&quot;, &quot;I&quot;);</span>
+<span class="fc" id="L445">            visitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L446">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L447">            visitor.visitEnd();</span>
+        }
+        {
+            // invoke(Object inst, Object... args);
+<span class="fc" id="L451">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_VARARGS,
+<span class="fc" id="L453">                INVOKER_INVOKE.getName(),</span>
+                INVOKER_INVOKE_DESCRIPTOR,
+                null,
+                INVOKER_INVOKE_EXCEPTIONS
+            );
+            // get index;
+<span class="fc" id="L459">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L460">            visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.innerName, &quot;index&quot;, &quot;I&quot;);</span>
+            // switch (index) {}
+<span class="fc" id="L462">            Label[] labels = new Label[pcInfo.methods.size()];</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">            for (int i = 0; i &lt; labels.length; i++) {</span>
+<span class="fc" id="L464">                labels[i] = new Label();</span>
+            }
+<span class="fc" id="L466">            Label labelLast = new Label();</span>
+<span class="fc" id="L467">            visitor.visitTableSwitchInsn(0, pcInfo.methods.size() - 1, labelLast, labels);</span>
+<span class="fc" id="L468">            int i = 0;</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">            for (ProxyMethodInfo pmInfo : pcInfo.methods) {</span>
+<span class="fc" id="L470">                Method method = pmInfo.method;</span>
+<span class="fc" id="L471">                String methodOwnerName = pmInfo.ownerName;</span>
+<span class="fc bfc" id="L472" title="All 2 branches covered.">                if (ClassKit.isProtected(method)) {</span>
+<span class="fc" id="L473">                    methodOwnerName = pcInfo.proxyName;</span>
+                }
+<span class="fc" id="L475">                visitor.visitLabel(labels[i++]);</span>
+<span class="fc" id="L476">                visitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+                // get outer
+<span class="fc" id="L478">                visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L479">                visitor.visitTypeInsn(Opcodes.CHECKCAST, methodOwnerName);</span>
+                // loads args
+<span class="fc" id="L481">                loadParameters(visitor, pmInfo.method);</span>
+                // return outer.invoke(args0, args1...);
+<span class="fc" id="L483">                AsmKit.invokeVirtual(</span>
+<span class="fc" id="L484">                    visitor, methodOwnerName, method.getName(), pmInfo.descriptor, pmInfo.isInterface</span>
+                );
+<span class="fc" id="L486">                Class&lt;?&gt; returnType = AsmKit.wrapToObject(visitor, method.getReturnType());</span>
+<span class="fc" id="L487">                AsmKit.visitReturn(visitor, returnType, false, true);</span>
+<span class="fc" id="L488">            }</span>
+<span class="fc" id="L489">            visitor.visitLabel(labelLast);</span>
+<span class="fc" id="L490">            visitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+<span class="fc" id="L491">            visitor.visitInsn(Opcodes.ACONST_NULL);</span>
+<span class="fc" id="L492">            visitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L493">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L494">            visitor.visitEnd();</span>
+        }
+        {
+            // invokeSuper(Object inst, Object... args);
+<span class="fc" id="L498">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_VARARGS,
+<span class="fc" id="L500">                INVOKER_INVOKE_SUPER.getName(),</span>
+                INVOKER_INVOKE_SUPER_DESCRIPTOR,
+                null,
+                INVOKER_INVOKE_SUPER_EXCEPTIONS
+            );
+            // get index;
+<span class="fc" id="L506">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L507">            visitor.visitFieldInsn(Opcodes.GETFIELD, pcInfo.innerName, &quot;index&quot;, &quot;I&quot;);</span>
+            // switch (index) {}
+<span class="fc" id="L509">            Label[] labels = new Label[pcInfo.methods.size()];</span>
+<span class="fc bfc" id="L510" title="All 2 branches covered.">            for (int i = 0; i &lt; labels.length; i++) {</span>
+<span class="fc" id="L511">                labels[i] = new Label();</span>
+            }
+<span class="fc" id="L513">            Label labelLast = new Label();</span>
+<span class="fc" id="L514">            visitor.visitTableSwitchInsn(0, pcInfo.methods.size() - 1, labelLast, labels);</span>
+<span class="fc" id="L515">            int i = 0;</span>
+<span class="fc bfc" id="L516" title="All 2 branches covered.">            for (ProxyMethodInfo pmInfo : pcInfo.methods) {</span>
+<span class="fc" id="L517">                visitor.visitLabel(labels[i++]);</span>
+<span class="fc" id="L518">                visitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+                // get outer
+<span class="fc" id="L520">                visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L521">                visitor.visitTypeInsn(Opcodes.CHECKCAST, pcInfo.proxyName);</span>
+                // loads args
+<span class="fc" id="L523">                loadParameters(visitor, pmInfo.method);</span>
+                // return outer.invoke(inst, args0, args1...);
+<span class="fc" id="L525">                visitor.visitMethodInsn(</span>
+                    Opcodes.INVOKESTATIC,
+<span class="fc" id="L527">                    pcInfo.proxyName,</span>
+<span class="fc" id="L528">                    pmInfo.superInvokerName,//&quot;access$001&quot;,</span>
+<span class="fc" id="L529">                    pmInfo.superInvokerDescriptor,</span>
+                    false
+                );
+<span class="fc" id="L532">                Class&lt;?&gt; returnType = AsmKit.wrapToObject(visitor, pmInfo.method.getReturnType());</span>
+<span class="fc" id="L533">                AsmKit.visitReturn(visitor, returnType, false, true);</span>
+<span class="fc" id="L534">            }</span>
+<span class="fc" id="L535">            visitor.visitLabel(labelLast);</span>
+<span class="fc" id="L536">            visitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+<span class="fc" id="L537">            visitor.visitInsn(Opcodes.ACONST_NULL);</span>
+<span class="fc" id="L538">            visitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L539">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L540">            visitor.visitEnd();</span>
+        }
+<span class="fc" id="L542">        classWriter.visitEnd();</span>
+<span class="fc" id="L543">        return classWriter.toByteArray();</span>
+    }
+
+    private void loadParameters(MethodVisitor visitor, Executable executable) {
+<span class="fc" id="L547">        int pIndex = 0;</span>
+<span class="fc bfc" id="L548" title="All 2 branches covered.">        for (Parameter parameter : executable.getParameters()) {</span>
+            // get args
+<span class="fc" id="L550">            visitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L551">            AsmKit.visitConst(visitor, pIndex++);</span>
+            // get args[pIndex]
+<span class="fc" id="L553">            visitor.visitInsn(Opcodes.AALOAD);</span>
+<span class="fc" id="L554">            AsmKit.convertObjectTo(visitor, parameter.getType());</span>
+        }
+<span class="fc" id="L556">    }</span>
+
+    private static final class ProxyClassInfo {
+
+        private final @Nonnull String proxyName;
+        private final @Nonnull String proxyDescriptor;
+        private final @Nonnull String proxySuperName;
+        private final @Nonnull String @Nullable [] proxyInterfaces;
+        private final @Nonnull String innerSimpleName;
+        private final @Nonnull String innerName;
+        private final @Nonnull List&lt;ProxyMethodInfo&gt; methods;
+
+        private ProxyClassInfo(
+            @Nonnull String proxyName,
+            @Nonnull String proxyDescriptor,
+            @Nonnull String proxySuperName,
+            @Nonnull String @Nullable [] proxyInterfaces,
+            @Nonnull String innerSimpleName,
+            @Nonnull String innerName,
+            @Nonnull List&lt;ProxyMethodInfo&gt; methods
+<span class="fc" id="L576">        ) {</span>
+<span class="fc" id="L577">            this.proxyName = proxyName;</span>
+<span class="fc" id="L578">            this.proxyDescriptor = proxyDescriptor;</span>
+<span class="fc" id="L579">            this.proxySuperName = proxySuperName;</span>
+<span class="fc" id="L580">            this.proxyInterfaces = proxyInterfaces;</span>
+<span class="fc" id="L581">            this.innerSimpleName = innerSimpleName;</span>
+<span class="fc" id="L582">            this.innerName = innerName;</span>
+<span class="fc" id="L583">            this.methods = methods;</span>
+<span class="fc" id="L584">        }</span>
+    }
+
+    private static final class ProxyMethodInfo {
+
+        private final @Nonnull Method method;
+        private final @Nonnull String ownerName;
+        private final @Nonnull String descriptor;
+        private final @Nullable String signature;
+        private final @Nonnull String @Nullable [] exceptions;
+        private final @Nonnull String superInvokerName;
+        private final @Nonnull String superInvokerDescriptor;
+        private final @Nullable String superInvokerSignature;
+        private final boolean isInterface;
+
+        private ProxyMethodInfo(
+            @Nonnull Method method,
+            @Nonnull String ownerName,
+            @Nonnull String descriptor,
+            @Nullable String signature,
+            @Nonnull String @Nullable [] exceptions,
+            @Nonnull String superInvokerName,
+            @Nonnull String superInvokerDescriptor,
+            @Nullable String superInvokerSignature,
+            boolean isInterface
+<span class="fc" id="L609">        ) {</span>
+<span class="fc" id="L610">            this.method = method;</span>
+<span class="fc" id="L611">            this.ownerName = ownerName;</span>
+<span class="fc" id="L612">            this.descriptor = descriptor;</span>
+<span class="fc" id="L613">            this.signature = signature;</span>
+<span class="fc" id="L614">            this.exceptions = exceptions;</span>
+<span class="fc" id="L615">            this.superInvokerName = superInvokerName;</span>
+<span class="fc" id="L616">            this.superInvokerDescriptor = superInvokerDescriptor;</span>
+<span class="fc" id="L617">            this.superInvokerSignature = superInvokerSignature;</span>
+<span class="fc" id="L618">            this.isInterface = isInterface;</span>
+<span class="fc" id="L619">        }</span>
+    }
+
+    private static final class AsmProxySpec implements ProxySpec {
+
+        private final @Nonnull Class&lt;?&gt; proxyClass;
+        private final @Nonnull Class&lt;?&gt; proxiedClass;
+        private final @Nonnull List&lt;@Nonnull Class&lt;?&gt;&gt; proxiedInterfaces;
+        private final @Nonnull ProxyHandler proxyHandler;
+        private final @Nonnull Method @Nonnull [] methods;
+
+        private AsmProxySpec(
+            @Nonnull Class&lt;?&gt; proxyClass,
+            @Nonnull Class&lt;?&gt; proxiedClass,
+            @Nonnull List&lt;@Nonnull Class&lt;?&gt;&gt; proxiedInterfaces,
+            @Nonnull ProxyHandler proxyHandler,
+            @Nonnull Method @Nonnull [] methods
+<span class="fc" id="L636">        ) {</span>
+<span class="fc" id="L637">            this.proxyClass = proxyClass;</span>
+<span class="fc" id="L638">            this.proxiedClass = proxiedClass;</span>
+<span class="fc" id="L639">            this.proxiedInterfaces = proxiedInterfaces;</span>
+<span class="fc" id="L640">            this.proxyHandler = proxyHandler;</span>
+<span class="fc" id="L641">            this.methods = methods;</span>
+<span class="fc" id="L642">        }</span>
+
+        @Override
+        public &lt;T&gt; @Nonnull T newInstance() throws AsmProxyException {
+<span class="fc" id="L646">            return Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L647">                Constructor&lt;?&gt; constructor = proxyClass.getConstructor(ProxyHandler.class, Method[].class);</span>
+<span class="fc" id="L648">                return Fs.as(constructor.newInstance(proxyHandler, methods));</span>
+            }, AsmProxyException::new);
+        }
+
+        @Override
+        public @Nonnull Class&lt;?&gt; proxyClass() {
+<span class="fc" id="L654">            return proxyClass;</span>
+        }
+
+        @Override
+        public @Nonnull Class&lt;?&gt; proxiedClass() {
+<span class="fc" id="L659">            return proxiedClass;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Class&lt;?&gt;&gt; proxiedInterfaces() {
+<span class="fc" id="L664">            return proxiedInterfaces;</span>
+        }
+
+        @Override
+        public @Nonnull ProxyHandler proxyHandler() {
+<span class="fc" id="L669">            return proxyHandler;</span>
+        }
+    }
+
+    /**
+     * This exception is the sub-exception of {@link ProxyException} for &lt;a href=&quot;https://asm.ow2.io/&quot;&gt;ASM&lt;/a&gt; proxy
+     * implementation.
+     *
+     * @author sunqian
+     */
+    public static class AsmProxyException extends ProxyException {
+        /**
+         * Constructs with the cause.
+         *
+         * @param cause the cause
+         */
+        public AsmProxyException(@Nullable Throwable cause) {
+<span class="fc" id="L686">            super(cause);</span>
+<span class="fc" id="L687">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

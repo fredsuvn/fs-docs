@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ret.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.base.value</a> &gt; <span class="el_source">Ret.java</span></div><h1>Ret.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.base.value;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.fs.base.exception.WrappedException;
+
+import java.util.function.Function;
+
+/**
+ * This interface represents a wrapper to wrap a return value from a method or function or other similar ones.
+ *
+ * @param &lt;T&gt; type of the return value
+ * @author sunqian
+ */
+@Immutable
+public interface Ret&lt;T&gt; {
+
+    /**
+     * Returns an instance of {@link Ret} with the specified return value.
+     *
+     * @param value the specified return value
+     * @param &lt;T&gt;   type of the return value
+     * @return an instance of {@link Ret} with the specified return value
+     */
+    static &lt;T&gt; Ret&lt;T&gt; of(T value) {
+<span class="fc" id="L25">        return new Ret&lt;T&gt;() {</span>
+
+            @Override
+            public T get() throws WrappedException {
+<span class="fc" id="L29">                return value;</span>
+            }
+
+            @Override
+            public T get(Function&lt;Throwable, ? extends T&gt; handler) {
+<span class="fc" id="L34">                return value;</span>
+            }
+        };
+    }
+
+    /**
+     * Returns an instance of {@link Ret} with the specified error.
+     *
+     * @param error the specified error
+     * @param &lt;T&gt;   type of the return value
+     * @return an instance of {@link Ret} with the specified error
+     */
+    static &lt;T&gt; Ret&lt;T&gt; of(Throwable error) {
+<span class="fc" id="L47">        return new Ret&lt;T&gt;() {</span>
+
+            @Override
+            public T get() throws WrappedException {
+<span class="fc" id="L51">                throw new WrappedException(error);</span>
+            }
+
+            @Override
+            public T get(Function&lt;Throwable, ? extends T&gt; handler) {
+<span class="fc" id="L56">                return handler.apply(error);</span>
+            }
+        };
+    }
+
+    /**
+     * Returns the return value. If an error occurs during the production to the return value, throws a
+     * {@link WrappedException}.
+     *
+     * @return the return value
+     * @throws WrappedException If an error occurs during the production to the return value
+     */
+    T get() throws WrappedException;
+
+    /**
+     * Returns the return value. If an error occurs during the production to the return value, the {@code handler} will
+     * be invoked to handle the error.
+     *
+     * @param handler the handler to handle the error
+     * @return the return value
+     */
+    T get(Function&lt;Throwable, ? extends T&gt; handler);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsmAspectMaker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.dynamic.aspect.asm</a> &gt; <span class="el_source">AsmAspectMaker.java</span></div><h1>AsmAspectMaker.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.dynamic.aspect.asm;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.ThreadSafe;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.asm.ClassWriter;
+import space.sunqian.fs.asm.FieldVisitor;
+import space.sunqian.fs.asm.Label;
+import space.sunqian.fs.asm.MethodVisitor;
+import space.sunqian.fs.asm.Opcodes;
+import space.sunqian.fs.base.system.JvmKit;
+import space.sunqian.fs.dynamic.aspect.AspectException;
+import space.sunqian.fs.dynamic.aspect.AspectHandler;
+import space.sunqian.fs.dynamic.aspect.AspectMaker;
+import space.sunqian.fs.dynamic.aspect.AspectSpec;
+import space.sunqian.fs.dynamic.proxy.ProxyKit;
+import space.sunqian.fs.reflect.BytesClassLoader;
+import space.sunqian.fs.reflect.ClassKit;
+import space.sunqian.fs.third.asm.AsmKit;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * The &lt;a href=&quot;https://asm.ow2.io/&quot;&gt;ASM&lt;/a&gt; implementation for {@link AspectMaker}. This implementation uses the
+ * built-in asm package: {@code space.sunqian.fs.asm}.
+ * &lt;p&gt;
+ * This implementation uses inheritance to implement proxy, just like the keywords: {@code extends}. That means the
+ * superclass, which is the advised class, cannot be {@code final} and must be inheritable, and must have an empty
+ * constructor to ensure that the {@link AspectSpec#newInstance()} can execute correctly. And only the methods, which
+ * can pass the {@link ProxyKit#isProxiable(Method)} and {@link AspectHandler#needsAspect(Method)}, can be advised.
+ * &lt;p&gt;
+ * Note the generated aspect class is {@code final}.
+ *
+ * @author sunqian
+ */
+@ThreadSafe
+<span class="fc" id="L45">public class AsmAspectMaker implements AspectMaker {</span>
+
+<span class="fc" id="L47">    private static final @Nonnull String HANDLER_NAME = JvmKit.toInternalName(AspectHandler.class);</span>
+<span class="fc" id="L48">    private static final @Nonnull String HANDLER_DESCRIPTOR = JvmKit.toDescriptor(AspectHandler.class);</span>
+<span class="fc" id="L49">    private static final @Nonnull String METHODS_DESCRIPTOR = JvmKit.toDescriptor(Method[].class);</span>
+<span class="fc" id="L50">    private static final @Nonnull Method BEFORE_METHOD = Fs.uncheck(</span>
+<span class="fc" id="L51">        () -&gt; AspectHandler.class.getMethod(&quot;beforeInvoking&quot;, Method.class, Object[].class, Object.class),</span>
+        AsmAspectException::new
+    );
+<span class="fc" id="L54">    private static final @Nonnull String BEFORE_DESCRIPTOR = JvmKit.toDescriptor(BEFORE_METHOD);</span>
+<span class="fc" id="L55">    private static final @Nonnull Method AFTER_METHOD = Fs.uncheck(</span>
+<span class="fc" id="L56">        () -&gt; AspectHandler.class.getMethod(&quot;afterReturning&quot;, Object.class, Method.class, Object[].class, Object.class),</span>
+        AsmAspectException::new
+    );
+<span class="fc" id="L59">    private static final @Nonnull String AFTER_DESCRIPTOR = JvmKit.toDescriptor(AFTER_METHOD);</span>
+<span class="fc" id="L60">    private static final @Nonnull Method THROW_METHOD = Fs.uncheck(</span>
+<span class="fc" id="L61">        () -&gt; AspectHandler.class.getMethod(&quot;afterThrowing&quot;, Throwable.class, Method.class, Object[].class, Object.class),</span>
+        AsmAspectException::new
+    );
+<span class="fc" id="L64">    private static final @Nonnull String THROW_DESCRIPTOR = JvmKit.toDescriptor(THROW_METHOD);</span>
+<span class="fc" id="L65">    private static final @Nonnull String METHOD_NAME = JvmKit.toInternalName(Method.class);</span>
+<span class="fc" id="L66">    private static final @Nonnull String ARGS_NAME = JvmKit.toInternalName(Object[].class);</span>
+
+    @Override
+    public @Nonnull AspectSpec make(
+        @Nonnull Class&lt;?&gt; advisedClass,
+        @Nonnull AspectHandler aspectHandler
+    ) throws AsmAspectException {
+        try {
+<span class="fc" id="L74">            Package pkg = AsmAspectMaker.class.getPackage();</span>
+            // aspect class internal name
+<span class="fc" id="L76">            String aspectName = AsmKit.newClassInternalName(pkg);</span>
+            // aspect class descriptor
+            // String aspectDescriptor = &quot;L&quot; + aspectName + &quot;;&quot;;
+<span class="fc" id="L79">            String advisedName = JvmKit.toInternalName(advisedClass);</span>
+            // advised methods
+<span class="fc" id="L81">            Map&lt;Method, AspectMethodInfo&gt; advisedMethodMap = new LinkedHashMap&lt;&gt;();</span>
+            // IntVar methodCount = IntVar.of(0);
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for (Method method : advisedClass.getMethods()) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">                if (!ProxyKit.isProxiable(method)) {</span>
+<span class="fc" id="L85">                    continue;</span>
+                }
+<span class="fc bfc" id="L87" title="All 2 branches covered.">                if (!aspectHandler.needsAspect(method)) {</span>
+<span class="fc" id="L88">                    continue;</span>
+                }
+<span class="fc" id="L90">                advisedMethodMap.put(</span>
+                    method,
+<span class="fc" id="L92">                    buildAspectMethodInfo(</span>
+                        method
+                        // advisedName,
+                        // aspectDescriptor,
+                        // methodCount.getAndIncrement()
+                    )
+                );
+            }
+<span class="fc" id="L100">            AspectClassInfo acInfo = new AspectClassInfo(</span>
+                aspectName,
+                // aspectDescriptor,
+                advisedName,
+<span class="fc" id="L104">                new ArrayList&lt;&gt;(advisedMethodMap.values())</span>
+            );
+<span class="fc" id="L106">            byte[] aspectClassBytes = generateAspectClass(acInfo);</span>
+            // using new class loader to help collect unused classes
+<span class="fc" id="L108">            BytesClassLoader loader = ClassKit.newClassLoader();</span>
+<span class="fc" id="L109">            Class&lt;?&gt; aspectClass = loader.loadClass(null, aspectClassBytes);</span>
+<span class="fc" id="L110">            return new AsmAspectSpec(</span>
+                aspectClass,
+                advisedClass,
+                aspectHandler,
+<span class="fc" id="L114">                advisedMethodMap.keySet().toArray(new Method[0])</span>
+            );
+<span class="fc" id="L116">        } catch (Exception e) {</span>
+<span class="fc" id="L117">            throw new AsmAspectException(e);</span>
+        }
+    }
+
+    private @Nonnull AspectMethodInfo buildAspectMethodInfo(
+        @Nonnull Method method
+        //@Nonnull String ownerName,
+        //@Nonnull String aspectDescriptor,
+        // int methodIndex
+    ) {
+<span class="fc" id="L127">        String descriptor = JvmKit.toDescriptor(method);</span>
+<span class="fc" id="L128">        String signature = JvmKit.toSignature(method);</span>
+<span class="fc" id="L129">        String[] exceptions = AsmKit.getExceptions(method);</span>
+<span class="fc" id="L130">        return new AspectMethodInfo(</span>
+            method,
+            // ownerName,
+            descriptor,
+            signature,
+            exceptions
+        );
+    }
+
+    private byte @Nonnull [] generateAspectClass(@Nonnull AspectClassInfo pcInfo) throws Exception {
+<span class="fc" id="L140">        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);</span>
+<span class="fc" id="L141">        classWriter.visit(</span>
+            Opcodes.V1_8,
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+<span class="fc" id="L144">            pcInfo.aspectName,</span>
+            null,
+<span class="fc" id="L146">            pcInfo.advisedName,</span>
+            null
+        );
+        {
+<span class="fc" id="L150">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;handler&quot;,
+                HANDLER_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L157">            visitor.visitEnd();</span>
+        }
+        {
+<span class="fc" id="L160">            FieldVisitor visitor = classWriter.visitField(</span>
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                &quot;methods&quot;,
+                METHODS_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L167">            visitor.visitEnd();</span>
+        }
+        {
+<span class="fc" id="L170">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                Opcodes.ACC_PUBLIC,
+                AsmKit.CONSTRUCTOR_NAME,
+                &quot;(&quot; + HANDLER_DESCRIPTOR + METHODS_DESCRIPTOR + &quot;)V&quot;,
+                null,
+                null
+            );
+<span class="fc" id="L177">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L178">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESPECIAL,
+<span class="fc" id="L180">                pcInfo.advisedName,</span>
+                AsmKit.CONSTRUCTOR_NAME,
+                AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR,
+                false
+            );
+<span class="fc" id="L185">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L186">            visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L187">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.aspectName, &quot;handler&quot;, HANDLER_DESCRIPTOR);</span>
+<span class="fc" id="L188">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L189">            visitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L190">            visitor.visitFieldInsn(Opcodes.PUTFIELD, pcInfo.aspectName, &quot;methods&quot;, METHODS_DESCRIPTOR);</span>
+<span class="fc" id="L191">            visitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L192">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L193">            visitor.visitEnd();</span>
+        }
+<span class="fc" id="L195">        int i = 0;</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        for (AspectMethodInfo pmInfo : pcInfo.methods) {</span>
+<span class="fc" id="L197">            generateAspectMethod(classWriter, pcInfo, pmInfo, i);</span>
+<span class="fc" id="L198">            i++;</span>
+<span class="fc" id="L199">        }</span>
+<span class="fc" id="L200">        classWriter.visitEnd();</span>
+<span class="fc" id="L201">        return classWriter.toByteArray();</span>
+    }
+
+    private void generateAspectMethod(
+        @Nonnull ClassWriter classWriter,
+        @Nonnull AspectClassInfo acInfo,
+        @Nonnull AspectMethodInfo amInfo,
+        int i
+    ) {
+<span class="fc" id="L210">        MethodVisitor visitor = classWriter.visitMethod(</span>
+            Opcodes.ACC_PUBLIC,
+<span class="fc" id="L212">            amInfo.method.getName(),</span>
+<span class="fc" id="L213">            amInfo.descriptor,</span>
+<span class="fc" id="L214">            amInfo.signature,</span>
+<span class="fc" id="L215">            amInfo.exceptions</span>
+        );
+
+<span class="fc" id="L218">        boolean noReturn = Objects.equals(amInfo.method.getReturnType(), void.class);</span>
+<span class="fc" id="L219">        int localSlots = AsmKit.countParamSlots(amInfo.method);</span>
+<span class="fc" id="L220">        int handlerIndex = localSlots + 1;</span>
+<span class="fc" id="L221">        int methodIndex = handlerIndex + 1;</span>
+<span class="fc" id="L222">        int argsIndex = methodIndex + 1;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        int returnIndex = noReturn ? argsIndex : argsIndex + 1;</span>
+
+<span class="fc" id="L225">        Label labelStart = new Label();</span>
+<span class="fc" id="L226">        Label labelEnd = new Label();</span>
+<span class="fc" id="L227">        Label labelHandler = new Label();</span>
+<span class="fc" id="L228">        visitor.visitTryCatchBlock(labelStart, labelEnd, labelHandler, &quot;java/lang/Throwable&quot;);</span>
+        {
+            // Handler handler = this.handler;
+            // Method method = this.methods[0];
+<span class="fc" id="L232">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L233">            visitor.visitFieldInsn(Opcodes.GETFIELD, acInfo.aspectName, &quot;handler&quot;, HANDLER_DESCRIPTOR);</span>
+<span class="fc" id="L234">            visitor.visitVarInsn(Opcodes.ASTORE, handlerIndex);</span>
+<span class="fc" id="L235">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L236">            visitor.visitFieldInsn(Opcodes.GETFIELD, acInfo.aspectName, &quot;methods&quot;, METHODS_DESCRIPTOR);</span>
+<span class="fc" id="L237">            AsmKit.visitConst(visitor, i);</span>
+<span class="fc" id="L238">            visitor.visitInsn(Opcodes.AALOAD);</span>
+<span class="fc" id="L239">            visitor.visitVarInsn(Opcodes.ASTORE, methodIndex);</span>
+        }
+        {
+            // Object[] args = new Object[]{a};
+<span class="fc" id="L243">            AsmKit.visitConst(visitor, amInfo.method.getParameterCount());</span>
+<span class="fc" id="L244">            visitor.visitTypeInsn(Opcodes.ANEWARRAY, AsmKit.OBJECT_NAME);</span>
+<span class="fc" id="L245">            int aIndex = 0;</span>
+<span class="fc" id="L246">            int pIndex = 1;</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">            for (Parameter parameter : amInfo.method.getParameters()) {</span>
+                // args[i] = param[i]
+<span class="fc" id="L249">                visitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L250">                AsmKit.visitConst(visitor, aIndex++);</span>
+<span class="fc" id="L251">                AsmKit.visitLoad(visitor, parameter.getType(), pIndex);</span>
+<span class="fc" id="L252">                AsmKit.wrapToObject(visitor, parameter.getType());</span>
+<span class="fc" id="L253">                visitor.visitInsn(Opcodes.AASTORE);</span>
+<span class="fc" id="L254">                pIndex += AsmKit.varSize(parameter.getType());</span>
+            }
+<span class="fc" id="L256">            visitor.visitVarInsn(Opcodes.ASTORE, argsIndex);</span>
+        }
+<span class="fc" id="L258">        visitor.visitLabel(labelStart);</span>
+        {
+            // aspectHandler.beforeInvoking(methods[0], args, this);
+<span class="fc" id="L261">            visitor.visitVarInsn(Opcodes.ALOAD, handlerIndex);</span>
+<span class="fc" id="L262">            visitor.visitVarInsn(Opcodes.ALOAD, methodIndex);</span>
+<span class="fc" id="L263">            visitor.visitVarInsn(Opcodes.ALOAD, argsIndex);</span>
+<span class="fc" id="L264">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L265">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKEINTERFACE,
+                HANDLER_NAME,
+<span class="fc" id="L268">                BEFORE_METHOD.getName(),</span>
+                BEFORE_DESCRIPTOR,
+                true
+            );
+        }
+        {
+            // String ret = super.s1((String) args[0]);
+<span class="fc" id="L275">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L276">            int pIndex = 0;</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            for (Parameter parameter : amInfo.method.getParameters()) {</span>
+                // get args
+<span class="fc" id="L279">                visitor.visitVarInsn(Opcodes.ALOAD, argsIndex);</span>
+<span class="fc" id="L280">                AsmKit.visitConst(visitor, pIndex++);</span>
+                // get args[pIndex]
+<span class="fc" id="L282">                visitor.visitInsn(Opcodes.AALOAD);</span>
+<span class="fc" id="L283">                AsmKit.convertObjectTo(visitor, parameter.getType());</span>
+            }
+<span class="fc" id="L285">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESPECIAL,
+<span class="fc" id="L287">                acInfo.advisedName,</span>
+<span class="fc" id="L288">                amInfo.method.getName(),</span>
+<span class="fc" id="L289">                amInfo.descriptor,</span>
+                false
+            );
+<span class="fc bfc" id="L292" title="All 2 branches covered.">            if (!noReturn) {</span>
+<span class="fc" id="L293">                AsmKit.wrapToObject(visitor, amInfo.method.getReturnType());</span>
+<span class="fc" id="L294">                visitor.visitVarInsn(Opcodes.ASTORE, returnIndex);</span>
+            }
+        }
+        {
+            // return (String) aspectHandler.afterReturning(ret, methods[0], args, this);
+<span class="fc" id="L299">            visitor.visitVarInsn(Opcodes.ALOAD, handlerIndex);</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            if (noReturn) {</span>
+<span class="fc" id="L301">                visitor.visitInsn(Opcodes.ACONST_NULL);</span>
+            } else {
+<span class="fc" id="L303">                visitor.visitVarInsn(Opcodes.ALOAD, returnIndex);</span>
+            }
+<span class="fc" id="L305">            visitor.visitVarInsn(Opcodes.ALOAD, methodIndex);</span>
+<span class="fc" id="L306">            visitor.visitVarInsn(Opcodes.ALOAD, argsIndex);</span>
+<span class="fc" id="L307">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L308">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKEINTERFACE,
+                HANDLER_NAME,
+<span class="fc" id="L311">                AFTER_METHOD.getName(),</span>
+                AFTER_DESCRIPTOR,
+                true
+            );
+<span class="fc bfc" id="L315" title="All 2 branches covered.">            if (noReturn) {</span>
+<span class="fc" id="L316">                visitor.visitInsn(Opcodes.POP);</span>
+            } else {
+<span class="fc" id="L318">                AsmKit.convertObjectTo(visitor, amInfo.method.getReturnType());</span>
+            }
+        }
+<span class="fc" id="L321">        visitor.visitLabel(labelEnd);</span>
+<span class="fc" id="L322">        AsmKit.visitReturn(visitor, amInfo.method.getReturnType(), false, false);</span>
+<span class="fc" id="L323">        visitor.visitLabel(labelHandler);</span>
+        {
+            // return (String) aspectHandler.afterThrowing(ex, methods[0], args, this);
+<span class="fc" id="L326">            List&lt;Object&gt; localNames = new ArrayList&lt;&gt;(</span>
+<span class="fc" id="L327">                amInfo.method.getParameterCount() + 4 //+ (noReturn ? 0 : 1)</span>
+            );
+<span class="fc" id="L329">            localNames.add(acInfo.aspectName);</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">            for (Parameter parameter : amInfo.method.getParameters()) {</span>
+<span class="fc" id="L331">                localNames.add(toFrameName(parameter.getType()));</span>
+            }
+<span class="fc" id="L333">            localNames.add(HANDLER_NAME);</span>
+<span class="fc" id="L334">            localNames.add(METHOD_NAME);</span>
+<span class="fc" id="L335">            localNames.add(ARGS_NAME);</span>
+            // if (!noReturn) {
+            //     localNames.add(toFrameName(amInfo.method.getReturnType()));
+            // }
+<span class="fc" id="L339">            visitor.visitFrame(</span>
+                Opcodes.F_FULL,
+<span class="fc" id="L341">                localNames.size(),</span>
+<span class="fc" id="L342">                localNames.toArray(),</span>
+                1,
+                new Object[]{&quot;java/lang/Throwable&quot;}
+            );
+<span class="fc" id="L346">            int exIndex = argsIndex + 1;</span>
+<span class="fc" id="L347">            visitor.visitVarInsn(Opcodes.ASTORE, exIndex);</span>
+<span class="fc" id="L348">            visitor.visitVarInsn(Opcodes.ALOAD, handlerIndex);</span>
+<span class="fc" id="L349">            visitor.visitVarInsn(Opcodes.ALOAD, exIndex);</span>
+<span class="fc" id="L350">            visitor.visitVarInsn(Opcodes.ALOAD, methodIndex);</span>
+<span class="fc" id="L351">            visitor.visitVarInsn(Opcodes.ALOAD, argsIndex);</span>
+<span class="fc" id="L352">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L353">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKEINTERFACE,
+                HANDLER_NAME,
+<span class="fc" id="L356">                THROW_METHOD.getName(),</span>
+                THROW_DESCRIPTOR,
+                true
+            );
+<span class="fc bfc" id="L360" title="All 2 branches covered.">            if (noReturn) {</span>
+<span class="fc" id="L361">                visitor.visitInsn(Opcodes.POP);</span>
+            } else {
+<span class="fc" id="L363">                AsmKit.convertObjectTo(visitor, amInfo.method.getReturnType());</span>
+            }
+<span class="fc" id="L365">            AsmKit.visitReturn(visitor, amInfo.method.getReturnType(), false, false);</span>
+<span class="fc" id="L366">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L367">            visitor.visitEnd();</span>
+        }
+<span class="fc" id="L369">    }</span>
+
+    private @Nonnull Object toFrameName(Class&lt;?&gt; type) {
+<span class="fc bfc" id="L372" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">            || Objects.equals(type, byte.class)</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">            || Objects.equals(type, short.class)</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">            || Objects.equals(type, char.class)</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">            || Objects.equals(type, int.class)) {</span>
+<span class="fc" id="L377">            return Opcodes.INTEGER;</span>
+        }
+<span class="fc bfc" id="L379" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
+<span class="fc" id="L380">            return Opcodes.LONG;</span>
+        }
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
+<span class="fc" id="L383">            return Opcodes.FLOAT;</span>
+        }
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L386">            return Opcodes.DOUBLE;</span>
+        }
+<span class="fc" id="L388">        return JvmKit.toInternalName(type);</span>
+    }
+
+    private static final class AspectClassInfo {
+
+        private final @Nonnull String aspectName;
+        // private final @Nonnull String aspectDescriptor;
+        private final @Nonnull String advisedName;
+        private final @Nonnull List&lt;AspectMethodInfo&gt; methods;
+
+        private AspectClassInfo(
+            @Nonnull String aspectName,
+            //@Nonnull String aspectDescriptor,
+            @Nonnull String advisedName,
+            @Nonnull List&lt;AspectMethodInfo&gt; methods
+<span class="fc" id="L403">        ) {</span>
+<span class="fc" id="L404">            this.aspectName = aspectName;</span>
+            // this.aspectDescriptor = aspectDescriptor;
+<span class="fc" id="L406">            this.advisedName = advisedName;</span>
+<span class="fc" id="L407">            this.methods = methods;</span>
+<span class="fc" id="L408">        }</span>
+    }
+
+    private static final class AspectMethodInfo {
+
+        private final @Nonnull Method method;
+        // private final @Nonnull String ownerName;
+        private final @Nonnull String descriptor;
+        private final @Nullable String signature;
+        private final @Nonnull String @Nullable [] exceptions;
+
+        private AspectMethodInfo(
+            @Nonnull Method method,
+            //@Nonnull String ownerName,
+            @Nonnull String descriptor,
+            @Nullable String signature,
+            @Nonnull String @Nullable [] exceptions
+<span class="fc" id="L425">        ) {</span>
+<span class="fc" id="L426">            this.method = method;</span>
+            // this.ownerName = ownerName;
+<span class="fc" id="L428">            this.descriptor = descriptor;</span>
+<span class="fc" id="L429">            this.signature = signature;</span>
+<span class="fc" id="L430">            this.exceptions = exceptions;</span>
+<span class="fc" id="L431">        }</span>
+    }
+
+    private static final class AsmAspectSpec implements AspectSpec {
+
+        private final @Nonnull Class&lt;?&gt; aspectClass;
+        private final @Nonnull Class&lt;?&gt; advisedClass;
+        private final @Nonnull AspectHandler aspectHandler;
+        private final @Nonnull Method @Nonnull [] methods;
+
+        private AsmAspectSpec(
+            @Nonnull Class&lt;?&gt; aspectClass,
+            @Nonnull Class&lt;?&gt; advisedClass,
+            @Nonnull AspectHandler aspectHandler,
+            @Nonnull Method @Nonnull [] methods
+<span class="fc" id="L446">        ) {</span>
+<span class="fc" id="L447">            this.aspectClass = aspectClass;</span>
+<span class="fc" id="L448">            this.advisedClass = advisedClass;</span>
+<span class="fc" id="L449">            this.aspectHandler = aspectHandler;</span>
+<span class="fc" id="L450">            this.methods = methods;</span>
+<span class="fc" id="L451">        }</span>
+
+        @Override
+        public &lt;T&gt; @Nonnull T newInstance() throws AsmAspectException {
+<span class="fc" id="L455">            return Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L456">                Constructor&lt;?&gt; constructor = aspectClass.getConstructor(AspectHandler.class, Method[].class);</span>
+<span class="fc" id="L457">                return Fs.as(constructor.newInstance(aspectHandler, methods));</span>
+            }, AsmAspectException::new);
+        }
+
+        @Override
+        public @Nonnull Class&lt;?&gt; aspectClass() {
+<span class="fc" id="L463">            return aspectClass;</span>
+        }
+
+        @Override
+        public @Nonnull Class&lt;?&gt; advisedClass() {
+<span class="fc" id="L468">            return advisedClass;</span>
+        }
+
+        @Override
+        public @Nonnull AspectHandler aspectHandler() {
+<span class="fc" id="L473">            return aspectHandler;</span>
+        }
+    }
+
+    /**
+     * This exception is the sub-exception of {@link AspectException} for &lt;a href=&quot;https://asm.ow2.io/&quot;&gt;ASM&lt;/a&gt; proxy
+     * implementation.
+     *
+     * @author sunqian
+     */
+    public static class AsmAspectException extends AspectException {
+        /**
+         * Constructs with the cause.
+         *
+         * @param cause the cause
+         */
+        public AsmAspectException(@Nullable Throwable cause) {
+<span class="fc" id="L490">            super(cause);</span>
+<span class="fc" id="L491">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

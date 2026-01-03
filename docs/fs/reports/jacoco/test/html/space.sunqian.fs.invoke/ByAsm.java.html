@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ByAsm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.invoke</a> &gt; <span class="el_source">ByAsm.java</span></div><h1>ByAsm.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.invoke;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.asm.ClassWriter;
+import space.sunqian.fs.asm.MethodVisitor;
+import space.sunqian.fs.asm.Opcodes;
+import space.sunqian.fs.base.system.JvmKit;
+import space.sunqian.fs.reflect.BytesClassLoader;
+import space.sunqian.fs.reflect.ClassKit;
+import space.sunqian.fs.third.asm.AsmKit;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
+final class ByAsm {
+
+<span class="fc" id="L20">    private static final @Nonnull String INVOCABLE_NAME = JvmKit.toInternalName(Invocable.class);</span>
+<span class="fc" id="L21">    private static final @Nonnull String @Nonnull [] INTERFACES = new String[]{INVOCABLE_NAME};</span>
+<span class="fc" id="L22">    private static final @Nonnull Method INVOKE_CHECKED = Fs.uncheck(</span>
+<span class="fc" id="L23">        () -&gt; Invocable.class.getMethod(&quot;invokeChecked&quot;, Object.class, Object[].class),</span>
+        InvocationException::new
+    );
+<span class="fc" id="L26">    private static final @Nonnull String @Nonnull [] INVOKE_CHECKED_EXCEPTIONS = {JvmKit.toInternalName(Throwable.class)};</span>
+<span class="fc" id="L27">    private static final @Nonnull String INVOKE_CHECKED_DESC = JvmKit.toDescriptor(INVOKE_CHECKED);</span>
+
+    static @Nonnull Invocable newInvocable(@Nonnull Method method) {
+<span class="fc" id="L30">        String className = buildClassName();</span>
+<span class="fc" id="L31">        ClassWriter classWriter = generateClassBody(className);</span>
+<span class="fc" id="L32">        generateMethodInvoker(classWriter, method);</span>
+<span class="fc" id="L33">        classWriter.visitEnd();</span>
+<span class="fc" id="L34">        byte[] bytecode = classWriter.toByteArray();</span>
+<span class="fc" id="L35">        return generate(bytecode);</span>
+    }
+
+    static @Nonnull Invocable newInvocable(@Nonnull Constructor&lt;?&gt; constructor) {
+<span class="fc" id="L39">        String className = buildClassName();</span>
+<span class="fc" id="L40">        ClassWriter classWriter = generateClassBody(className);</span>
+<span class="fc" id="L41">        generateConstructorInvoker(classWriter, constructor);</span>
+<span class="fc" id="L42">        classWriter.visitEnd();</span>
+<span class="fc" id="L43">        byte[] bytecode = classWriter.toByteArray();</span>
+<span class="fc" id="L44">        return generate(bytecode);</span>
+    }
+
+    private static String buildClassName() {
+<span class="fc" id="L48">        Package pkg = ByAsm.class.getPackage();</span>
+<span class="fc" id="L49">        return AsmKit.newClassInternalName(pkg);</span>
+    }
+
+    private static Invocable generate(byte[] bytecode) {
+<span class="fc" id="L53">        BytesClassLoader classLoader = new BytesClassLoader();</span>
+<span class="fc" id="L54">        Class&lt;?&gt; cls = classLoader.loadClass(null, bytecode);</span>
+<span class="fc" id="L55">        return Fs.uncheck(() -&gt; Fs.as(cls.getDeclaredConstructor().newInstance()), InvocationException::new);</span>
+    }
+
+    private static ClassWriter generateClassBody(String className) {
+<span class="fc" id="L59">        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);</span>
+<span class="fc" id="L60">        classWriter.visit(</span>
+            Opcodes.V1_8,
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+            className,
+            null,
+            AsmKit.OBJECT_NAME,
+            INTERFACES
+        );
+        {
+<span class="fc" id="L69">            MethodVisitor visitor = classWriter.visitMethod(</span>
+                Opcodes.ACC_PUBLIC,
+                AsmKit.CONSTRUCTOR_NAME,
+                AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR,
+                null,
+                null
+            );
+<span class="fc" id="L76">            visitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L77">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESPECIAL,
+                AsmKit.OBJECT_NAME,
+                AsmKit.CONSTRUCTOR_NAME,
+                AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR,
+                false
+            );
+<span class="fc" id="L84">            visitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L85">            visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L86">            visitor.visitEnd();</span>
+        }
+<span class="fc" id="L88">        return classWriter;</span>
+    }
+
+    private static void generateMethodInvoker(ClassWriter classWriter, Method method) {
+<span class="fc" id="L92">        MethodVisitor visitor = classWriter.visitMethod(</span>
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_VARARGS,
+<span class="fc" id="L94">            INVOKE_CHECKED.getName(),</span>
+            INVOKE_CHECKED_DESC,
+            null,
+            INVOKE_CHECKED_EXCEPTIONS
+        );
+<span class="fc" id="L99">        String methodOwnerName = JvmKit.toInternalName(method.getDeclaringClass());</span>
+<span class="fc" id="L100">        boolean isStatic = ClassKit.isStatic(method);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (!isStatic) {</span>
+            // get object
+<span class="fc" id="L103">            visitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L104">            visitor.visitTypeInsn(Opcodes.CHECKCAST, methodOwnerName);</span>
+        }
+        // loads args
+<span class="fc" id="L107">        loadParameters(visitor, method);</span>
+        // return object.doMethod(...) or Object.doMethod(...);
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (isStatic) {</span>
+<span class="fc" id="L110">            visitor.visitMethodInsn(</span>
+                Opcodes.INVOKESTATIC,
+                methodOwnerName,
+<span class="fc" id="L113">                method.getName(),</span>
+<span class="fc" id="L114">                JvmKit.toDescriptor(method),</span>
+<span class="fc" id="L115">                method.getDeclaringClass().isInterface()</span>
+            );
+        } else {
+<span class="fc" id="L118">            AsmKit.invokeVirtual(</span>
+                visitor,
+                methodOwnerName,
+<span class="fc" id="L121">                method.getName(),</span>
+<span class="fc" id="L122">                JvmKit.toDescriptor(method),</span>
+<span class="fc" id="L123">                method.getDeclaringClass().isInterface()</span>
+            );
+        }
+<span class="fc" id="L126">        Class&lt;?&gt; returnType = AsmKit.wrapToObject(visitor, method.getReturnType());</span>
+<span class="fc" id="L127">        AsmKit.visitReturn(visitor, returnType, false, true);</span>
+<span class="fc" id="L128">        visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L129">        visitor.visitEnd();</span>
+<span class="fc" id="L130">    }</span>
+
+    private static void generateConstructorInvoker(ClassWriter classWriter, Constructor&lt;?&gt; constructor) {
+<span class="fc" id="L133">        MethodVisitor visitor = classWriter.visitMethod(</span>
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_VARARGS,
+<span class="fc" id="L135">            INVOKE_CHECKED.getName(),</span>
+            INVOKE_CHECKED_DESC,
+            null,
+            INVOKE_CHECKED_EXCEPTIONS
+        );
+<span class="fc" id="L140">        String methodOwnerName = JvmKit.toInternalName(constructor.getDeclaringClass());</span>
+        // new Object();
+<span class="fc" id="L142">        visitor.visitTypeInsn(Opcodes.NEW, methodOwnerName);</span>
+<span class="fc" id="L143">        visitor.visitInsn(Opcodes.DUP);</span>
+        // loads args
+<span class="fc" id="L145">        loadParameters(visitor, constructor);</span>
+        // init new object
+<span class="fc" id="L147">        visitor.visitMethodInsn(</span>
+            Opcodes.INVOKESPECIAL,
+            methodOwnerName,
+            AsmKit.CONSTRUCTOR_NAME,
+<span class="fc" id="L151">            JvmKit.toDescriptor(constructor),</span>
+            false
+        );
+<span class="fc" id="L154">        visitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L155">        visitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L156">        visitor.visitEnd();</span>
+<span class="fc" id="L157">    }</span>
+
+    private static void loadParameters(MethodVisitor visitor, Executable executable) {
+<span class="fc" id="L160">        int pIndex = 0;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (Parameter parameter : executable.getParameters()) {</span>
+            // get args
+<span class="fc" id="L163">            visitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L164">            AsmKit.visitConst(visitor, pIndex++);</span>
+            // get args[pIndex]
+<span class="fc" id="L166">            visitor.visitInsn(Opcodes.AALOAD);</span>
+<span class="fc" id="L167">            AsmKit.convertObjectTo(visitor, parameter.getType());</span>
+        }
+<span class="fc" id="L169">    }</span>
+
+    private ByAsm() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
