@@ -450,22 +450,13 @@ public class ClassKit {
     }
 
     /**
-     * Returns a new {@link BytesClassLoader} instance.
-     *
-     * @return a new {@link BytesClassLoader} instance
-     */
-    public static @Nonnull BytesClassLoader newClassLoader() {
-<span class="fc" id="L458">        return new BytesClassLoader();</span>
-    }
-
-    /**
      * Returns whether the given member is static.
      *
      * @param member the given member
      * @return whether the given member is static
      */
     public static boolean isStatic(@Nonnull Member member) {
-<span class="fc" id="L468">        return Modifier.isStatic(member.getModifiers());</span>
+<span class="fc" id="L459">        return Modifier.isStatic(member.getModifiers());</span>
     }
 
     /**
@@ -475,7 +466,7 @@ public class ClassKit {
      * @return whether the given member is public
      */
     public static boolean isPublic(@Nonnull Member member) {
-<span class="fc" id="L478">        return Modifier.isPublic(member.getModifiers());</span>
+<span class="fc" id="L469">        return Modifier.isPublic(member.getModifiers());</span>
     }
 
     /**
@@ -485,7 +476,7 @@ public class ClassKit {
      * @return whether the given member is protected
      */
     public static boolean isProtected(@Nonnull Member member) {
-<span class="fc" id="L488">        return Modifier.isProtected(member.getModifiers());</span>
+<span class="fc" id="L479">        return Modifier.isProtected(member.getModifiers());</span>
     }
 
     /**
@@ -495,7 +486,7 @@ public class ClassKit {
      * @return whether the given member is private
      */
     public static boolean isPrivate(@Nonnull Member member) {
-<span class="fc" id="L498">        return Modifier.isPrivate(member.getModifiers());</span>
+<span class="fc" id="L489">        return Modifier.isPrivate(member.getModifiers());</span>
     }
 
     /**
@@ -505,8 +496,8 @@ public class ClassKit {
      * @return whether the given member is package-private (no modifies)
      */
     public static boolean isPackagePrivate(@Nonnull Member member) {
-<span class="fc" id="L508">        int mod = member.getModifiers();</span>
-<span class="fc bfc" id="L509" title="All 6 branches covered.">        return !Modifier.isPublic(mod) &amp;&amp; !Modifier.isProtected(mod) &amp;&amp; !Modifier.isPrivate(mod);</span>
+<span class="fc" id="L499">        int mod = member.getModifiers();</span>
+<span class="fc bfc" id="L500" title="All 6 branches covered.">        return !Modifier.isPublic(mod) &amp;&amp; !Modifier.isProtected(mod) &amp;&amp; !Modifier.isPrivate(mod);</span>
     }
 
     /**
@@ -516,7 +507,7 @@ public class ClassKit {
      * @return whether the given class is static
      */
     public static boolean isStatic(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L519">        return Modifier.isStatic(cls.getModifiers());</span>
+<span class="fc" id="L510">        return Modifier.isStatic(cls.getModifiers());</span>
     }
 
     /**
@@ -526,7 +517,7 @@ public class ClassKit {
      * @return whether the given class is public
      */
     public static boolean isPublic(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L529">        return Modifier.isPublic(cls.getModifiers());</span>
+<span class="fc" id="L520">        return Modifier.isPublic(cls.getModifiers());</span>
     }
 
     /**
@@ -536,7 +527,7 @@ public class ClassKit {
      * @return whether the given class is protected
      */
     public static boolean isProtected(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L539">        return Modifier.isProtected(cls.getModifiers());</span>
+<span class="fc" id="L530">        return Modifier.isProtected(cls.getModifiers());</span>
     }
 
     /**
@@ -546,7 +537,7 @@ public class ClassKit {
      * @return whether the given class is private
      */
     public static boolean isPrivate(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L549">        return Modifier.isPrivate(cls.getModifiers());</span>
+<span class="fc" id="L540">        return Modifier.isPrivate(cls.getModifiers());</span>
     }
 
     /**
@@ -556,8 +547,8 @@ public class ClassKit {
      * @return whether the given class is package-private (no modifies)
      */
     public static boolean isPackagePrivate(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L559">        int mod = cls.getModifiers();</span>
-<span class="fc bfc" id="L560" title="All 6 branches covered.">        return !Modifier.isPublic(mod) &amp;&amp; !Modifier.isProtected(mod) &amp;&amp; !Modifier.isPrivate(mod);</span>
+<span class="fc" id="L550">        int mod = cls.getModifiers();</span>
+<span class="fc bfc" id="L551" title="All 6 branches covered.">        return !Modifier.isPublic(mod) &amp;&amp; !Modifier.isProtected(mod) &amp;&amp; !Modifier.isPrivate(mod);</span>
     }
 
     /**
@@ -569,12 +560,12 @@ public class ClassKit {
      * static and no private)
      */
     public static boolean isOverridable(@Nonnull Member member) {
-<span class="fc" id="L572">        int modifiers = member.getModifiers();</span>
-<span class="fc bfc" id="L573" title="All 2 branches covered.">        if (!isOverridable(modifiers)) {</span>
-<span class="fc" id="L574">            return false;</span>
+<span class="fc" id="L563">        int modifiers = member.getModifiers();</span>
+<span class="fc bfc" id="L564" title="All 2 branches covered.">        if (!isOverridable(modifiers)) {</span>
+<span class="fc" id="L565">            return false;</span>
         }
-<span class="fc" id="L576">        Class&lt;?&gt; declaringClass = member.getDeclaringClass();</span>
-<span class="fc bfc" id="L577" title="All 2 branches covered.">        return !Modifier.isFinal(declaringClass.getModifiers());</span>
+<span class="fc" id="L567">        Class&lt;?&gt; declaringClass = member.getDeclaringClass();</span>
+<span class="fc bfc" id="L568" title="All 2 branches covered.">        return !Modifier.isFinal(declaringClass.getModifiers());</span>
     }
 
     /**
@@ -584,14 +575,14 @@ public class ClassKit {
      * @return whether the given class can be overridden (no final, no static and no private)
      */
     public static boolean isOverridable(@Nonnull Class&lt;?&gt; cls) {
-<span class="fc" id="L587">        int modifiers = cls.getModifiers();</span>
-<span class="fc" id="L588">        return isOverridable(modifiers);</span>
+<span class="fc" id="L578">        int modifiers = cls.getModifiers();</span>
+<span class="fc" id="L579">        return isOverridable(modifiers);</span>
     }
 
     private static boolean isOverridable(int mod) {
-<span class="fc bfc" id="L592" title="All 2 branches covered.">        return !Modifier.isFinal(mod) &amp;&amp;</span>
-<span class="fc bfc" id="L593" title="All 2 branches covered.">            !Modifier.isStatic(mod) &amp;&amp;</span>
-<span class="fc bfc" id="L594" title="All 2 branches covered.">            !Modifier.isPrivate(mod);</span>
+<span class="fc bfc" id="L583" title="All 2 branches covered.">        return !Modifier.isFinal(mod) &amp;&amp;</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">            !Modifier.isStatic(mod) &amp;&amp;</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">            !Modifier.isPrivate(mod);</span>
     }
 
     private ClassKit() {

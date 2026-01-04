@@ -6,7 +6,7 @@ import space.sunqian.fs.asm.ClassWriter;
 import space.sunqian.fs.asm.MethodVisitor;
 import space.sunqian.fs.asm.Opcodes;
 import space.sunqian.fs.base.system.JvmKit;
-import space.sunqian.fs.reflect.BytesClassLoader;
+import space.sunqian.fs.dynamic.DynamicClassLoader;
 import space.sunqian.fs.reflect.ClassKit;
 import space.sunqian.fs.third.asm.AsmKit;
 
@@ -50,7 +50,7 @@ final class ByAsm {
     }
 
     private static Invocable generate(byte[] bytecode) {
-<span class="fc" id="L53">        BytesClassLoader classLoader = new BytesClassLoader();</span>
+<span class="fc" id="L53">        DynamicClassLoader classLoader = new DynamicClassLoader();</span>
 <span class="fc" id="L54">        Class&lt;?&gt; cls = classLoader.loadClass(null, bytecode);</span>
 <span class="fc" id="L55">        return Fs.uncheck(() -&gt; Fs.as(cls.getDeclaredConstructor().newInstance()), InvocationException::new);</span>
     }

@@ -12,10 +12,7 @@ space.sunqian.fs.base.bytes
 space.sunqian.fs.base.chars
 space.sunqian.fs.base.date
 space.sunqian.fs.base.exception
-space.sunqian.fs.base.function.callable
-space.sunqian.fs.base.function.consumer
-space.sunqian.fs.base.function.function
-space.sunqian.fs.base.function.predicate
+space.sunqian.fs.base.function
 space.sunqian.fs.base.lang
 space.sunqian.fs.base.logging
 space.sunqian.fs.base.math
@@ -31,8 +28,9 @@ space.sunqian.fs.cache
 space.sunqian.fs.codec
 space.sunqian.fs.collect
 space.sunqian.fs.concurrent
-space.sunqian.fs.dynamic.aspect
-space.sunqian.fs.dynamic.aspect.asm
+space.sunqian.fs.dynamic
+space.sunqian.fs.dynamic.aop
+space.sunqian.fs.dynamic.aop.asm
 space.sunqian.fs.dynamic.proxy
 space.sunqian.fs.dynamic.proxy.asm
 space.sunqian.fs.dynamic.proxy.jdk
