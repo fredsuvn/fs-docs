@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleEventBusImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.eventbus</a> &gt; <span class="el_source">SimpleEventBusImpl.java</span></div><h1>SimpleEventBusImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.eventbus;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
+
+final class SimpleEventBusImpl implements SimpleEventBus {
+
+<span class="fc" id="L17">    private volatile Map&lt;@Nonnull Type, @Nonnull List&lt;@Nonnull Consumer&lt;@Nonnull ?&gt;&gt;&gt; subscriberMap</span>
+<span class="fc" id="L18">        = Collections.emptyMap();</span>
+    private final @Nonnull Executor executor;
+
+<span class="fc" id="L21">    SimpleEventBusImpl(@Nonnull Executor executor) {</span>
+<span class="fc" id="L22">        this.executor = executor;</span>
+<span class="fc" id="L23">    }</span>
+
+    @Override
+    public &lt;T&gt; void register(@Nonnull Type type, @Nonnull Consumer&lt;T&gt; subscriber) {
+<span class="fc" id="L27">        synchronized (this) {</span>
+<span class="fc" id="L28">            Map&lt;Type, List&lt;Consumer&lt;?&gt;&gt;&gt; newMap = new HashMap&lt;&gt;(subscriberMap);</span>
+<span class="fc" id="L29">            newMap.computeIfAbsent(type, k -&gt; new ArrayList&lt;&gt;()).add(subscriber);</span>
+<span class="fc" id="L30">            this.subscriberMap = newMap;</span>
+<span class="fc" id="L31">        }</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public void register(@Nonnull Map&lt;@Nonnull Type, @Nonnull List&lt;@Nonnull Consumer&lt;@Nonnull ?&gt;&gt;&gt; subscribers) {
+<span class="fc" id="L36">        synchronized (this) {</span>
+<span class="fc" id="L37">            Map&lt;Type, List&lt;Consumer&lt;?&gt;&gt;&gt; newMap = new HashMap&lt;&gt;(subscriberMap);</span>
+<span class="fc" id="L38">            subscribers.forEach((type, consumerList) -&gt;</span>
+<span class="fc" id="L39">                newMap.computeIfAbsent(type, k -&gt; new ArrayList&lt;&gt;()).addAll(consumerList));</span>
+<span class="fc" id="L40">            this.subscriberMap = newMap;</span>
+<span class="fc" id="L41">        }</span>
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    public void unregister(@Nonnull Object subscriber) {
+<span class="fc" id="L46">        synchronized (this) {</span>
+<span class="fc" id="L47">            Map&lt;Type, List&lt;Consumer&lt;?&gt;&gt;&gt; newMap = new HashMap&lt;&gt;(subscriberMap);</span>
+<span class="fc" id="L48">            newMap.values().forEach(consumerList -&gt;</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                consumerList.removeIf(c -&gt; c == subscriber));</span>
+<span class="fc" id="L50">            this.subscriberMap = newMap;</span>
+<span class="fc" id="L51">        }</span>
+<span class="fc" id="L52">    }</span>
+
+    @Override
+    public void unregister(@Nonnull Iterable&lt;?&gt; subscribers) {
+<span class="fc" id="L56">        synchronized (this) {</span>
+<span class="fc" id="L57">            Map&lt;Type, List&lt;Consumer&lt;?&gt;&gt;&gt; newMap = new HashMap&lt;&gt;(subscriberMap);</span>
+<span class="fc" id="L58">            subscribers.forEach(subscriber -&gt;</span>
+<span class="fc" id="L59">                newMap.values().forEach(consumerList -&gt;</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">                    consumerList.removeIf(c -&gt; c == subscriber)));</span>
+<span class="fc" id="L61">            this.subscriberMap = newMap;</span>
+<span class="fc" id="L62">        }</span>
+<span class="fc" id="L63">    }</span>
+
+    @Override
+    public void post(@Nonnull Object event, @Nonnull Type eventType, @Nonnull DispatchMode dispatchMode) {
+<span class="fc" id="L67">        post0(event, eventType, dispatchMode);</span>
+<span class="fc" id="L68">    }</span>
+
+    private void post0(@Nonnull Object event, @Nonnull Type eventType, @Nonnull DispatchMode dispatchMode) {
+<span class="fc" id="L71">        List&lt;Consumer&lt;Object&gt;&gt; consumerList = Fs.as(subscriberMap.get(eventType));</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (consumerList == null) {</span>
+<span class="fc" id="L73">            return;</span>
+        }
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (DispatchMode.CHAIN.equals(dispatchMode)) {</span>
+<span class="fc" id="L76">            postChain(event, consumerList);</span>
+        } else {
+<span class="fc" id="L78">            postBroadcast(event, consumerList);</span>
+        }
+<span class="fc" id="L80">    }</span>
+
+    private void postBroadcast(
+        @Nonnull Object event,
+        @Nonnull List&lt;@Nonnull Consumer&lt;@Nonnull Object&gt;&gt; consumerList
+    ) {
+<span class="fc" id="L86">        consumerList.forEach(consumer -&gt;</span>
+<span class="fc" id="L87">            executor.execute(() -&gt; consumer.accept(event)));</span>
+<span class="fc" id="L88">    }</span>
+
+    private void postChain(
+        @Nonnull Object event,
+        @Nonnull List&lt;@Nonnull Consumer&lt;@Nonnull Object&gt;&gt; consumerList
+    ) {
+<span class="fc" id="L94">        executor.execute(() -&gt; {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">                for (Consumer&lt;Object&gt; consumer : consumerList) {</span>
+                    try {
+<span class="fc" id="L97">                        consumer.accept(event);</span>
+<span class="fc" id="L98">                    } catch (Exception e) {</span>
+<span class="fc" id="L99">                        break;</span>
+<span class="fc" id="L100">                    }</span>
+<span class="fc" id="L101">                }</span>
+<span class="fc" id="L102">            }</span>
+        );
+<span class="fc" id="L104">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

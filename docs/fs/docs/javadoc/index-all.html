@@ -1418,6 +1418,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Primitive <code>boolean</code> version of <a href="space/sunqian/fs/base/value/Var.html" title="interface in space.sunqian.fs.base.value"><code>Var</code></a>.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html#BROADCAST" class="member-name-link">BROADCAST</a> - Enum constant in enum class space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html" title="enum class in space.sunqian.fs.eventbus">SimpleEventBus.DispatchMode</a></dt>
+<dd>
+<div class="block">The broadcast mode: subscribers which subscribe the event type will receive the event.</div>
+</dd>
 <dt><a href="space/sunqian/fs/net/udp/UdpSender.html#broadcastAddress()" class="member-name-link">broadcastAddress()</a> - Method in interface space.sunqian.fs.net.udp.<a href="space/sunqian/fs/net/udp/UdpSender.html" title="interface in space.sunqian.fs.net.udp">UdpSender</a></dt>
 <dd>
 <div class="block">Returns the broadcast address.</div>
@@ -1691,6 +1695,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#CASTORE" class="member-name-link">CASTORE</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html#CHAIN" class="member-name-link">CHAIN</a> - Enum constant in enum class space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html" title="enum class in space.sunqian.fs.eventbus">SimpleEventBus.DispatchMode</a></dt>
+<dd>
+<div class="block">The chain dispatch mode: subscribers which subscribe the event type will receive the event in the order they
+ are registered, and the event propagation can be prevented by any subscriber.</div>
+</dd>
 <dt><a href="space/sunqian/fs/io/communicate/AbstractChannelContext.html#channel()" class="member-name-link">channel()</a> - Method in class space.sunqian.fs.io.communicate.<a href="space/sunqian/fs/io/communicate/AbstractChannelContext.html" title="class in space.sunqian.fs.io.communicate">AbstractChannelContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/io/communicate/ChannelContext.html#channel()" class="member-name-link">channel()</a> - Method in interface space.sunqian.fs.io.communicate.<a href="space/sunqian/fs/io/communicate/ChannelContext.html" title="interface in space.sunqian.fs.io.communicate">ChannelContext</a></dt>
@@ -3072,6 +3081,26 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/base/logging/SimpleLogger.Level.html#ERROR" class="member-name-link">ERROR</a> - Enum constant in enum class space.sunqian.fs.base.logging.<a href="space/sunqian/fs/base/logging/SimpleLogger.Level.html" title="enum class in space.sunqian.fs.base.logging">SimpleLogger.Level</a></dt>
 <dd>
 <div class="block">The error level.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/EventBusException.html" class="type-name-link" title="class in space.sunqian.fs.eventbus">EventBusException</a> - Exception in <a href="space/sunqian/fs/eventbus/package-summary.html">space.sunqian.fs.eventbus</a></dt>
+<dd>
+<div class="block">Exception for event bus.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/EventBusException.html#%3Cinit%3E()" class="member-name-link">EventBusException()</a> - Constructor for exception space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/EventBusException.html" title="class in space.sunqian.fs.eventbus">EventBusException</a></dt>
+<dd>
+<div class="block">Empty constructor.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/EventBusException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">EventBusException(String)</a> - Constructor for exception space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/EventBusException.html" title="class in space.sunqian.fs.eventbus">EventBusException</a></dt>
+<dd>
+<div class="block">Constructs with the message.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/EventBusException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">EventBusException(String, Throwable)</a> - Constructor for exception space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/EventBusException.html" title="class in space.sunqian.fs.eventbus">EventBusException</a></dt>
+<dd>
+<div class="block">Constructs with the message and cause.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/EventBusException.html#%3Cinit%3E(java.lang.Throwable)" class="member-name-link">EventBusException(Throwable)</a> - Constructor for exception space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/EventBusException.html" title="class in space.sunqian.fs.eventbus">EventBusException</a></dt>
+<dd>
+<div class="block">Constructs with the cause.</div>
 </dd>
 <dt><a href="space/sunqian/fs/object/convert/ConvertOption.html#EXCEPTION_HANDLER" class="member-name-link">EXCEPTION_HANDLER</a> - Enum constant in enum class space.sunqian.fs.object.convert.<a href="space/sunqian/fs/object/convert/ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></dt>
 <dd>
@@ -6506,6 +6535,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates and returns a new <a href="space/sunqian/fs/object/convert/ObjectConverter.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectConverter</code></a> with the given handlers.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#newEventBus()" class="member-name-link">newEventBus()</a> - Static method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Creates a new event bus, all event consuming will be executed in the post thread.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#newEventBus(java.util.concurrent.Executor)" class="member-name-link">newEventBus(Executor)</a> - Static method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Creates a new event bus with the specified executor.</div>
+</dd>
 <dt><a href="space/sunqian/fs/asm/TypeReference.html#newExceptionReference(int)" class="member-name-link">newExceptionReference(int)</a> - Static method in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/TypeReference.html" title="class in space.sunqian.fs.asm">TypeReference</a></dt>
 <dd>
 <div class="block">Returns a reference to the type of an exception, in a 'throws' clause of a method.</div>
@@ -7451,6 +7488,22 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/codec/HexKit.HexException.html#position()" class="member-name-link">position()</a> - Method in exception space.sunqian.fs.codec.<a href="space/sunqian/fs/codec/HexKit.HexException.html" title="class in space.sunqian.fs.codec">HexKit.HexException</a></dt>
 <dd>
 <div class="block">Returns the position where this exception occurs, may be <code>-1</code> if the position is unknown.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#post(java.lang.Object)" class="member-name-link">post(Object)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Posts an event.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#post(java.lang.Object,java.lang.reflect.Type)" class="member-name-link">post(Object, Type)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Posts an event with the specified type.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#post(java.lang.Object,java.lang.reflect.Type,space.sunqian.fs.eventbus.SimpleEventBus.DispatchMode)" class="member-name-link">post(Object, Type, SimpleEventBus.DispatchMode)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Posts an event with the specified type and dispatch mode.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#post(java.lang.Object,space.sunqian.fs.eventbus.SimpleEventBus.DispatchMode)" class="member-name-link">post(Object, SimpleEventBus.DispatchMode)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Posts an event with the specified dispatch mode.</div>
 </dd>
 <dt><a href="space/sunqian/fs/app/di/InjectedResource.html#postConstruct()" class="member-name-link">postConstruct()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
 <dd>
@@ -8440,6 +8493,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the actual value to be cached, may be <code>null</code> if the value is invalid.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#register(java.lang.reflect.Type,java.util.function.Consumer)" class="member-name-link">register(Type, Consumer&lt;T&gt;)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Registers an event subscriber for the specified event type.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#register(java.util.Map)" class="member-name-link">register(Map&lt;Type, List&lt;Consumer&lt;?&gt;&gt;&gt;)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Registers event subscribers with the specified event types, the keys of the map are the event types, and the
+ values are the event subscribers.</div>
+</dd>
 <dt><a href="space/sunqian/fs/net/NetClient.html#remoteAddress()" class="member-name-link">remoteAddress()</a> - Method in interface space.sunqian.fs.net.<a href="space/sunqian/fs/net/NetClient.html" title="interface in space.sunqian.fs.net">NetClient</a></dt>
 <dd>
 <div class="block">Returns the remote address this client connects to.</div>
@@ -8844,6 +8906,14 @@ loadScripts(document, 'script');</script>
 <div class="block">This annotation indicates that the annotated class is a simple class, it can be better optimized, such as optimizing
  it to a <code>value class</code> in the future version.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html" class="type-name-link" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a> - Interface in <a href="space/sunqian/fs/eventbus/package-summary.html">space.sunqian.fs.eventbus</a></dt>
+<dd>
+<div class="block">This interface is a simplified event bus interface.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html" class="type-name-link" title="enum class in space.sunqian.fs.eventbus">SimpleEventBus.DispatchMode</a> - Enum Class in <a href="space/sunqian/fs/eventbus/package-summary.html">space.sunqian.fs.eventbus</a></dt>
+<dd>
+<div class="block">The dispatch mode for posting events.</div>
+</dd>
 <dt><a href="space/sunqian/fs/base/logging/SimpleLog.html" class="type-name-link" title="interface in space.sunqian.fs.base.logging">SimpleLog</a> - Interface in <a href="space/sunqian/fs/base/logging/package-summary.html">space.sunqian.fs.base.logging</a></dt>
 <dd>
 <div class="block">Represents the content of a simple log message, to provide the necessary information for logging.</div>
@@ -9094,6 +9164,13 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/dynamic/proxy/jdk/package-summary.html">space.sunqian.fs.dynamic.proxy.jdk</a> - package space.sunqian.fs.dynamic.proxy.jdk</dt>
 <dd>
 <div class="block">Provides proxy maker implementations by JDK, using codes similar to the following:</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/package-summary.html">space.sunqian.fs.eventbus</a> - package space.sunqian.fs.eventbus</dt>
+<dd>
+<div class="block">Provides simple event bus interface and default implementation:
+ 
+     <a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus"><code>SimpleEventBus</code></a>: Simple event bus interface;
+ </div>
 </dd>
 <dt><a href="space/sunqian/fs/invoke/package-summary.html">space.sunqian.fs.invoke</a> - package space.sunqian.fs.invoke</dt>
 <dd>
@@ -10080,6 +10157,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs with the cause.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#unregister(java.lang.Iterable)" class="member-name-link">unregister(Iterable&lt;?&gt;)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Unregisters event subscribers which are registered via <code>register</code> methods.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.html#unregister(java.lang.Object)" class="member-name-link">unregister(Object)</a> - Method in interface space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></dt>
+<dd>
+<div class="block">Unregisters an event subscriber which is registered via <code>register</code> methods.</div>
+</dd>
 <dt><a href="space/sunqian/fs/base/exception/UnsupportedEnvException.html" class="type-name-link" title="class in space.sunqian.fs.base.exception">UnsupportedEnvException</a> - Exception in <a href="space/sunqian/fs/base/exception/package-summary.html">space.sunqian.fs.base.exception</a></dt>
 <dd>
 <div class="block">This runtime exception is typically used for checking whether the current environment is supported.</div>
@@ -10211,6 +10296,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html" title="enum class in space.sunqian.fs.eventbus">SimpleEventBus.DispatchMode</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="space/sunqian/fs/invoke/InvocationMode.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class space.sunqian.fs.invoke.<a href="space/sunqian/fs/invoke/InvocationMode.html" title="enum class in space.sunqian.fs.invoke">InvocationMode</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -10237,6 +10326,11 @@ loadScripts(document, 'script');</script>
 the order they are declared.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/logging/SimpleLogger.Level.html#values()" class="member-name-link">values()</a> - Static method in enum class space.sunqian.fs.base.logging.<a href="space/sunqian/fs/base/logging/SimpleLogger.Level.html" title="enum class in space.sunqian.fs.base.logging">SimpleLogger.Level</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html#values()" class="member-name-link">values()</a> - Static method in enum class space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.DispatchMode.html" title="enum class in space.sunqian.fs.eventbus">SimpleEventBus.DispatchMode</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>

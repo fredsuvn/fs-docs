@@ -34,6 +34,7 @@ space.sunqian.fs.dynamic.aop.asm
 space.sunqian.fs.dynamic.proxy
 space.sunqian.fs.dynamic.proxy.asm
 space.sunqian.fs.dynamic.proxy.jdk
+space.sunqian.fs.eventbus
 space.sunqian.fs.invoke
 space.sunqian.fs.io
 space.sunqian.fs.io.communicate
