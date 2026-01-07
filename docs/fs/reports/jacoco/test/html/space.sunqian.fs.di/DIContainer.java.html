@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DIContainer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.di</a> &gt; <span class="el_source">DIContainer.java</span></div><h1>DIContainer.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.di;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.collect.CollectKit;
+import space.sunqian.fs.collect.ListKit;
+import space.sunqian.fs.reflect.TypeRef;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This interface represents a DI container that manages the injection of dependencies into objects.
+ * &lt;p&gt;
+ * A DI container is typically created via {@link #newBuilder()}, which is used to configure the container's components
+ * and behaviors. See {@linkplain space.sunqian.fs.di DI documentation} for more information.
+ *
+ * @author sunqian
+ */
+public interface DIContainer {
+
+    /**
+     * Returns a new builder for {@link DIContainer}.
+     *
+     * @return a new builder for {@link DIContainer}
+     */
+    static @Nonnull Builder newBuilder() {
+<span class="fc" id="L36">        return new Builder();</span>
+    }
+
+    /**
+     * Initializes this DI container.
+     * &lt;p&gt;
+     * All {@code post-construct} methods of this DI container's components are executed sequentially according to their
+     * dependency relationships. If an exception occurs during the execution, an {@link DIInitializeException} will be
+     * thrown and the initialization process will terminate immediately, successfully initialized components will not be
+     * rolled back and the uninitialized components will not be initialized. See
+     * {@linkplain space.sunqian.fs.di DI documentation} for more information. A DI container can only initialize once
+     * and cannot re-initialize.
+     * &lt;p&gt;
+     * This method blocks current thread until the initialization operation is completed.
+     *
+     * @return this DI container
+     * @throws DIInitializeException if any {@code post-construct} method execution fails
+     * @throws DIException           if any other error occurs during initialization operation
+     */
+    DIContainer initialize() throws DIInitializeException, DIException;
+
+    /**
+     * Returns whether this DI container is initialized.
+     *
+     * @return {@code true} if this DI container is initialized; {@code false} otherwise
+     */
+    boolean isInitialized();
+
+    /**
+     * Shuts down this DI container.
+     * &lt;p&gt;
+     * All {@code pre-destroy} methods of this DI container's components are executed sequentially according to their
+     * dependency relationships. If an exception occurs during the execution, an {@link DIShutdownException} will be
+     * thrown and the shutdown process will terminate immediately, successfully destroyed components will not be rolled
+     * back and the un-destroyed components will not be destroyed. See {@linkplain space.sunqian.fs.di DI documentation}
+     * for more information. A DI container can only shut down once and cannot re-shutdown.
+     * &lt;p&gt;
+     * Sub-containers are not automatically shut down along with this container, but components that sub-containers
+     * depend on from this DI container will be destroyed by this DI container.
+     * &lt;p&gt;
+     * This method blocks current thread until the shutdown operation is completed.
+     *
+     * @return this DI container
+     * @throws DIShutdownException if any {@code pre-destroy} method execution fails
+     * @throws DIException         if any other error occurs during shutdown operation
+     */
+    DIContainer shutdown() throws DIShutdownException, DIException;
+
+    /**
+     * Returns whether this DI container is shut down.
+     *
+     * @return {@code true} if this DI container is shut down; {@code false} otherwise
+     */
+    boolean isShutdown();
+
+    /**
+     * Returns all parent containers of this container.
+     *
+     * @return all parent containers of this container
+     */
+    @Nonnull
+    List&lt;@Nonnull DIContainer&gt; parentContainers();
+
+    /**
+     * Returns the component map that are directly owned by this container, excluding the components inherited from
+     * parent containers.
+     *
+     * @return the component map that are directly owned by this container, excluding the components inherited from
+     * parent containers
+     */
+    @Nonnull
+    Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; localComponents();
+
+    /**
+     * Returns all component map that constitute this container, including the components inherited from parent
+     * containers.
+     *
+     * @return all component map that constitute this container, including the components inherited from parent
+     * containers
+     */
+    @Nonnull
+    Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; components();
+
+    /**
+     * Returns the component whose type is assignable to the specified type, or {@code null} if no such component
+     * exists.
+     * &lt;p&gt;
+     * This method first attempts to find a component whose type exactly matches the specified type using
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one component that can be
+     * assigned to the specified type from all components that constitute this container.
+     *
+     * @param type the specified type
+     * @return the component whose type is assignable to the specified type, or {@code null} if no such component exists
+     */
+    @Nullable
+    DIComponent getComponent(@Nonnull Type type);
+
+    /**
+     * Returns the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists.
+     * &lt;p&gt;
+     * This method first attempts to find a component whose type exactly matches the specified type using
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one component object that can
+     * be assigned to the specified type from all components that constitute this container.
+     *
+     * @param &lt;T&gt;  the specified type
+     * @param type the specified type
+     * @return the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists
+     */
+    default &lt;T&gt; @Nullable T getObject(@Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L147">        return Fs.as(getObject((Type) type));</span>
+    }
+
+    /**
+     * Returns the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists.
+     * &lt;p&gt;
+     * This method first attempts to find a component whose type exactly matches the specified type using
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one component object that can
+     * be assigned to the specified type from all components that constitute this container.
+     *
+     * @param &lt;T&gt;  the specified type
+     * @param type the {@link TypeRef} for the specified type
+     * @return the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists
+     */
+    default &lt;T&gt; @Nullable T getObject(@Nonnull TypeRef&lt;T&gt; type) {
+<span class="fc" id="L164">        return Fs.as(getObject(type.type()));</span>
+    }
+
+    /**
+     * Returns the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists.
+     * &lt;p&gt;
+     * This method first attempts to find a component whose type exactly matches the specified type using
+     * {@link Object#equals(Object)}. If no exact match is found, it will randomly select one component object that can
+     * be assigned to the specified type from all components that constitute this container.
+     *
+     * @param type the specified type
+     * @return the component object whose type is assignable to the specified type, or {@code null} if no such component
+     * exists
+     */
+    default @Nullable Object getObject(@Nonnull Type type) {
+<span class="fc" id="L180">        DIComponent component = getComponent(type);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (component != null) {</span>
+<span class="fc" id="L182">            return component.instance();</span>
+        }
+<span class="fc" id="L184">        return null;</span>
+    }
+
+    /**
+     * Builder for {@link DIContainer}.
+     */
+<span class="fc" id="L190">    class Builder {</span>
+
+<span class="fc" id="L192">        private static final @Nonnull List&lt;@Nonnull String&gt; RESOURCE_ANNOTATIONS =</span>
+<span class="fc" id="L193">            ListKit.list(&quot;javax.annotation.Resource&quot;, &quot;jakarta.annotation.Resource&quot;);</span>
+<span class="fc" id="L194">        private static final @Nonnull List&lt;@Nonnull String&gt; POST_CONSTRUCT_ANNOTATIONS =</span>
+<span class="fc" id="L195">            ListKit.list(&quot;javax.annotation.PostConstruct&quot;, &quot;jakarta.annotation.PostConstruct&quot;);</span>
+<span class="fc" id="L196">        private static final @Nonnull List&lt;@Nonnull String&gt; PRE_DESTROY_ANNOTATIONS =</span>
+<span class="fc" id="L197">            ListKit.list(&quot;javax.annotation.PreDestroy&quot;, &quot;jakarta.annotation.PreDestroy&quot;);</span>
+
+<span class="fc" id="L199">        private final @Nonnull Collection&lt;Type&gt; componentTypes = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L200">        private final @Nonnull Collection&lt;@Nonnull DIContainer&gt; parentContainers = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L201">        private final @Nonnull Collection&lt;@Nonnull String&gt; componentAnnotations = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L202">        private final @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L203">        private final @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations = new LinkedHashSet&lt;&gt;();</span>
+
+<span class="fc" id="L205">        private @Nonnull DIComponent.Resolver componentResolver = DIComponent.defaultResolver();</span>
+<span class="fc" id="L206">        private @Nonnull DIComponent.FieldSetter fieldSetter = DIComponent.defaultFieldSetter();</span>
+
+        /**
+         * Adds a component annotation type that marks a {@link Field} references a component from the container.
+         * &lt;p&gt;
+         * Multiple component annotation types can be specified, and any of them will be recognized as marking a
+         * component dependency. If no component annotation types are explicitly specified, the default annotations used
+         * are:
+         * &lt;lu&gt;
+         * &lt;li&gt;{@code javax.annotation.Resource}&lt;/li&gt;
+         * &lt;li&gt;{@code jakarta.annotation.Resource}&lt;/li&gt;
+         * &lt;/lu&gt;
+         *
+         * @param componentAnnotation a component annotation type that marks a {@link Field} as referencing a component
+         *                            from the container
+         * @return this builder
+         */
+        public @Nonnull Builder componentAnnotation(@Nonnull Class&lt;? extends Annotation&gt; componentAnnotation) {
+<span class="fc" id="L224">            this.componentAnnotations.add(componentAnnotation.getName());</span>
+<span class="fc" id="L225">            return this;</span>
+        }
+
+        /**
+         * Adds a post-construct annotation type that marks a {@link Method} is a post-construct method that will be
+         * executed in dependency order in initialization process of the container.
+         * &lt;p&gt;
+         * Multiple post-construct annotation types can be specified, and any of them will be recognized as marking a
+         * post-construct method. If no post-construct annotation types are explicitly specified, the default
+         * annotations used are:
+         * &lt;lu&gt;
+         * &lt;li&gt;{@code javax.annotation.PostConstruct}&lt;/li&gt;
+         * &lt;li&gt;{@code jakarta.annotation.PostConstruct}&lt;/li&gt;
+         * &lt;/lu&gt;
+         *
+         * @param postConstructAnnotation a post-construct annotation type that marks a {@link Method} is a
+         *                                post-construct method
+         * @return this builder
+         */
+        public @Nonnull Builder postConstructAnnotation(@Nonnull Class&lt;? extends Annotation&gt; postConstructAnnotation) {
+<span class="fc" id="L245">            this.postConstructAnnotations.add(postConstructAnnotation.getName());</span>
+<span class="fc" id="L246">            return this;</span>
+        }
+
+        /**
+         * Adds a pre-destroy annotation type that marks a {@link Method} is a pre-destroy method that will be executed
+         * in dependency order in shutdown process of the container.
+         * &lt;p&gt;
+         * Multiple pre-destroy annotation types can be specified, and any of them will be recognized as marking a
+         * pre-destroy method. If no pre-destroy annotation types are explicitly specified, the default annotations used
+         * are:
+         * &lt;lu&gt;
+         * &lt;li&gt;{@code javax.annotation.PreDestroy}&lt;/li&gt;
+         * &lt;li&gt;{@code jakarta.annotation.PreDestroy}&lt;/li&gt;
+         * &lt;/lu&gt;
+         *
+         * @param preDestroyAnnotation a pre-destroy annotation type that marks a {@link Method} is a pre-destroy
+         *                             method
+         * @return this builder
+         */
+        public @Nonnull Builder preDestroyAnnotation(@Nonnull Class&lt;? extends Annotation&gt; preDestroyAnnotation) {
+<span class="fc" id="L266">            this.preDestroyAnnotations.add(preDestroyAnnotation.getName());</span>
+<span class="fc" id="L267">            return this;</span>
+        }
+
+        /**
+         * Adds root component types to this builder, each type should be a {@link Class} or {@link ParameterizedType}.
+         * Any previously-added type will be ignored.
+         * &lt;p&gt;
+         * These types serve as root types for dependency injection. The dependency resolver will recursively analyze
+         * all {@link Field}s of these types to build the dependency injection graph.
+         * &lt;p&gt;
+         * Note each type only generates singleton component instance.
+         *
+         * @param componentTypes the component types to be added
+         * @return this builder
+         */
+        public @Nonnull Builder componentTypes(@Nonnull Type @Nonnull ... componentTypes) {
+<span class="fc" id="L283">            CollectKit.addAll(this.componentTypes, componentTypes);</span>
+<span class="fc" id="L284">            return this;</span>
+        }
+
+        /**
+         * Adds root component types to this builder, each type should be a {@link Class} or {@link ParameterizedType}.
+         * Any previously-added type will be ignored.
+         * &lt;p&gt;
+         * These types serve as root types for dependency injection. The dependency resolver will recursively analyze
+         * all {@link Field}s of these types to build the dependency injection graph.
+         * &lt;p&gt;
+         * Note each type only generates singleton component instance.
+         *
+         * @param componentTypes the component types to be added
+         * @return this builder
+         */
+        public @Nonnull Builder componentTypes(@Nonnull Iterable&lt;@Nonnull Type&gt; componentTypes) {
+<span class="fc" id="L300">            CollectKit.addAll(this.componentTypes, componentTypes);</span>
+<span class="fc" id="L301">            return this;</span>
+        }
+
+        /**
+         * Adds parent containers to inherit and share their components. If a component type has already been registered
+         * in the parent container, the sub-container will not generate another instance of that type.
+         * &lt;p&gt;
+         * Once a parent container is shut down, its sub-containers are not automatically shut down along with it. The
+         * inherited components will still be held by the sub-containers, but theirs pre-destroy methods will be
+         * executed.
+         *
+         * @param parentContainers the parent containers
+         * @return this builder
+         */
+        public @Nonnull Builder parentContainers(@Nullable DIContainer @Nonnull ... parentContainers) {
+<span class="fc" id="L316">            CollectKit.addAll(this.parentContainers, parentContainers);</span>
+<span class="fc" id="L317">            return this;</span>
+        }
+
+        /**
+         * Adds parent containers to inherit and share their components. If a component type has already been registered
+         * in the parent container, the sub-container will not generate another instance of that type.
+         * &lt;p&gt;
+         * Once a parent container is shut down, its sub-containers are not automatically shut down along with it. The
+         * inherited components will still be held by the sub-containers, but theirs pre-destroy methods will be
+         * executed.
+         *
+         * @param parentContainers the parent containers
+         * @return this builder
+         */
+        public @Nonnull Builder parentContainers(@Nonnull Iterable&lt;@Nonnull DIContainer&gt; parentContainers) {
+<span class="fc" id="L332">            CollectKit.addAll(this.parentContainers, parentContainers);</span>
+<span class="fc" id="L333">            return this;</span>
+        }
+
+        /**
+         * Sets the component resolver for this container. The default is {@link DIComponent#defaultResolver()}.
+         *
+         * @param componentResolver the component resolver
+         * @return this builder
+         */
+        public @Nonnull Builder componentResolver(@Nonnull DIComponent.Resolver componentResolver) {
+<span class="fc" id="L343">            this.componentResolver = componentResolver;</span>
+<span class="fc" id="L344">            return this;</span>
+        }
+
+        /**
+         * Sets the field setter for this container. The default is {@link DIComponent#defaultFieldSetter()}.
+         *
+         * @param fieldSetter the field setter
+         * @return this builder
+         */
+        public @Nonnull Builder fieldSetter(@Nonnull DIComponent.FieldSetter fieldSetter) {
+<span class="fc" id="L354">            this.fieldSetter = fieldSetter;</span>
+<span class="fc" id="L355">            return this;</span>
+        }
+
+        /**
+         * Builds and returns a new DI container instance, the returned instance is not initialized.
+         *
+         * @return a new DI container instance
+         * @throws DIException if any error occurs
+         */
+        public @Nonnull DIContainer build() throws DIException {
+<span class="fc bfc" id="L365" title="All 2 branches covered.">            if (componentAnnotations.isEmpty()) {</span>
+<span class="fc" id="L366">                componentAnnotations.addAll(RESOURCE_ANNOTATIONS);</span>
+            }
+<span class="fc bfc" id="L368" title="All 2 branches covered.">            if (postConstructAnnotations.isEmpty()) {</span>
+<span class="fc" id="L369">                postConstructAnnotations.addAll(POST_CONSTRUCT_ANNOTATIONS);</span>
+            }
+<span class="fc bfc" id="L371" title="All 2 branches covered.">            if (preDestroyAnnotations.isEmpty()) {</span>
+<span class="fc" id="L372">                preDestroyAnnotations.addAll(PRE_DESTROY_ANNOTATIONS);</span>
+            }
+<span class="fc" id="L374">            return new DIContainerImpl(</span>
+                componentTypes,
+                parentContainers,
+                componentAnnotations,
+                postConstructAnnotations,
+                preDestroyAnnotations,
+                componentResolver,
+                fieldSetter
+            );
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

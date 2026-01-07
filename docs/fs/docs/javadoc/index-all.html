@@ -1458,13 +1458,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the buffer size of the caller for I/O operations if needed.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#build()" class="member-name-link">build()</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>
-<div class="block">Builds and starts a new app instance.</div>
-</dd>
 <dt><a href="space/sunqian/fs/base/random/Rog.Builder.html#build()" class="member-name-link">build()</a> - Method in class space.sunqian.fs.base.random.<a href="space/sunqian/fs/base/random/Rog.Builder.html" title="class in space.sunqian.fs.base.random">Rog.Builder</a></dt>
 <dd>
 <div class="block">Builds and returns a new <a href="space/sunqian/fs/base/random/Rog.html" title="interface in space.sunqian.fs.base.random"><code>Rog</code></a> instance with the added weights, objects and suppliers.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#build()" class="member-name-link">build()</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
+<dd>
+<div class="block">Builds and returns a new DI container instance, the returned instance is not initialized.</div>
 </dd>
 <dt><a href="space/sunqian/fs/net/http/HttpCaller.Builder.html#build()" class="member-name-link">build()</a> - Method in class space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpCaller.Builder.html" title="class in space.sunqian.fs.net.http">HttpCaller.Builder</a></dt>
 <dd>
@@ -1483,9 +1483,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns an instance of <a href="space/sunqian/fs/object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilder</code></a>, or <code>null</code> if the target type is unsupported.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#%3Cinit%3E()" class="member-name-link">Builder()</a> - Constructor for class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/base/random/Rog.Builder.html#%3Cinit%3E()" class="member-name-link">Builder()</a> - Constructor for class space.sunqian.fs.base.random.<a href="space/sunqian/fs/base/random/Rog.Builder.html" title="class in space.sunqian.fs.base.random">Rog.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#%3Cinit%3E()" class="member-name-link">Builder()</a> - Constructor for class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/net/http/HttpCaller.Builder.html#%3Cinit%3E()" class="member-name-link">Builder()</a> - Constructor for class space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpCaller.Builder.html" title="class in space.sunqian.fs.net.http">HttpCaller.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -1878,6 +1878,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#CHECKCAST" class="member-name-link">CHECKCAST</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="space/sunqian/fs/di/DIKit.html#checkCycleDependencies(T,space.sunqian.fs.di.DIKit.DependenciesFunction)" class="member-name-link">checkCycleDependencies(T, DIKit.DependenciesFunction&lt;T&gt;)</a> - Static method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIKit.html" title="class in space.sunqian.fs.di">DIKit</a></dt>
+<dd>
+<div class="block">Checks whether the cycle dependencies exist in the given component.</div>
+</dd>
 <dt><a href="space/sunqian/fs/base/Checker.html#checkElement(boolean,java.lang.CharSequence)" class="member-name-link">checkElement(boolean, CharSequence)</a> - Static method in class space.sunqian.fs.base.<a href="space/sunqian/fs/base/Checker.html" title="class in space.sunqian.fs.base">Checker</a></dt>
 <dd>
 <div class="block">Checks whether the given expression is <code>true</code>, if it is not, throws a new <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/NoSuchElementException.html" title="class or interface in java.util" class="external-link"><code>NoSuchElementException</code></a>
@@ -2137,6 +2141,27 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="space/sunqian/fs/object/convert/handlers/CommonConvertHandler.html#%3Cinit%3E()" class="member-name-link">CommonConvertHandler()</a> - Constructor for class space.sunqian.fs.object.convert.handlers.<a href="space/sunqian/fs/object/convert/handlers/CommonConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers">CommonConvertHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#componentAnnotation(java.lang.Class)" class="member-name-link">componentAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
+<dd>
+<div class="block">Adds a component annotation type that marks a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link"><code>Field</code></a> references a component from the container.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#componentResolver(space.sunqian.fs.di.DIComponent.Resolver)" class="member-name-link">componentResolver(DIComponent.Resolver)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
+<dd>
+<div class="block">Sets the component resolver for this container.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#components()" class="member-name-link">components()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns all component map that constitute this container, including the components inherited from parent
+ containers.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#componentTypes(java.lang.Iterable)" class="member-name-link">componentTypes(Iterable&lt;Type&gt;)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
+<dd>
+<div class="block">Adds root component types to this builder, each type should be a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/ParameterizedType.html" title="class or interface in java.lang.reflect" class="external-link"><code>ParameterizedType</code></a>.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#componentTypes(java.lang.reflect.Type...)" class="member-name-link">componentTypes(Type...)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
+<dd>
+<div class="block">Adds root component types to this builder, each type should be a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/ParameterizedType.html" title="class or interface in java.lang.reflect" class="external-link"><code>ParameterizedType</code></a>.</div>
+</dd>
 <dt><a href="space/sunqian/fs/collect/ListKit.html#compositeView(java.util.List...)" class="member-name-link">compositeView(List&lt;T&gt;...)</a> - Static method in class space.sunqian.fs.collect.<a href="space/sunqian/fs/collect/ListKit.html" title="class in space.sunqian.fs.collect">ListKit</a></dt>
 <dd>
 <div class="block">Returns a composite view of multiple lists as a single list.</div>
@@ -2599,9 +2624,9 @@ loadScripts(document, 'script');</script>
      <a href="space/sunqian/fs/object/convert/handlers/CommonConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers"><code>CommonConvertHandler</code></a>;
  </div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#defaultFieldSetter()" class="member-name-link">defaultFieldSetter()</a> - Static method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#defaultFieldSetter()" class="member-name-link">defaultFieldSetter()</a> - Static method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the default field setter for <a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di"><code>InjectedResource</code></a>.</div>
+<div class="block">Returns the default field setter for <a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di"><code>DIComponent</code></a>.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/date/DateFormatter.html#defaultFormatter()" class="member-name-link">defaultFormatter()</a> - Static method in interface space.sunqian.fs.base.date.<a href="space/sunqian/fs/base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a></dt>
 <dd>
@@ -2638,9 +2663,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the default <a href="space/sunqian/fs/object/data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a>.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#defaultResolver()" class="member-name-link">defaultResolver()</a> - Static method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#defaultResolver()" class="member-name-link">defaultResolver()</a> - Static method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the default resolver for <a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di"><code>InjectedResource</code></a>.</div>
+<div class="block">Returns the default resolver for <a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di"><code>DIComponent</code></a>.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/string/NameFormatter.html#delimiterCase(java.lang.CharSequence)" class="member-name-link">delimiterCase(CharSequence)</a> - Static method in interface space.sunqian.fs.base.string.<a href="space/sunqian/fs/base/string/NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></dt>
 <dd>
@@ -2650,18 +2675,74 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a new <a href="space/sunqian/fs/base/string/NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html#dependencyFields()" class="member-name-link">dependencyFields()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#dependencies()" class="member-name-link">dependencies()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the dependency fields of the resource.</div>
+<div class="block">Returns the dependencies of this component.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIKit.DependenciesFunction.html#dependencies(T)" class="member-name-link">dependencies(T)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIKit.DependenciesFunction.html" title="interface in space.sunqian.fs.di">DIKit.DependenciesFunction</a></dt>
+<dd>
+<div class="block">Returns the dependencies of the given component.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html#dependencyFields()" class="member-name-link">dependencyFields()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></dt>
+<dd>
+<div class="block">Returns the dependency fields of the component.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/process/VirtualProcess.html#destroy()" class="member-name-link">destroy()</a> - Method in class space.sunqian.fs.base.process.<a href="space/sunqian/fs/base/process/VirtualProcess.html" title="class in space.sunqian.fs.base.process">VirtualProcess</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html#destroyedResources()" class="member-name-link">destroyedResources()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIShutdownException.html#destroyedComponents()" class="member-name-link">destroyedComponents()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIShutdownException.html" title="class in space.sunqian.fs.di">DIShutdownException</a></dt>
 <dd>
-<div class="block">Returns the resources that were successfully destroyed before the failure occurred.</div>
+<div class="block">Returns the components that were successfully destroyed before the failure occurred.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/process/VirtualProcess.html#destroyForcibly()" class="member-name-link">destroyForcibly()</a> - Method in class space.sunqian.fs.base.process.<a href="space/sunqian/fs/base/process/VirtualProcess.html" title="class in space.sunqian.fs.base.process">VirtualProcess</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="space/sunqian/fs/di/DIAspectHandler.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIAspectHandler</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">The aspect-oriented programming interface for <a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di"><code>DIContainer</code></a>, extends <a href="space/sunqian/fs/dynamic/aop/AspectHandler.html" title="interface in space.sunqian.fs.dynamic.aop"><code>AspectHandler</code></a>.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Represents component of <a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di"><code>DIContainer</code></a>, consisting of a type and a singleton instance of that type.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Represents descriptor of component type.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.FieldSetter.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.FieldSetter</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Represents setter for dependency field.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.Resolver.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.Resolver</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Represents resolver for <a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di"><code>DIComponent</code></a>.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIContainer</a> - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">This interface represents a DI container that manages the injection of dependencies into objects.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html" class="type-name-link" title="class in space.sunqian.fs.di">DIContainer.Builder</a> - Class in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Builder for <a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di"><code>DIContainer</code></a>.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIException</a> - Exception in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Exception for dependency injection.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIException.html#%3Cinit%3E()" class="member-name-link">DIException()</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIException.html" title="class in space.sunqian.fs.di">DIException</a></dt>
+<dd>
+<div class="block">Empty constructor.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">DIException(String)</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIException.html" title="class in space.sunqian.fs.di">DIException</a></dt>
+<dd>
+<div class="block">Constructs with the message.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">DIException(String, Throwable)</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIException.html" title="class in space.sunqian.fs.di">DIException</a></dt>
+<dd>
+<div class="block">Constructs with the message and cause.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIException.html#%3Cinit%3E(java.lang.Throwable)" class="member-name-link">DIException(Throwable)</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIException.html" title="class in space.sunqian.fs.di">DIException</a></dt>
+<dd>
+<div class="block">Constructs with the cause.</div>
+</dd>
 <dt><a href="space/sunqian/fs/codec/DigestKit.html" class="type-name-link" title="class in space.sunqian.fs.codec">DigestKit</a> - Class in <a href="space/sunqian/fs/codec/package-summary.html">space.sunqian.fs.codec</a></dt>
 <dd>
 <div class="block">Utilities for <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/MessageDigest.html" title="class or interface in java.security" class="external-link"><code>MessageDigest</code></a>.</div>
@@ -2670,11 +2751,33 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a new <a href="space/sunqian/fs/io/ByteTransformer.html" title="interface in space.sunqian.fs.io"><code>ByteTransformer</code></a> instance for the specified <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/MessageDigest.html" title="class or interface in java.security" class="external-link"><code>MessageDigest</code></a>.</div>
 </dd>
+<dt><a href="space/sunqian/fs/di/DIInitializeException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIInitializeException</a> - Exception in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Exception for failing to initialize a DI container.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIInitializeException.html#%3Cinit%3E(space.sunqian.fs.di.DIComponent,java.lang.Throwable,java.util.List,java.util.List)" class="member-name-link">DIInitializeException(DIComponent, Throwable, List&lt;DIComponent&gt;, List&lt;DIComponent&gt;)</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIInitializeException.html" title="class in space.sunqian.fs.di">DIInitializeException</a></dt>
+<dd>
+<div class="block">Constructs with the failed component, cause, initialized components, and uninitialized components.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIKit.html" class="type-name-link" title="class in space.sunqian.fs.di">DIKit</a> - Class in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Dependency injection utilities.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIKit.DependenciesFunction.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIKit.DependenciesFunction</a>&lt;<a href="space/sunqian/fs/di/DIKit.DependenciesFunction.html" title="type parameter in DIKit.DependenciesFunction">T</a>&gt; - Interface in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Represents function to get dependencies of a component.</div>
+</dd>
 <dt><a href="space/sunqian/fs/io/BufferKit.html#directCharBuffer(int)" class="member-name-link">directCharBuffer(int)</a> - Static method in class space.sunqian.fs.io.<a href="space/sunqian/fs/io/BufferKit.html" title="class in space.sunqian.fs.io">BufferKit</a></dt>
 <dd>
 <div class="block">Returns a new direct <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/CharBuffer.html" title="class or interface in java.nio" class="external-link"><code>CharBuffer</code></a> with the specified capacity, and its endian is
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/ByteOrder.html#BIG_ENDIAN" title="class or interface in java.nio" class="external-link"><code>ByteOrder.BIG_ENDIAN</code></a>.</div>
 </dd>
+<dt><a href="space/sunqian/fs/di/DIShutdownException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIShutdownException</a> - Exception in <a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a></dt>
+<dd>
+<div class="block">Exception for failing to destroy a DI container.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIShutdownException.html#%3Cinit%3E(space.sunqian.fs.di.DIComponent,java.lang.Throwable,java.util.List,java.util.List)" class="member-name-link">DIShutdownException(DIComponent, Throwable, List&lt;DIComponent&gt;, List&lt;DIComponent&gt;)</a> - Constructor for exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIShutdownException.html" title="class in space.sunqian.fs.di">DIShutdownException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#DLOAD" class="member-name-link">DLOAD</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#DMUL" class="member-name-link">DMUL</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
@@ -3176,13 +3279,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#FADD" class="member-name-link">FADD</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html#failedResource()" class="member-name-link">failedResource()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIInitializeException.html#failedComponent()" class="member-name-link">failedComponent()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIInitializeException.html" title="class in space.sunqian.fs.di">DIInitializeException</a></dt>
 <dd>
-<div class="block">Returns the resource that failed during destruction, causing the shutdown to abort.</div>
+<div class="block">Returns the component that failed to initialize.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html#failedResource()" class="member-name-link">failedResource()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIShutdownException.html#failedComponent()" class="member-name-link">failedComponent()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIShutdownException.html" title="class in space.sunqian.fs.di">DIShutdownException</a></dt>
 <dd>
-<div class="block">Returns the resource that failed during initialization, causing the startup to abort.</div>
+<div class="block">Returns the component that failed to destroy.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#FALOAD" class="member-name-link">FALOAD</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
@@ -3218,9 +3321,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The sort of type references that target the type of a field.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#fieldSetter(space.sunqian.fs.app.di.InjectedResource.FieldSetter)" class="member-name-link">fieldSetter(InjectedResource.FieldSetter)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#fieldSetter(space.sunqian.fs.di.DIComponent.FieldSetter)" class="member-name-link">fieldSetter(DIComponent.FieldSetter)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>
-<div class="block">Sets the field setter for this app.</div>
+<div class="block">Sets the field setter for this container.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/FieldVisitor.html" class="type-name-link" title="class in space.sunqian.fs.asm">FieldVisitor</a> - Class in <a href="space/sunqian/fs/asm/package-summary.html">space.sunqian.fs.asm</a></dt>
 <dd>
@@ -3608,6 +3711,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><a href="space/sunqian/fs/third/asm/AsmKit.html#GEN_CLASS_PREFIX" class="member-name-link">GEN_CLASS_PREFIX</a> - Static variable in class space.sunqian.fs.third.asm.<a href="space/sunqian/fs/third/asm/AsmKit.html" title="class in space.sunqian.fs.third.asm">AsmKit</a></dt>
+<dd>
+<div class="block">The prefix of generated class name.</div>
+</dd>
 <dt><a href="space/sunqian/fs/cache/AbstractSimpleCache.html#generate(K,java.lang.Object)" class="member-name-link">generate(K, Object)</a> - Method in class space.sunqian.fs.cache.<a href="space/sunqian/fs/cache/AbstractSimpleCache.html" title="class in space.sunqian.fs.cache">AbstractSimpleCache</a></dt>
 <dd>
 <div class="block">Generates a cache value wrapper with the given cache key and cache value.</div>
@@ -3866,6 +3973,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/asm/ClassWriter.html#getCommonSuperClass(java.lang.String,java.lang.String)" class="member-name-link">getCommonSuperClass(String, String)</a> - Method in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/ClassWriter.html" title="class in space.sunqian.fs.asm">ClassWriter</a></dt>
 <dd>
 <div class="block">Returns the common super type of the two given types.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#getComponent(java.lang.reflect.Type)" class="member-name-link">getComponent(Type)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns the component whose type is assignable to the specified type, or <code>null</code> if no such component
+ exists.</div>
 </dd>
 <dt><a href="space/sunqian/fs/reflect/TypeKit.html#getComponentType(java.lang.reflect.Type)" class="member-name-link">getComponentType(Type)</a> - Static method in class space.sunqian.fs.reflect.<a href="space/sunqian/fs/reflect/TypeKit.html" title="class in space.sunqian.fs.reflect">TypeKit</a></dt>
 <dd>
@@ -4136,19 +4248,19 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns system property of <a href="space/sunqian/fs/base/system/SystemKeys.html#NATIVE_ENCODING"><code>SystemKeys.NATIVE_ENCODING</code></a>: Character encoding name derived from the host
  environment and/or the user's settings.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#getObject(java.lang.Class)" class="member-name-link">getObject(Class&lt;T&gt;)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#getObject(java.lang.Class)" class="member-name-link">getObject(Class&lt;T&gt;)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Returns the resource object whose type is assignable to the specified type, or <code>null</code> if no such resource
+<div class="block">Returns the component object whose type is assignable to the specified type, or <code>null</code> if no such component
  exists.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#getObject(java.lang.reflect.Type)" class="member-name-link">getObject(Type)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#getObject(java.lang.reflect.Type)" class="member-name-link">getObject(Type)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Returns the resource object whose type is assignable to the specified type, or <code>null</code> if no such resource
+<div class="block">Returns the component object whose type is assignable to the specified type, or <code>null</code> if no such component
  exists.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#getObject(space.sunqian.fs.reflect.TypeRef)" class="member-name-link">getObject(TypeRef&lt;T&gt;)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#getObject(space.sunqian.fs.reflect.TypeRef)" class="member-name-link">getObject(TypeRef&lt;T&gt;)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Returns the resource object whose type is assignable to the specified type, or <code>null</code> if no such resource
+<div class="block">Returns the component object whose type is assignable to the specified type, or <code>null</code> if no such component
  exists.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Type.html#getObjectType(java.lang.String)" class="member-name-link">getObjectType(String)</a> - Static method in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Type.html" title="class in space.sunqian.fs.asm">Type</a></dt>
@@ -4204,10 +4316,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/reflect/TypeKit.html#getRawClass(java.lang.reflect.Type)" class="member-name-link">getRawClass(Type)</a> - Static method in class space.sunqian.fs.reflect.<a href="space/sunqian/fs/reflect/TypeKit.html" title="class in space.sunqian.fs.reflect">TypeKit</a></dt>
 <dd>
 <div class="block">Returns the raw class of the given type.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#getResource(java.lang.reflect.Type)" class="member-name-link">getResource(Type)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
-<dd>
-<div class="block">Returns the resource whose type is assignable to the specified type, or <code>null</code> if no such resource exists.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Type.html#getReturnType()" class="member-name-link">getReturnType()</a> - Method in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Type.html" title="class in space.sunqian.fs.asm">Type</a></dt>
 <dd>
@@ -4905,73 +5013,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The info level.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html#initializedResources()" class="member-name-link">initializedResources()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#initialize()" class="member-name-link">initialize()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Returns the resources that were successfully initialized before the failure occurred.</div>
+<div class="block">Initializes this DI container.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedApp</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
+<dt><a href="space/sunqian/fs/di/DIInitializeException.html#initializedComponents()" class="member-name-link">initializedComponents()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIInitializeException.html" title="class in space.sunqian.fs.di">DIInitializeException</a></dt>
 <dd>
-<div class="block">A dependency injection-based sub-interface of <a href="space/sunqian/fs/app/SimpleApp.html" title="interface in space.sunqian.fs.app"><code>SimpleApp</code></a>, built via <a href="space/sunqian/fs/app/di/InjectedApp.html#newBuilder()"><code>InjectedApp.newBuilder()</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a> - Class in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Builder for <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAppException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedAppException</a> - Exception in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Exception for <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAppException.html#%3Cinit%3E()" class="member-name-link">InjectedAppException()</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAppException.html" title="class in space.sunqian.fs.app.di">InjectedAppException</a></dt>
-<dd>
-<div class="block">Empty constructor.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAppException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">InjectedAppException(String)</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAppException.html" title="class in space.sunqian.fs.app.di">InjectedAppException</a></dt>
-<dd>
-<div class="block">Constructs with the message.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAppException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">InjectedAppException(String, Throwable)</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAppException.html" title="class in space.sunqian.fs.app.di">InjectedAppException</a></dt>
-<dd>
-<div class="block">Constructs with the message and cause.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAppException.html#%3Cinit%3E(java.lang.Throwable)" class="member-name-link">InjectedAppException(Throwable)</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAppException.html" title="class in space.sunqian.fs.app.di">InjectedAppException</a></dt>
-<dd>
-<div class="block">Constructs with the cause.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAspect.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedAspect</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">The aspect-oriented programming interface for <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a>, extends <a href="space/sunqian/fs/dynamic/aop/AspectHandler.html" title="interface in space.sunqian.fs.dynamic.aop"><code>AspectHandler</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Represents resource of <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a>, consisting of a type and a singleton instance of that type.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Represents descriptor of resource type.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.FieldSetter.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.FieldSetter</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Represents setter for dependency field.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Resolver.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.Resolver</a> - Interface in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Represents resolver for <a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di"><code>InjectedResource</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a> - Exception in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Exception for failing to destroy resources during <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a> shutdown.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html#%3Cinit%3E(space.sunqian.fs.app.di.InjectedResource,java.lang.Throwable,java.util.List,java.util.List)" class="member-name-link">InjectedResourceDestructionException(InjectedResource, Throwable, List&lt;InjectedResource&gt;, List&lt;InjectedResource&gt;)</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a></dt>
-<dd>
-<div class="block">Constructs an exception with detailed context about the resource destroy failure.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a> - Exception in <a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a></dt>
-<dd>
-<div class="block">Exception for failing to initialize resources during <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a> startup.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html#%3Cinit%3E(space.sunqian.fs.app.di.InjectedResource,java.lang.Throwable,java.util.List,java.util.List)" class="member-name-link">InjectedResourceInitializationException(InjectedResource, Throwable, List&lt;InjectedResource&gt;, List&lt;InjectedResource&gt;)</a> - Constructor for exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a></dt>
-<dd>
-<div class="block">Constructs an exception with detailed context about the resource initialize failure.</div>
+<div class="block">Returns the components that were successfully initialized before the failure occurred.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/TypePath.html#INNER_TYPE" class="member-name-link">INNER_TYPE</a> - Static variable in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/TypePath.html" title="class in space.sunqian.fs.asm">TypePath</a></dt>
 <dd>
@@ -4981,9 +5029,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Input stream.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#instance()" class="member-name-link">instance()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#instance()" class="member-name-link">instance()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the singleton instance of this resource's type.</div>
+<div class="block">Returns the singleton instance of this component's type.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#INSTANCEOF" class="member-name-link">INSTANCEOF</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
@@ -5256,9 +5304,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns whether this client connects to the server.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#isDestroyed()" class="member-name-link">isDestroyed()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#isDestroyed()" class="member-name-link">isDestroyed()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns whether this resource is destroyed, the pre-destroy method has also been executed normally.</div>
+<div class="block">Returns whether this component is destroyed, the pre-destroy method has also been executed normally.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/value/LongSpan.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class space.sunqian.fs.base.value.<a href="space/sunqian/fs/base/value/LongSpan.html" title="class in space.sunqian.fs.base.value">LongSpan</a></dt>
 <dd>
@@ -5362,9 +5410,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns whether the given range, starting at the given start position (inclusive) and ending at the given end
  position (exclusive), is between the start boundary (inclusive) and the end boundary (exclusive).</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#isInitialized()" class="member-name-link">isInitialized()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#isInitialized()" class="member-name-link">isInitialized()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns whether this resource is initialized, the post-construct method has also been executed normally.</div>
+<div class="block">Returns whether this component is initialized, the post-construct method has also been executed normally.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#isInitialized()" class="member-name-link">isInitialized()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns whether this DI container is initialized.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Handle.html#isInterface()" class="member-name-link">isInterface()</a> - Method in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Handle.html" title="class in space.sunqian.fs.asm">Handle</a></dt>
 <dd>
@@ -5374,9 +5426,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns whether the current OS is <code>Linux</code>.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#isLocal()" class="member-name-link">isLocal()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#isLocal()" class="member-name-link">isLocal()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns whether this resource is directly owned by the current app, rather than inherited from parent apps</div>
+<div class="block">Returns whether this component is directly owned by the current container, rather than inherited from parent
+ containers.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/system/OSKit.html#isMac()" class="member-name-link">isMac()</a> - Static method in class space.sunqian.fs.base.system.<a href="space/sunqian/fs/base/system/OSKit.html" title="class in space.sunqian.fs.base.system">OSKit</a></dt>
 <dd>
@@ -5518,6 +5571,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/object/data/ObjectProperty.html#isReadable()" class="member-name-link">isReadable()</a> - Method in interface space.sunqian.fs.object.data.<a href="space/sunqian/fs/object/data/ObjectProperty.html" title="interface in space.sunqian.fs.object.data">ObjectProperty</a></dt>
 <dd>
 <div class="block">Returns whether this property is readable.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#isShutdown()" class="member-name-link">isShutdown()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns whether this DI container is shut down.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/system/OSKit.html#isSolaris()" class="member-name-link">isSolaris()</a> - Static method in class space.sunqian.fs.base.system.<a href="space/sunqian/fs/base/system/OSKit.html" title="class in space.sunqian.fs.base.system">OSKit</a></dt>
 <dd>
@@ -6002,14 +6059,14 @@ loadScripts(document, 'script');</script>
 <div class="block">If the <a href="space/sunqian/fs/base/chars/CharsKit.html#nativeCharset()"><code>CharsKit.nativeCharset()</code></a> is not <code>null</code>, returns <a href="space/sunqian/fs/base/chars/CharsKit.html#nativeCharset()"><code>CharsKit.nativeCharset()</code></a>, otherwise returns
  <a href="space/sunqian/fs/base/chars/CharsKit.html#jvmCharset()"><code>CharsKit.jvmCharset()</code></a>.</div>
 </dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#localComponents()" class="member-name-link">localComponents()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns the component map that are directly owned by this container, excluding the components inherited from
+ parent containers.</div>
+</dd>
 <dt><a href="space/sunqian/fs/base/thread/LocalKit.html" class="type-name-link" title="class in space.sunqian.fs.base.thread">LocalKit</a> - Class in <a href="space/sunqian/fs/base/thread/package-summary.html">space.sunqian.fs.base.thread</a></dt>
 <dd>
 <div class="block">Utilities for thread-local.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#localResources()" class="member-name-link">localResources()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
-<dd>
-<div class="block">Returns the resource map that are directly owned by this app, excluding the resources inherited from parent
- apps.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/logging/AbstractSimpleLogger.html#log(space.sunqian.fs.base.logging.SimpleLog,java.lang.reflect.Method)" class="member-name-link">log(SimpleLog, Method)</a> - Method in class space.sunqian.fs.base.logging.<a href="space/sunqian/fs/base/logging/AbstractSimpleLogger.html" title="class in space.sunqian.fs.base.logging">AbstractSimpleLogger</a></dt>
 <dd>
@@ -6396,7 +6453,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns whether the aspect-oriented programming should be applied to the given method.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedAspect.html#needsAspect(java.lang.reflect.Type)" class="member-name-link">needsAspect(Type)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAspect.html" title="interface in space.sunqian.fs.app.di">InjectedAspect</a></dt>
+<dt><a href="space/sunqian/fs/di/DIAspectHandler.html#needsAspect(java.lang.reflect.Type)" class="member-name-link">needsAspect(Type)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIAspectHandler.html" title="interface in space.sunqian.fs.di">DIAspectHandler</a></dt>
 <dd>
 <div class="block">Returns whether the aspect-oriented programming should be applied to the given type.</div>
 </dd>
@@ -6468,13 +6525,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#NEWARRAY" class="member-name-link">NEWARRAY</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#newBuilder()" class="member-name-link">newBuilder()</a> - Static method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
-<dd>
-<div class="block">Returns a new builder for <a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di"><code>InjectedApp</code></a>.</div>
-</dd>
 <dt><a href="space/sunqian/fs/base/random/Rog.html#newBuilder()" class="member-name-link">newBuilder()</a> - Static method in interface space.sunqian.fs.base.random.<a href="space/sunqian/fs/base/random/Rog.html" title="interface in space.sunqian.fs.base.random">Rog</a></dt>
 <dd>
 <div class="block">Returns a new builder for generating a new <a href="space/sunqian/fs/base/random/Rog.html" title="interface in space.sunqian.fs.base.random"><code>Rog</code></a> instances.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#newBuilder()" class="member-name-link">newBuilder()</a> - Static method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
+<dd>
+<div class="block">Returns a new builder for <a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di"><code>DIContainer</code></a>.</div>
 </dd>
 <dt><a href="space/sunqian/fs/net/http/HttpCaller.html#newBuilder()" class="member-name-link">newBuilder()</a> - Static method in interface space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpCaller.html" title="interface in space.sunqian.fs.net.http">HttpCaller</a></dt>
 <dd>
@@ -7387,17 +7444,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the all slot count of the specified parameters.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#parentApps()" class="member-name-link">parentApps()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#parentContainers()" class="member-name-link">parentContainers()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Returns all parent apps of this app.</div>
+<div class="block">Returns all parent containers of this container.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#parentApps(java.lang.Iterable)" class="member-name-link">parentApps(Iterable&lt;InjectedApp&gt;)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#parentContainers(java.lang.Iterable)" class="member-name-link">parentContainers(Iterable&lt;DIContainer&gt;)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>
-<div class="block">Adds parent apps to inherit and share its resources.</div>
+<div class="block">Adds parent containers to inherit and share their components.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#parentApps(space.sunqian.fs.app.di.InjectedApp...)" class="member-name-link">parentApps(InjectedApp...)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#parentContainers(space.sunqian.fs.di.DIContainer...)" class="member-name-link">parentContainers(DIContainer...)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>
-<div class="block">Adds parent apps to inherit and share its resources.</div>
+<div class="block">Adds parent containers to inherit and share their components.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/string/NameFormatter.html#parse(java.lang.CharSequence)" class="member-name-link">parse(CharSequence)</a> - Method in interface space.sunqian.fs.base.string.<a href="space/sunqian/fs/base/string/NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></dt>
 <dd>
@@ -7505,41 +7562,50 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Posts an event with the specified dispatch mode.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#postConstruct()" class="member-name-link">postConstruct()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#postConstruct()" class="member-name-link">postConstruct()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Invokes the post-construct method of this resource if the post-construct method is not <code>null</code>, otherwise
+<div class="block">Invokes the post-construct method of this component if the post-construct method is not <code>null</code>, otherwise
  this method has no effect.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#postConstructAnnotation(java.lang.Class)" class="member-name-link">postConstructAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#postConstructAnnotation(java.lang.Class)" class="member-name-link">postConstructAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>
-<div class="block">Adds a post-construct annotation type that indicates a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> will be executed after its resource
- construction is completed.</div>
+<div class="block">Adds a post-construct annotation type that marks a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> is a post-construct method that will be
+ executed in dependency order in initialization process of the container.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html#postConstructMethod()" class="member-name-link">postConstructMethod()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#postConstructDependencies()" class="member-name-link">postConstructDependencies()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the post-construct method of the resource, may be <code>null</code> if there is no ost-construct method.</div>
+<div class="block">Returns the dependencies of this component for post-construct method.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#postConstructMethod()" class="member-name-link">postConstructMethod()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html#postConstructMethod()" class="member-name-link">postConstructMethod()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></dt>
 <dd>
-<div class="block">Returns the post-construct method of this resource.</div>
+<div class="block">Returns the post-construct method of the component, may be <code>null</code> if there is no post-construct
+ method.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#preDestroy()" class="member-name-link">preDestroy()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#postConstructMethod()" class="member-name-link">postConstructMethod()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Invokes the pre-destroy method of this resource if the pre-destroy method is not <code>null</code>, otherwise this
+<div class="block">Returns the post-construct method of this component.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#preDestroy()" class="member-name-link">preDestroy()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
+<dd>
+<div class="block">Invokes the pre-destroy method of this component if the pre-destroy method is not <code>null</code>, otherwise this
  method has no effect.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#preDestroyAnnotation(java.lang.Class)" class="member-name-link">preDestroyAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.Builder.html#preDestroyAnnotation(java.lang.Class)" class="member-name-link">preDestroyAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" title="class in space.sunqian.fs.di">DIContainer.Builder</a></dt>
 <dd>
-<div class="block">Adds a pre-destroy annotation type that indicates a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> will be executed before its resource is
- destroyed.</div>
+<div class="block">Adds a pre-destroy annotation type that marks a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> is a pre-destroy method that will be executed
+ in dependency order in shutdown process of the container.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html#preDestroyMethod()" class="member-name-link">preDestroyMethod()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#preDestroyDependencies()" class="member-name-link">preDestroyDependencies()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the pre-destroy method of the resource, may be <code>null</code> if there is no pre-destroy method.</div>
+<div class="block">Returns the dependencies of this component for pre-destroy method.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#preDestroyMethod()" class="member-name-link">preDestroyMethod()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html#preDestroyMethod()" class="member-name-link">preDestroyMethod()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></dt>
 <dd>
-<div class="block">Returns the pre-destroy method of this resource.</div>
+<div class="block">Returns the pre-destroy method of the component, may be <code>null</code> if there is no pre-destroy method.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#preDestroyMethod()" class="member-name-link">preDestroyMethod()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
+<dd>
+<div class="block">Returns the pre-destroy method of this component.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/value/PrimitiveToVal.html" class="type-name-link" title="interface in space.sunqian.fs.base.value">PrimitiveToVal</a>&lt;<a href="space/sunqian/fs/base/value/PrimitiveToVal.html" title="type parameter in PrimitiveToVal">T</a>&gt; - Interface in <a href="space/sunqian/fs/base/value/package-summary.html">space.sunqian.fs.base.value</a></dt>
 <dd>
@@ -7801,9 +7867,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html#rawClass()" class="member-name-link">rawClass()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html#rawClass()" class="member-name-link">rawClass()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></dt>
 <dd>
-<div class="block">Returns the raw class of the resource.</div>
+<div class="block">Returns the raw class of the component.</div>
 </dd>
 <dt><a href="space/sunqian/fs/object/data/DataSchema.html#rawType()" class="member-name-link">rawType()</a> - Method in interface space.sunqian.fs.object.data.<a href="space/sunqian/fs/object/data/DataSchema.html" title="interface in space.sunqian.fs.object.data">DataSchema</a></dt>
 <dd>
@@ -8572,9 +8638,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Utilities for resource.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Resolver.html#resolve(java.lang.reflect.Type,java.util.Collection,java.util.Collection,java.util.Collection)" class="member-name-link">resolve(Type, Collection&lt;String&gt;, Collection&lt;String&gt;, Collection&lt;String&gt;)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Resolver.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Resolver</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.Resolver.html#resolve(java.lang.reflect.Type,java.util.Collection,java.util.Collection,java.util.Collection)" class="member-name-link">resolve(Type, Collection&lt;String&gt;, Collection&lt;String&gt;, Collection&lt;String&gt;)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Resolver.html" title="interface in space.sunqian.fs.di">DIComponent.Resolver</a></dt>
 <dd>
-<div class="block">Resolves the descriptor of the resource.</div>
+<div class="block">Resolves the descriptor of the component.</div>
 </dd>
 <dt><a href="space/sunqian/fs/object/data/handlers/AbstractObjectSchemaHandler.html#resolveAccessor(java.lang.reflect.Method)" class="member-name-link">resolveAccessor(Method)</a> - Method in class space.sunqian.fs.object.data.handlers.<a href="space/sunqian/fs/object/data/handlers/AbstractObjectSchemaHandler.html" title="class in space.sunqian.fs.object.data.handlers">AbstractObjectSchemaHandler</a></dt>
 <dd>
@@ -8595,26 +8661,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/asm/TypeReference.html#RESOURCE_VARIABLE" class="member-name-link">RESOURCE_VARIABLE</a> - Static variable in class space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/TypeReference.html" title="class in space.sunqian.fs.asm">TypeReference</a></dt>
 <dd>
 <div class="block">The sort of type references that target the type of a resource variable in a method.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#resourceAnnotation(java.lang.Class)" class="member-name-link">resourceAnnotation(Class&lt;? extends Annotation&gt;)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>
-<div class="block">Adds a resource annotation type that indicates a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link"><code>Field</code></a> references a resource from the app.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#resourceResolver(space.sunqian.fs.app.di.InjectedResource.Resolver)" class="member-name-link">resourceResolver(InjectedResource.Resolver)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>
-<div class="block">Sets the resource resolver for this app.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#resources()" class="member-name-link">resources()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
-<dd>
-<div class="block">Returns all resource map that constitute this app, including the resources inherited from parent apps.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#resourceTypes(java.lang.Iterable)" class="member-name-link">resourceTypes(Iterable&lt;Type&gt;)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>
-<div class="block">Adds root resource types to this builder, each type should be a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/ParameterizedType.html" title="class or interface in java.lang.reflect" class="external-link"><code>ParameterizedType</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.Builder.html#resourceTypes(java.lang.reflect.Type...)" class="member-name-link">resourceTypes(Type...)</a> - Method in class space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></dt>
-<dd>
-<div class="block">Adds root resource types to this builder, each type should be a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/ParameterizedType.html" title="class or interface in java.lang.reflect" class="external-link"><code>ParameterizedType</code></a>.</div>
 </dd>
 <dt><a href="space/sunqian/fs/base/value/Ret.html" class="type-name-link" title="interface in space.sunqian.fs.base.value">Ret</a>&lt;<a href="space/sunqian/fs/base/value/Ret.html" title="type parameter in Ret">T</a>&gt; - Interface in <a href="space/sunqian/fs/base/value/package-summary.html">space.sunqian.fs.base.value</a></dt>
 <dd>
@@ -8772,7 +8818,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the element at the specified index in the given array.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.FieldSetter.html#set(java.lang.reflect.Field,java.lang.Object,java.lang.Object)" class="member-name-link">set(Field, Object, Object)</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.FieldSetter.html" title="interface in space.sunqian.fs.app.di">InjectedResource.FieldSetter</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.FieldSetter.html#set(java.lang.reflect.Field,java.lang.Object,java.lang.Object)" class="member-name-link">set(Field, Object, Object)</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.FieldSetter.html" title="interface in space.sunqian.fs.di">DIComponent.FieldSetter</a></dt>
 <dd>
 <div class="block">Sets the value to the dependency field.</div>
 </dd>
@@ -8828,13 +8874,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Primitive <code>short</code> version of <a href="space/sunqian/fs/base/value/Var.html" title="interface in space.sunqian.fs.base.value"><code>Var</code></a>.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedApp.html#shutdown()" class="member-name-link">shutdown()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" title="interface in space.sunqian.fs.app.di">InjectedApp</a></dt>
+<dt><a href="space/sunqian/fs/di/DIContainer.html#shutdown()" class="member-name-link">shutdown()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" title="interface in space.sunqian.fs.di">DIContainer</a></dt>
 <dd>
-<div class="block">Shuts down this app.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleApp.html#shutdown()" class="member-name-link">shutdown()</a> - Method in interface space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleApp.html" title="interface in space.sunqian.fs.app">SimpleApp</a></dt>
-<dd>
-<div class="block">Shuts down this app.</div>
+<div class="block">Shuts down this DI container.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/signature/SignatureReader.html" class="type-name-link" title="class in space.sunqian.fs.asm.signature">SignatureReader</a> - Class in <a href="space/sunqian/fs/asm/signature/package-summary.html">space.sunqian.fs.asm.signature</a></dt>
 <dd>
@@ -8861,33 +8903,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a new <a href="space/sunqian/fs/asm/signature/SignatureWriter.html" title="class in space.sunqian.fs.asm.signature"><code>SignatureWriter</code></a>.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/SimpleApp.html" class="type-name-link" title="interface in space.sunqian.fs.app">SimpleApp</a> - Interface in <a href="space/sunqian/fs/app/package-summary.html">space.sunqian.fs.app</a></dt>
-<dd>
-<div class="block">This interface represents a simple application.</div>
-</dd>
 <dt><a href="space/sunqian/fs/base/string/NameFormatter.html#simpleAppender()" class="member-name-link">simpleAppender()</a> - Static method in interface space.sunqian.fs.base.string.<a href="space/sunqian/fs/base/string/NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></dt>
 <dd>
 <div class="block">Returns an instance of <a href="space/sunqian/fs/base/string/NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter.Appender</code></a> which simply adds the word without any modifications.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleAppException.html" class="type-name-link" title="class in space.sunqian.fs.app">SimpleAppException</a> - Exception in <a href="space/sunqian/fs/app/package-summary.html">space.sunqian.fs.app</a></dt>
-<dd>
-<div class="block">Exception for <a href="space/sunqian/fs/app/SimpleApp.html" title="interface in space.sunqian.fs.app"><code>SimpleApp</code></a>.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleAppException.html#%3Cinit%3E()" class="member-name-link">SimpleAppException()</a> - Constructor for exception space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleAppException.html" title="class in space.sunqian.fs.app">SimpleAppException</a></dt>
-<dd>
-<div class="block">Empty constructor.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleAppException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">SimpleAppException(String)</a> - Constructor for exception space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleAppException.html" title="class in space.sunqian.fs.app">SimpleAppException</a></dt>
-<dd>
-<div class="block">Constructs with the message.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleAppException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">SimpleAppException(String, Throwable)</a> - Constructor for exception space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleAppException.html" title="class in space.sunqian.fs.app">SimpleAppException</a></dt>
-<dd>
-<div class="block">Constructs with the message and cause.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/SimpleAppException.html#%3Cinit%3E(java.lang.Throwable)" class="member-name-link">SimpleAppException(Throwable)</a> - Constructor for exception space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleAppException.html" title="class in space.sunqian.fs.app">SimpleAppException</a></dt>
-<dd>
-<div class="block">Constructs with the cause.</div>
 </dd>
 <dt><a href="space/sunqian/fs/object/data/handlers/SimpleBeanSchemaHandler.html" class="type-name-link" title="class in space.sunqian.fs.object.data.handlers">SimpleBeanSchemaHandler</a> - Class in <a href="space/sunqian/fs/object/data/handlers/package-summary.html">space.sunqian.fs.object.data.handlers</a></dt>
 <dd>
@@ -9033,14 +9051,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The root package of fs, provides root supports for fs:</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/package-summary.html">space.sunqian.fs.app</a> - package space.sunqian.fs.app</dt>
-<dd>
-<div class="block">This package provides core application and resource interfaces, which are used to abstract application behaviors.</div>
-</dd>
-<dt><a href="space/sunqian/fs/app/di/package-summary.html">space.sunqian.fs.app.di</a> - package space.sunqian.fs.app.di</dt>
-<dd>
-<div class="block">A simple dependency injection framework to implement <a href="space/sunqian/fs/app/SimpleApp.html" title="interface in space.sunqian.fs.app"><code>SimpleApp</code></a>.</div>
-</dd>
 <dt><a href="space/sunqian/fs/asm/package-summary.html">space.sunqian.fs.asm</a> - package space.sunqian.fs.asm</dt>
 <dd>
 <div class="block">The built-in ASM package, from the <a href="http://asm.ow2.org/">ASM</a> framework, provides a small and fast
@@ -9133,6 +9143,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="space/sunqian/fs/concurrent/package-summary.html">space.sunqian.fs.concurrent</a> - package space.sunqian.fs.concurrent</dt>
 <dd>
 <div class="block">Provides utilities for concurrent related, such as <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Future.html" title="class or interface in java.util.concurrent" class="external-link"><code>Future</code></a>.</div>
+</dd>
+<dt><a href="space/sunqian/fs/di/package-summary.html">space.sunqian.fs.di</a> - package space.sunqian.fs.di</dt>
+<dd>
+<div class="block">This package is a simple dependency injection framework.</div>
 </dd>
 <dt><a href="space/sunqian/fs/dynamic/package-summary.html">space.sunqian.fs.dynamic</a> - package space.sunqian.fs.dynamic</dt>
 <dd>
@@ -9969,13 +9983,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The type of this attribute, also called its name in the JVMS.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html#type()" class="member-name-link">type()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.Descriptor.html#type()" class="member-name-link">type()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></dt>
 <dd>
-<div class="block">Returns the type of the resource.</div>
+<div class="block">Returns the type of the component.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResource.html#type()" class="member-name-link">type()</a> - Method in interface space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" title="interface in space.sunqian.fs.app.di">InjectedResource</a></dt>
+<dt><a href="space/sunqian/fs/di/DIComponent.html#type()" class="member-name-link">type()</a> - Method in interface space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" title="interface in space.sunqian.fs.di">DIComponent</a></dt>
 <dd>
-<div class="block">Returns the type of this resource.</div>
+<div class="block">Returns the type of this component.</div>
 </dd>
 <dt><a href="space/sunqian/fs/net/http/HttpReq.Body.html#type()" class="member-name-link">type()</a> - Method in interface space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpReq.Body.html" title="interface in space.sunqian.fs.net.http">HttpReq.Body</a></dt>
 <dd>
@@ -10091,15 +10105,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Runs the given action and wraps any exception into an unchecked exception, the unchecked exception is generated
  by the given unchecked exception generator.</div>
 </dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html#undestroyedResources()" class="member-name-link">undestroyedResources()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIShutdownException.html#undestroyedComponents()" class="member-name-link">undestroyedComponents()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIShutdownException.html" title="class in space.sunqian.fs.di">DIShutdownException</a></dt>
 <dd>
-<div class="block">Returns the resources that were not destroyed due to the failure.</div>
+<div class="block">Returns the components that were not destroyed due to the failure.</div>
 </dd>
 <dt><a href="space/sunqian/fs/asm/Opcodes.html#UNINITIALIZED_THIS" class="member-name-link">UNINITIALIZED_THIS</a> - Static variable in interface space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/Opcodes.html" title="interface in space.sunqian.fs.asm">Opcodes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html#uninitializedResources()" class="member-name-link">uninitializedResources()</a> - Method in exception space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a></dt>
+<dt><a href="space/sunqian/fs/di/DIInitializeException.html#uninitializedComponents()" class="member-name-link">uninitializedComponents()</a> - Method in exception space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIInitializeException.html" title="class in space.sunqian.fs.di">DIInitializeException</a></dt>
 <dd>
-<div class="block">Returns the resources that were not initialized due to the failure.</div>
+<div class="block">Returns the components that were not initialized due to the failure.</div>
 </dd>
 <dt><a href="javax/annotation/meta/When.html#UNKNOWN" class="member-name-link">UNKNOWN</a> - Enum constant in enum class javax.annotation.meta.<a href="javax/annotation/meta/When.html" title="enum class in javax.annotation.meta">When</a></dt>
 <dd>

@@ -56,8 +56,6 @@ loadScripts(document, 'script');</script>
 <li><a href="javax/annotation/meta/package-tree.html">javax.annotation.meta</a>, </li>
 <li><a href="space/sunqian/annotation/package-tree.html">space.sunqian.annotation</a>, </li>
 <li><a href="space/sunqian/fs/package-tree.html">space.sunqian.fs</a>, </li>
-<li><a href="space/sunqian/fs/app/package-tree.html">space.sunqian.fs.app</a>, </li>
-<li><a href="space/sunqian/fs/app/di/package-tree.html">space.sunqian.fs.app.di</a>, </li>
 <li><a href="space/sunqian/fs/asm/package-tree.html">space.sunqian.fs.asm</a>, </li>
 <li><a href="space/sunqian/fs/asm/signature/package-tree.html">space.sunqian.fs.asm.signature</a>, </li>
 <li><a href="space/sunqian/fs/base/package-tree.html">space.sunqian.fs.base</a>, </li>
@@ -81,6 +79,7 @@ loadScripts(document, 'script');</script>
 <li><a href="space/sunqian/fs/codec/package-tree.html">space.sunqian.fs.codec</a>, </li>
 <li><a href="space/sunqian/fs/collect/package-tree.html">space.sunqian.fs.collect</a>, </li>
 <li><a href="space/sunqian/fs/concurrent/package-tree.html">space.sunqian.fs.concurrent</a>, </li>
+<li><a href="space/sunqian/fs/di/package-tree.html">space.sunqian.fs.di</a>, </li>
 <li><a href="space/sunqian/fs/dynamic/package-tree.html">space.sunqian.fs.dynamic</a>, </li>
 <li><a href="space/sunqian/fs/dynamic/aop/package-tree.html">space.sunqian.fs.dynamic.aop</a>, </li>
 <li><a href="space/sunqian/fs/dynamic/aop/asm/package-tree.html">space.sunqian.fs.dynamic.aop.asm</a>, </li>
@@ -152,7 +151,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.codec.<a href="space/sunqian/fs/codec/CryptoKit.html" class="type-name-link" title="class in space.sunqian.fs.codec">CryptoKit</a></li>
 <li class="circle">space.sunqian.fs.object.data.<a href="space/sunqian/fs/object/data/DataObjectKit.html" class="type-name-link" title="class in space.sunqian.fs.object.data">DataObjectKit</a></li>
 <li class="circle">space.sunqian.fs.base.date.<a href="space/sunqian/fs/base/date/DateKit.html" class="type-name-link" title="class in space.sunqian.fs.base.date">DateKit</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.Builder.html" class="type-name-link" title="class in space.sunqian.fs.di">DIContainer.Builder</a></li>
 <li class="circle">space.sunqian.fs.codec.<a href="space/sunqian/fs/codec/DigestKit.html" class="type-name-link" title="class in space.sunqian.fs.codec">DigestKit</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIKit.html" class="type-name-link" title="class in space.sunqian.fs.di">DIKit</a></li>
 <li class="circle">space.sunqian.fs.dynamic.<a href="space/sunqian/fs/dynamic/DynamicKit.html" class="type-name-link" title="class in space.sunqian.fs.dynamic">DynamicKit</a></li>
 <li class="circle">space.sunqian.fs.base.lang.<a href="space/sunqian/fs/base/lang/EnumKit.html" class="type-name-link" title="class in space.sunqian.fs.base.lang">EnumKit</a></li>
 <li class="circle">space.sunqian.fs.asm.<a href="space/sunqian/fs/asm/FieldVisitor.html" class="type-name-link" title="class in space.sunqian.fs.asm">FieldVisitor</a></li>
@@ -165,7 +166,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpCaller.Builder.html" class="type-name-link" title="class in space.sunqian.fs.net.http">HttpCaller.Builder</a></li>
 <li class="circle">space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpKit.html" class="type-name-link" title="class in space.sunqian.fs.net.http">HttpKit</a></li>
 <li class="circle">space.sunqian.fs.net.http.<a href="space/sunqian/fs/net/http/HttpReq.Builder.html" class="type-name-link" title="class in space.sunqian.fs.net.http">HttpReq.Builder</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.Builder.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedApp.Builder</a></li>
 <li class="circle">java.io.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" class="type-name-link external-link" title="class or interface in java.io">InputStream</a> (implements java.io.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Closeable.html" title="class or interface in java.io" class="external-link">Closeable</a>)
 <ul>
 <li class="circle">space.sunqian.fs.io.<a href="space/sunqian/fs/io/DoReadStream.html" class="type-name-link" title="class in space.sunqian.fs.io">DoReadStream</a></li>
@@ -252,11 +252,12 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.base.exception.<a href="space/sunqian/fs/base/exception/AwaitingException.html" class="type-name-link" title="class in space.sunqian.fs.base.exception">AwaitingException</a></li>
 <li class="circle">space.sunqian.fs.codec.<a href="space/sunqian/fs/codec/Base64Kit.Base64Exception.html" class="type-name-link" title="class in space.sunqian.fs.codec">Base64Kit.Base64Exception</a></li>
 <li class="circle">space.sunqian.fs.object.data.<a href="space/sunqian/fs/object/data/DataObjectException.html" class="type-name-link" title="class in space.sunqian.fs.object.data">DataObjectException</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIException</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIInitializeException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIInitializeException</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIShutdownException.html" class="type-name-link" title="class in space.sunqian.fs.di">DIShutdownException</a></li>
 <li class="circle">space.sunqian.fs.dynamic.<a href="space/sunqian/fs/dynamic/DynamicException.html" class="type-name-link" title="class in space.sunqian.fs.dynamic">DynamicException</a></li>
 <li class="circle">space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/EventBusException.html" class="type-name-link" title="class in space.sunqian.fs.eventbus">EventBusException</a></li>
 <li class="circle">space.sunqian.fs.codec.<a href="space/sunqian/fs/codec/HexKit.HexException.html" class="type-name-link" title="class in space.sunqian.fs.codec">HexKit.HexException</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceDestructionException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedResourceDestructionException</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResourceInitializationException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedResourceInitializationException</a></li>
 <li class="circle">space.sunqian.fs.invoke.<a href="space/sunqian/fs/invoke/InvocationException.html" class="type-name-link" title="class in space.sunqian.fs.invoke">InvocationException</a></li>
 <li class="circle">space.sunqian.fs.io.<a href="space/sunqian/fs/io/IORuntimeException.html" class="type-name-link" title="class in space.sunqian.fs.io">IORuntimeException</a>
 <ul>
@@ -281,11 +282,6 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">space.sunqian.fs.reflect.<a href="space/sunqian/fs/reflect/ReflectionException.html" class="type-name-link" title="class in space.sunqian.fs.reflect">ReflectionException</a></li>
-<li class="circle">space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleAppException.html" class="type-name-link" title="class in space.sunqian.fs.app">SimpleAppException</a>
-<ul>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAppException.html" class="type-name-link" title="class in space.sunqian.fs.app.di">InjectedAppException</a></li>
-</ul>
-</li>
 <li class="circle">space.sunqian.fs.base.exception.<a href="space/sunqian/fs/base/exception/UnknownTypeException.html" class="type-name-link" title="class in space.sunqian.fs.base.exception">UnknownTypeException</a>
 <ul>
 <li class="circle">space.sunqian.fs.base.exception.<a href="space/sunqian/fs/base/exception/UnknownArrayTypeException.html" class="type-name-link" title="class in space.sunqian.fs.base.exception">UnknownArrayTypeException</a></li>
@@ -336,7 +332,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.collect.<a href="space/sunqian/fs/collect/ArrayOperator.html" class="type-name-link" title="interface in space.sunqian.fs.collect">ArrayOperator</a></li>
 <li class="circle">space.sunqian.fs.dynamic.aop.<a href="space/sunqian/fs/dynamic/aop/AspectHandler.html" class="type-name-link" title="interface in space.sunqian.fs.dynamic.aop">AspectHandler</a>
 <ul>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedAspect.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedAspect</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIAspectHandler.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIAspectHandler</a></li>
 </ul>
 </li>
 <li class="circle">space.sunqian.fs.dynamic.aop.<a href="space/sunqian/fs/dynamic/aop/AspectMaker.html" class="type-name-link" title="interface in space.sunqian.fs.dynamic.aop">AspectMaker</a></li>
@@ -436,6 +432,12 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">space.sunqian.fs.base.date.<a href="space/sunqian/fs/base/date/DateFormatter.html" class="type-name-link" title="interface in space.sunqian.fs.base.date">DateFormatter</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Descriptor.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.Descriptor</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.FieldSetter.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.FieldSetter</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIComponent.Resolver.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIComponent.Resolver</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIContainer.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIContainer</a></li>
+<li class="circle">space.sunqian.fs.di.<a href="space/sunqian/fs/di/DIKit.DependenciesFunction.html" class="type-name-link" title="interface in space.sunqian.fs.di">DIKit.DependenciesFunction</a>&lt;T&gt;</li>
 <li class="circle">java.util.function.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/DoubleSupplier.html" class="type-name-link external-link" title="class or interface in java.util.function">DoubleSupplier</a>
 <ul>
 <li class="circle">space.sunqian.fs.base.random.<a href="space/sunqian/fs/base/random/Rng.html" class="type-name-link" title="interface in space.sunqian.fs.base.random">Rng</a> (also extends java.util.function.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntSupplier.html" title="class or interface in java.util.function" class="external-link">IntSupplier</a>, java.util.function.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/LongSupplier.html" title="class or interface in java.util.function" class="external-link">LongSupplier</a>)</li>
@@ -460,10 +462,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.base.function.<a href="space/sunqian/fs/base/function/IndexedLongFunction.html" class="type-name-link" title="interface in space.sunqian.fs.base.function">IndexedLongFunction</a>&lt;R&gt;</li>
 <li class="circle">space.sunqian.fs.base.function.<a href="space/sunqian/fs/base/function/IndexedLongPredicate.html" class="type-name-link" title="interface in space.sunqian.fs.base.function">IndexedLongPredicate</a></li>
 <li class="circle">space.sunqian.fs.base.function.<a href="space/sunqian/fs/base/function/IndexedPredicate.html" class="type-name-link" title="interface in space.sunqian.fs.base.function">IndexedPredicate</a>&lt;T&gt;</li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Descriptor.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.Descriptor</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.FieldSetter.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.FieldSetter</a></li>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedResource.Resolver.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedResource.Resolver</a></li>
 <li class="circle">space.sunqian.fs.base.function.<a href="space/sunqian/fs/base/function/IntSubFunction.html" class="type-name-link" title="interface in space.sunqian.fs.base.function">IntSubFunction</a>&lt;T,<wbr>R&gt;</li>
 <li class="circle">java.util.function.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntSupplier.html" class="type-name-link external-link" title="class or interface in java.util.function">IntSupplier</a>
 <ul>
@@ -559,11 +557,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">space.sunqian.fs.dynamic.proxy.<a href="space/sunqian/fs/dynamic/proxy/ProxySpec.html" class="type-name-link" title="interface in space.sunqian.fs.dynamic.proxy">ProxySpec</a></li>
 <li class="circle">space.sunqian.fs.base.value.<a href="space/sunqian/fs/base/value/Ret.html" class="type-name-link" title="interface in space.sunqian.fs.base.value">Ret</a>&lt;T&gt;</li>
 <li class="circle">space.sunqian.fs.base.random.<a href="space/sunqian/fs/base/random/Rog.html" class="type-name-link" title="interface in space.sunqian.fs.base.random">Rog</a>&lt;T&gt;</li>
-<li class="circle">space.sunqian.fs.app.<a href="space/sunqian/fs/app/SimpleApp.html" class="type-name-link" title="interface in space.sunqian.fs.app">SimpleApp</a>
-<ul>
-<li class="circle">space.sunqian.fs.app.di.<a href="space/sunqian/fs/app/di/InjectedApp.html" class="type-name-link" title="interface in space.sunqian.fs.app.di">InjectedApp</a></li>
-</ul>
-</li>
 <li class="circle">space.sunqian.fs.cache.<a href="space/sunqian/fs/cache/SimpleCache.html" class="type-name-link" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</li>
 <li class="circle">space.sunqian.fs.eventbus.<a href="space/sunqian/fs/eventbus/SimpleEventBus.html" class="type-name-link" title="interface in space.sunqian.fs.eventbus">SimpleEventBus</a></li>
 <li class="circle">space.sunqian.fs.base.logging.<a href="space/sunqian/fs/base/logging/SimpleLog.html" class="type-name-link" title="interface in space.sunqian.fs.base.logging">SimpleLog</a></li>

@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DIContainerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.di</a> &gt; <span class="el_source">DIContainerImpl.java</span></div><h1>DIContainerImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.di;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.OutParam;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.collect.ListKit;
+import space.sunqian.fs.dynamic.aop.AspectMaker;
+import space.sunqian.fs.dynamic.aop.AspectSpec;
+import space.sunqian.fs.invoke.Invocable;
+import space.sunqian.fs.invoke.InvocationException;
+import space.sunqian.fs.reflect.TypeKit;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+final class DIContainerImpl implements DIContainer {
+
+<span class="fc" id="L33">    private static final Runnable EMPTY_RUNNABLE = () -&gt; {};</span>
+
+    private final @Nonnull Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; components;
+    private final @Nonnull Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; localComponents;
+    private final @Nonnull List&lt;@Nonnull DIContainer&gt; parentContainers;
+
+<span class="fc" id="L39">    private volatile int state = 0;</span>
+
+    public DIContainerImpl(
+        @Nonnull Collection&lt;@Nonnull Type&gt; componentTypes,
+        @Nonnull Collection&lt;@Nonnull DIContainer&gt; parentContainers,
+        @Nonnull Collection&lt;@Nonnull String&gt; componentAnnotations,
+        @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations,
+        @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations,
+        @Nonnull DIComponent.Resolver resolver,
+        @Nonnull DIComponent.FieldSetter fieldSetter
+<span class="fc" id="L49">    ) throws DIInitializeException, DIException {</span>
+<span class="fc" id="L50">        Map&lt;Type, Res&gt; resMap = new LinkedHashMap&lt;&gt;();</span>
+        // add components from parent containers
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (DIContainer container : parentContainers) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            for (DIComponent component : container.components().values()) {</span>
+<span class="fc" id="L54">                resMap.put(component.type(), new Res(component.type(), component.instance()));</span>
+<span class="fc" id="L55">            }</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc" id="L57">        Set&lt;ResField&gt; fieldSet = new LinkedHashSet&lt;&gt;();</span>
+        // generate instances
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (Type componentType : componentTypes) {</span>
+<span class="fc" id="L60">            doDependencyInjection(</span>
+                componentType,
+                componentAnnotations,
+                postConstructAnnotations,
+                preDestroyAnnotations,
+                resolver,
+                resMap,
+                fieldSet
+            );
+<span class="fc" id="L69">        }</span>
+        // base injects:
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (ResField resField : fieldSet) {</span>
+<span class="fc" id="L72">            setField(</span>
+                fieldSetter,
+<span class="fc" id="L74">                resField.field,</span>
+<span class="fc" id="L75">                resField.owner.instance,</span>
+<span class="fc" id="L76">                getRes(resField.field.getGenericType(), resMap).instance</span>
+            );
+<span class="fc" id="L78">        }</span>
+        // aop
+<span class="fc" id="L80">        doAop(fieldSetter, resMap, fieldSet);</span>
+        // rewrite fields
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (ResField resField : fieldSet) {</span>
+<span class="fc" id="L83">            boolean needsRewrite = false;</span>
+            Object owner;
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (resField.owner.advisedInstance != null) {</span>
+<span class="fc" id="L86">                needsRewrite = true;</span>
+<span class="fc" id="L87">                owner = resField.owner.advisedInstance;</span>
+            } else {
+<span class="fc" id="L89">                owner = resField.owner.instance;</span>
+            }
+<span class="fc" id="L91">            Res valueRes = getRes(resField.field.getGenericType(), resMap);</span>
+            Object value;
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (valueRes.advisedInstance != null) {</span>
+<span class="fc" id="L94">                needsRewrite = true;</span>
+<span class="fc" id="L95">                value = valueRes.advisedInstance;</span>
+            } else {
+<span class="fc" id="L97">                value = valueRes.instance;</span>
+            }
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (needsRewrite) {</span>
+<span class="fc" id="L100">                setField(fieldSetter, resField.field, owner, value);</span>
+            }
+<span class="fc" id="L102">        }</span>
+        // components
+<span class="fc" id="L104">        LinkedHashMap&lt;Type, DIComponentImpl&gt; components = new LinkedHashMap&lt;&gt;(resMap.size());</span>
+<span class="fc" id="L105">        LinkedHashMap&lt;Type, DIComponentImpl&gt; localComponents = new LinkedHashMap&lt;&gt;(resMap.size());</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (Res res : resMap.values()) {</span>
+<span class="fc" id="L107">            Object inst = getResInstance(res);</span>
+<span class="fc" id="L108">            DIComponentImpl component = new DIComponentImpl(</span>
+<span class="fc" id="L109">                res.type,</span>
+                inst,
+<span class="fc" id="L111">                res.local,</span>
+<span class="fc" id="L112">                res.postConstructMethod(),</span>
+<span class="fc" id="L113">                res.preDestroyMethod()</span>
+            );
+<span class="fc" id="L115">            components.put(res.type, component);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if (res.local) {</span>
+<span class="fc" id="L117">                localComponents.put(res.type, component);</span>
+            }
+<span class="fc" id="L119">        }</span>
+        // complete
+<span class="fc" id="L121">        this.parentContainers = ListKit.toList(parentContainers);</span>
+<span class="fc" id="L122">        this.components = Collections.unmodifiableMap(components);</span>
+<span class="fc" id="L123">        this.localComponents = Collections.unmodifiableMap(localComponents);</span>
+        // set dependencies
+<span class="fc" id="L125">        configureComponentDependencies(resMap);</span>
+        // check cycle dependencies for post-construct methods and pre-destroy methods
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (DIComponent component : localComponents.values()) {</span>
+<span class="fc" id="L128">            DIKit.checkCycleDependencies(component, DIComponent::postConstructDependencies);</span>
+<span class="fc" id="L129">            DIKit.checkCycleDependencies(component, DIComponent::preDestroyDependencies);</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">    }</span>
+
+    private void configureComponentDependencies(
+        @Nonnull Map&lt;@Nonnull Type, @Nonnull Res&gt; resMap
+    ) {
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (DIComponent value : localComponents.values()) {</span>
+<span class="fc" id="L137">            DIComponentImpl component = (DIComponentImpl) value;</span>
+            // @Resource
+<span class="fc" id="L139">            Res res = getRes(component.type(), resMap);</span>
+<span class="fc" id="L140">            DIComponent.Descriptor descriptor = Fs.asNonnull(res.descriptor);</span>
+<span class="fc" id="L141">            component.dependenciesVar.addAll(</span>
+<span class="fc" id="L142">                descriptor.dependencyFields().stream()</span>
+<span class="fc" id="L143">                    .map(field -&gt; getNonnullComponent(field.getGenericType()))</span>
+<span class="fc" id="L144">                    .collect(Collectors.toList())</span>
+            );
+            // post-construct method parameters
+<span class="fc" id="L147">            Method postConstructMethod = descriptor.postConstructMethod();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (postConstructMethod != null) {</span>
+<span class="fc" id="L149">                component.postConstructDependenciesVar.addAll(</span>
+<span class="fc" id="L150">                    Arrays.stream(postConstructMethod.getParameterTypes())</span>
+<span class="fc" id="L151">                        .map(this::getNonnullComponent)</span>
+<span class="fc" id="L152">                        .collect(Collectors.toList())</span>
+                );
+            }
+            // pre-destroy method parameters
+<span class="fc" id="L156">            Method preDestroyMethod = descriptor.preDestroyMethod();</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (preDestroyMethod != null) {</span>
+<span class="fc" id="L158">                component.preDestroyDependenciesVar.addAll(</span>
+<span class="fc" id="L159">                    Arrays.stream(preDestroyMethod.getParameterTypes())</span>
+<span class="fc" id="L160">                        .map(this::getNonnullComponent)</span>
+<span class="fc" id="L161">                        .collect(Collectors.toList())</span>
+                );
+            }
+<span class="fc" id="L164">            component.dependenciesVar.trimToSize();</span>
+<span class="fc" id="L165">            component.postConstructDependenciesVar.trimToSize();</span>
+<span class="fc" id="L166">            component.preDestroyDependenciesVar.trimToSize();</span>
+<span class="fc" id="L167">        }</span>
+<span class="fc" id="L168">    }</span>
+
+    private @Nonnull DIComponent getNonnullComponent(@Nonnull Type type) {
+<span class="fc" id="L171">        return Fs.asNonnull(getComponent(type));</span>
+    }
+
+    private void doDependencyInjection(
+        @Nonnull Type type,
+        @Nonnull Collection&lt;@Nonnull String&gt; componentAnnotations,
+        @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations,
+        @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations,
+        @Nonnull DIComponent.Resolver resolver,
+        @Nonnull @OutParam Map&lt;@Nonnull Type, @Nonnull Res&gt; componentMap,
+        @Nonnull @OutParam Set&lt;@Nonnull ResField&gt; fieldSet
+    ) throws DIException {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (componentMap.containsKey(type)) {</span>
+<span class="fc" id="L184">            return;</span>
+        }
+<span class="fc" id="L186">        DIComponent.Descriptor descriptor = Fs.uncheck(() -&gt;</span>
+<span class="fc" id="L187">                resolver.resolve(type, componentAnnotations, postConstructAnnotations, preDestroyAnnotations),</span>
+            DIException::new
+        );
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (!canInstantiate(descriptor.rawClass())) {</span>
+<span class="fc" id="L191">            return;</span>
+        }
+<span class="fc" id="L193">        Res res = new Res(descriptor);</span>
+<span class="fc" id="L194">        componentMap.put(type, res);</span>
+        // dependency fields
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        for (Field dependencyField : descriptor.dependencyFields()) {</span>
+<span class="fc" id="L197">            Type dependencyType = dependencyField.getGenericType();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (dependencyType.equals(type)) {</span>
+<span class="fc" id="L199">                fieldSet.add(new ResField(dependencyField, res));</span>
+<span class="fc" id="L200">                continue;</span>
+            }
+<span class="fc" id="L202">            doDependencyInjection(</span>
+                dependencyType,
+                componentAnnotations,
+                postConstructAnnotations,
+                preDestroyAnnotations,
+                resolver,
+                componentMap,
+                fieldSet
+            );
+<span class="fc" id="L211">            fieldSet.add(new ResField(dependencyField, res));</span>
+<span class="fc" id="L212">        }</span>
+        // dependency parameters of post-construct method
+<span class="fc" id="L214">        Method postConstructMethod = descriptor.postConstructMethod();</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (postConstructMethod != null) {</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">            for (Type parameterType : postConstructMethod.getGenericParameterTypes()) {</span>
+<span class="fc" id="L217">                doDependencyInjection(</span>
+                    parameterType,
+                    componentAnnotations,
+                    postConstructAnnotations,
+                    preDestroyAnnotations,
+                    resolver,
+                    componentMap,
+                    fieldSet
+                );
+            }
+        }
+        // dependency parameters of pre-destroy method
+<span class="fc" id="L229">        Method preDestroyMethod = descriptor.preDestroyMethod();</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (preDestroyMethod != null) {</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            for (Type parameterType : preDestroyMethod.getGenericParameterTypes()) {</span>
+<span class="fc" id="L232">                doDependencyInjection(</span>
+                    parameterType,
+                    componentAnnotations,
+                    postConstructAnnotations,
+                    preDestroyAnnotations,
+                    resolver,
+                    componentMap,
+                    fieldSet
+                );
+            }
+        }
+<span class="fc" id="L243">    }</span>
+
+    private boolean canInstantiate(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if (type.isInterface()) {</span>
+<span class="fc" id="L247">            return false;</span>
+        }
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        return !Modifier.isAbstract(type.getModifiers());</span>
+    }
+
+    private void doAop(
+        @Nonnull DIComponent.FieldSetter fieldSetter,
+        @Nonnull @OutParam Map&lt;@Nonnull Type, @Nonnull Res&gt; componentMap,
+        @Nonnull @OutParam Set&lt;@Nonnull ResField&gt; fieldSet
+    ) throws DIException {
+<span class="fc" id="L257">        List&lt;DIAspectHandler&gt; aspects = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        for (Res res : componentMap.values()) {</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">            if (!res.local) {</span>
+<span class="fc" id="L260">                continue;</span>
+            }
+<span class="fc" id="L262">            Object instance = res.instance;</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">            if (instance instanceof DIAspectHandler) {</span>
+<span class="fc" id="L264">                aspects.add((DIAspectHandler) instance);</span>
+<span class="fc" id="L265">                res.isAspectHandler = true;</span>
+            }
+<span class="fc" id="L267">        }</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (aspects.isEmpty()) {</span>
+<span class="fc" id="L269">            return;</span>
+        }
+<span class="fc" id="L271">        AspectMaker aspectMaker = AspectMaker.byAsm();</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        for (Res res : componentMap.values()) {</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">            if (!res.local) {</span>
+<span class="fc" id="L274">                continue;</span>
+            }
+<span class="fc bfc" id="L276" title="All 2 branches covered.">            if (res.isAspectHandler) {</span>
+<span class="fc" id="L277">                continue;</span>
+            }
+<span class="fc bfc" id="L279" title="All 2 branches covered.">            for (DIAspectHandler aspect : aspects) {</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">                if (aspect.needsAspect(res.type)) {</span>
+<span class="fc" id="L281">                    AspectSpec spec = aspectMaker.make(Fs.asNonnull(res.descriptor).rawClass(), aspect);</span>
+<span class="fc" id="L282">                    res.advisedInstance = spec.newInstance();</span>
+<span class="fc" id="L283">                    break;</span>
+                }
+<span class="fc" id="L285">            }</span>
+<span class="fc" id="L286">        }</span>
+<span class="fc" id="L287">    }</span>
+
+    private void setField(
+        @Nonnull DIComponent.FieldSetter fieldSetter,
+        @Nonnull Field field, @Nonnull Object owner, @Nonnull Object value
+    ) throws DIException {
+<span class="fc" id="L293">        Fs.uncheck(</span>
+            () -&gt; {
+<span class="fc" id="L295">                fieldSetter.set(field, owner, value);</span>
+<span class="fc" id="L296">            },</span>
+            DIException::new
+        );
+<span class="fc" id="L299">    }</span>
+
+    private @Nonnull Res getRes(
+        @Nonnull Type type,
+        @Nonnull Map&lt;@Nonnull Type, @Nonnull Res&gt; componentMap
+    ) throws DIException {
+<span class="fc" id="L305">        Res res = componentMap.get(type);</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        if (res != null) {</span>
+<span class="fc" id="L307">            return res;</span>
+        }
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        for (Res resource : componentMap.values()) {</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">            if (TypeKit.isAssignable(type, resource.type)) {</span>
+<span class="fc" id="L311">                return resource;</span>
+            }
+<span class="fc" id="L313">        }</span>
+<span class="fc" id="L314">        throw new DIException(&quot;Can not find resource instance for type :&quot; + type.getTypeName() + &quot;.&quot;);</span>
+    }
+
+    private @Nonnull Object getResInstance(
+        @Nonnull Res res
+    ) {
+<span class="fc bfc" id="L320" title="All 2 branches covered.">        return res.advisedInstance != null ? res.advisedInstance : res.instance;</span>
+    }
+
+    @Override
+    public synchronized DIContainer initialize() throws DIInitializeException, DIException {
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (state &gt; 0) {</span>
+<span class="fc" id="L326">            throw new DIException(&quot;DIContainer is already initialized.&quot;);</span>
+        }
+        try {
+<span class="fc" id="L329">            Set&lt;DIComponent&gt; unprocessed = new LinkedHashSet&lt;&gt;(localComponents.values());</span>
+<span class="fc" id="L330">            Set&lt;DIComponent&gt; processed = new LinkedHashSet&lt;&gt;(unprocessed.size());</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">            for (DIComponent component : localComponents.values()) {</span>
+                try {
+<span class="fc" id="L333">                    postConstruct(component, unprocessed, processed);</span>
+<span class="fc" id="L334">                } catch (Exception e) {</span>
+<span class="fc" id="L335">                    unprocessed.remove(component);</span>
+<span class="fc" id="L336">                    throw new DIInitializeException(component, e, new ArrayList&lt;&gt;(processed), new ArrayList&lt;&gt;(unprocessed));</span>
+<span class="fc" id="L337">                }</span>
+<span class="fc" id="L338">            }</span>
+        } finally {
+<span class="fc" id="L340">            this.state = 1;</span>
+        }
+<span class="fc" id="L342">        return this;</span>
+    }
+
+    private void postConstruct(
+        @Nonnull DIComponent component,
+        @Nonnull Set&lt;@Nonnull DIComponent&gt; unprocessed,
+        @Nonnull Set&lt;@Nonnull DIComponent&gt; processed
+    ) {
+<span class="fc bfc" id="L350" title="All 2 branches covered.">        if (component.isInitialized()) {</span>
+<span class="fc" id="L351">            return;</span>
+        }
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        for (DIComponent postConstructDependency : component.postConstructDependencies()) {</span>
+<span class="fc" id="L354">            postConstruct(postConstructDependency, unprocessed, processed);</span>
+<span class="fc" id="L355">        }</span>
+<span class="fc" id="L356">        component.postConstruct();</span>
+<span class="fc" id="L357">        unprocessed.remove(component);</span>
+<span class="fc" id="L358">        processed.add(component);</span>
+<span class="fc" id="L359">    }</span>
+
+    @Override
+    public boolean isInitialized() {
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        return state &gt; 0;</span>
+    }
+
+    @Override
+    public synchronized DIContainer shutdown() throws DIShutdownException, DIException {
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (state &lt; 1) {</span>
+<span class="fc" id="L369">            throw new DIException(&quot;DIContainer is not initialized.&quot;);</span>
+        }
+<span class="fc bfc" id="L371" title="All 2 branches covered.">        if (state &gt;= 2) {</span>
+<span class="fc" id="L372">            throw new DIException(&quot;DIContainer is already shutdown.&quot;);</span>
+        }
+        try {
+<span class="fc" id="L375">            Set&lt;DIComponent&gt; unprocessed = new LinkedHashSet&lt;&gt;(localComponents.values());</span>
+<span class="fc" id="L376">            Set&lt;DIComponent&gt; processed = new LinkedHashSet&lt;&gt;(unprocessed.size());</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">            for (DIComponent component : localComponents.values()) {</span>
+                try {
+<span class="fc" id="L379">                    preDestroy(component, unprocessed, processed);</span>
+<span class="fc" id="L380">                } catch (Exception e) {</span>
+<span class="fc" id="L381">                    unprocessed.remove(component);</span>
+<span class="fc" id="L382">                    throw new DIShutdownException(component, e, new ArrayList&lt;&gt;(processed), new ArrayList&lt;&gt;(unprocessed));</span>
+<span class="fc" id="L383">                }</span>
+<span class="fc" id="L384">            }</span>
+        } finally {
+<span class="fc" id="L386">            this.state = 2;</span>
+        }
+<span class="fc" id="L388">        return this;</span>
+    }
+
+    private void preDestroy(
+        @Nonnull DIComponent component,
+        @Nonnull Set&lt;@Nonnull DIComponent&gt; unprocessed,
+        @Nonnull Set&lt;@Nonnull DIComponent&gt; processed
+    ) {
+<span class="fc bfc" id="L396" title="All 2 branches covered.">        if (component.isDestroyed()) {</span>
+<span class="fc" id="L397">            return;</span>
+        }
+<span class="fc bfc" id="L399" title="All 2 branches covered.">        for (DIComponent preDestroyDependency : component.preDestroyDependencies()) {</span>
+<span class="fc" id="L400">            preDestroy(preDestroyDependency, unprocessed, processed);</span>
+<span class="fc" id="L401">        }</span>
+<span class="fc" id="L402">        component.preDestroy();</span>
+<span class="fc" id="L403">        unprocessed.remove(component);</span>
+<span class="fc" id="L404">        processed.add(component);</span>
+<span class="fc" id="L405">    }</span>
+
+    @Override
+    public boolean isShutdown() {
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        return state &gt;= 2;</span>
+    }
+
+    @Override
+    public @Nonnull List&lt;@Nonnull DIContainer&gt; parentContainers() {
+<span class="fc" id="L414">        return parentContainers;</span>
+    }
+
+    @Override
+    public @Nonnull Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; localComponents() {
+<span class="fc" id="L419">        return localComponents;</span>
+    }
+
+    @Override
+    public @Nonnull Map&lt;@Nonnull Type, @Nonnull DIComponent&gt; components() {
+<span class="fc" id="L424">        return components;</span>
+    }
+
+    @Override
+    public @Nullable DIComponent getComponent(@Nonnull Type type) {
+<span class="fc" id="L429">        DIComponent component = components.get(type);</span>
+<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (component != null) {</span>
+<span class="fc" id="L431">            return component;</span>
+        }
+<span class="fc bfc" id="L433" title="All 2 branches covered.">        for (DIComponent sr : components.values()) {</span>
+<span class="fc bfc" id="L434" title="All 2 branches covered.">            if (TypeKit.isAssignable(type, sr.type())) {</span>
+<span class="fc" id="L435">                return sr;</span>
+            }
+<span class="fc" id="L437">        }</span>
+<span class="fc" id="L438">        return null;</span>
+    }
+
+    private static @Nonnull Class&lt;?&gt; rawClass(@Nonnull Type type) {
+<span class="fc" id="L442">        Class&lt;?&gt; raw = TypeKit.getRawClass(type);</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">        if (raw == null) {</span>
+<span class="fc" id="L444">            throw new DIException(&quot;Unsupported DI type: &quot; + type.getTypeName() + &quot;.&quot;);</span>
+        }
+<span class="fc" id="L446">        return raw;</span>
+    }
+
+    private static final class Res {
+
+        private final @Nonnull Type type;
+        private final boolean local;
+        private final @Nonnull Object instance;
+        private final @Nullable DIComponent.Descriptor descriptor;
+
+        private Object advisedInstance;
+<span class="fc" id="L457">        private boolean isAspectHandler = false;</span>
+
+        private Res(
+            @Nonnull DIComponent.Descriptor descriptor
+<span class="fc" id="L461">        ) throws DIException {</span>
+<span class="fc" id="L462">            this.type = descriptor.type();</span>
+<span class="fc" id="L463">            this.local = true;</span>
+<span class="fc" id="L464">            this.descriptor = descriptor;</span>
+            try {
+<span class="fc" id="L466">                this.instance = Invocable.of(descriptor.rawClass().getConstructor()).invoke(null);</span>
+<span class="fc" id="L467">            } catch (Exception e) {</span>
+<span class="fc" id="L468">                throw new DIException(&quot;Creates instance for &quot; + type.getTypeName() + &quot; failed.&quot;, e);</span>
+<span class="fc" id="L469">            }</span>
+<span class="fc" id="L470">        }</span>
+
+<span class="fc" id="L472">        private Res(@Nonnull Type type, @Nonnull Object instance) {</span>
+<span class="fc" id="L473">            this.type = type;</span>
+<span class="fc" id="L474">            this.local = false;</span>
+<span class="fc" id="L475">            this.descriptor = null;</span>
+<span class="fc" id="L476">            this.instance = instance;</span>
+<span class="fc" id="L477">        }</span>
+
+        public @Nullable Method postConstructMethod() {
+<span class="fc bfc" id="L480" title="All 2 branches covered.">            return descriptor != null ? descriptor.postConstructMethod() : null;</span>
+        }
+
+        public @Nullable Method preDestroyMethod() {
+<span class="fc bfc" id="L484" title="All 2 branches covered.">            return descriptor != null ? descriptor.preDestroyMethod() : null;</span>
+        }
+    }
+
+    private static final class ResField {
+
+        private final @Nonnull Field field;
+        private final @Nonnull Res owner;
+
+<span class="fc" id="L493">        private ResField(@Nonnull Field field, @Nonnull Res owner) {</span>
+<span class="fc" id="L494">            this.field = field;</span>
+<span class="fc" id="L495">            this.owner = owner;</span>
+<span class="fc" id="L496">        }</span>
+    }
+
+    private final class DIComponentImpl implements DIComponent {
+
+        private final @Nonnull Type type;
+        private final @Nonnull Object instance;
+        private final boolean local;
+        private final @Nullable Method postConstructMethod;
+        private final @Nonnull Runnable postConstruct;
+        private final @Nullable Method preDestroyMethod;
+        private final @Nonnull Runnable preDestroy;
+
+<span class="fc" id="L509">        final @Nonnull ArrayList&lt;@Nonnull DIComponent&gt; dependenciesVar = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L510">        final @Nonnull ArrayList&lt;@Nonnull DIComponent&gt; postConstructDependenciesVar = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L511">        final @Nonnull ArrayList&lt;@Nonnull DIComponent&gt; preDestroyDependenciesVar = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L512">        private final @Nonnull List&lt;@Nonnull DIComponent&gt; dependencies =</span>
+<span class="fc" id="L513">            Collections.unmodifiableList(dependenciesVar);</span>
+<span class="fc" id="L514">        private final @Nonnull List&lt;@Nonnull DIComponent&gt; postConstructDependencies =</span>
+<span class="fc" id="L515">            Collections.unmodifiableList(postConstructDependenciesVar);</span>
+<span class="fc" id="L516">        private final @Nonnull List&lt;@Nonnull DIComponent&gt; preDestroyDependencies =</span>
+<span class="fc" id="L517">            Collections.unmodifiableList(preDestroyDependenciesVar);</span>
+
+<span class="fc" id="L519">        private volatile int state = 0;</span>
+
+        private DIComponentImpl(
+            @Nonnull Type type,
+            @Nonnull Object instance,
+            boolean local,
+            @Nullable Method postConstructMethod,
+            @Nullable Method preDestroyMethod
+<span class="fc" id="L527">        ) {</span>
+<span class="fc" id="L528">            this.type = type;</span>
+<span class="fc" id="L529">            this.instance = instance;</span>
+<span class="fc" id="L530">            this.local = local;</span>
+<span class="fc" id="L531">            this.postConstructMethod = postConstructMethod;</span>
+<span class="fc" id="L532">            this.preDestroyMethod = preDestroyMethod;</span>
+<span class="fc bfc" id="L533" title="All 2 branches covered.">            this.postConstruct = postConstructMethod == null ?</span>
+<span class="fc" id="L534">                EMPTY_RUNNABLE</span>
+                :
+                () -&gt; {
+<span class="fc" id="L537">                    Invocable invocable = Invocable.of(postConstructMethod);</span>
+<span class="fc" id="L538">                    Type[] paramTypes = postConstructMethod.getGenericParameterTypes();</span>
+<span class="fc" id="L539">                    Object[] args = new Object[paramTypes.length];</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">                    for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="fc" id="L541">                        args[i] = getObject(paramTypes[i]);</span>
+                    }
+<span class="fc" id="L543">                    invocable.invoke(instance, args);</span>
+<span class="fc" id="L544">                };</span>
+<span class="fc bfc" id="L545" title="All 2 branches covered.">            this.preDestroy = preDestroyMethod == null ?</span>
+<span class="fc" id="L546">                EMPTY_RUNNABLE</span>
+                :
+                () -&gt; {
+<span class="fc" id="L549">                    Invocable invocable = Invocable.of(preDestroyMethod);</span>
+<span class="fc" id="L550">                    Type[] paramTypes = preDestroyMethod.getGenericParameterTypes();</span>
+<span class="fc" id="L551">                    Object[] args = new Object[paramTypes.length];</span>
+<span class="fc bfc" id="L552" title="All 2 branches covered.">                    for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="fc" id="L553">                        args[i] = getObject(paramTypes[i]);</span>
+                    }
+<span class="fc" id="L555">                    invocable.invoke(instance, args);</span>
+<span class="fc" id="L556">                };</span>
+<span class="fc" id="L557">        }</span>
+
+        @Override
+        public @Nonnull Type type() {
+<span class="fc" id="L561">            return type;</span>
+        }
+
+        @Override
+        public @Nonnull Object instance() {
+<span class="fc" id="L566">            return instance;</span>
+        }
+
+        @Override
+        public boolean isLocal() {
+<span class="fc" id="L571">            return local;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;DIComponent&gt; dependencies() {
+<span class="fc" id="L576">            return dependencies;</span>
+        }
+
+        @Override
+        public @Nullable Method postConstructMethod() {
+<span class="fc" id="L581">            return postConstructMethod;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull DIComponent&gt; postConstructDependencies() {
+<span class="fc" id="L586">            return postConstructDependencies;</span>
+        }
+
+        @Override
+        public synchronized void postConstruct() throws InvocationException {
+<span class="fc" id="L591">            postConstruct.run();</span>
+<span class="fc" id="L592">            state = 1;</span>
+<span class="fc" id="L593">        }</span>
+
+        @Override
+        public boolean isInitialized() {
+<span class="fc bfc" id="L597" title="All 2 branches covered.">            return state &gt;= 1;</span>
+        }
+
+        @Override
+        public @Nullable Method preDestroyMethod() {
+<span class="fc" id="L602">            return preDestroyMethod;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull DIComponent&gt; preDestroyDependencies() {
+<span class="fc" id="L607">            return preDestroyDependencies;</span>
+        }
+
+        @Override
+        public synchronized void preDestroy() throws InvocationException {
+<span class="fc" id="L612">            preDestroy.run();</span>
+<span class="fc" id="L613">            state = 2;</span>
+<span class="fc" id="L614">        }</span>
+
+        @Override
+        public boolean isDestroyed() {
+<span class="fc bfc" id="L618" title="All 2 branches covered.">            return state &gt;= 2;</span>
+        }
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L623">            return &quot;DIComponent-&quot; + instance();</span>
+        }
+    }
+
+<span class="fc" id="L627">    enum Resolver implements DIComponent.Resolver {</span>
+
+<span class="fc" id="L629">        INST;</span>
+
+        @Override
+        public DIComponent.@Nonnull Descriptor resolve(
+            @Nonnull Type type,
+            @Nonnull Collection&lt;@Nonnull String&gt; componentAnnotations,
+            @Nonnull Collection&lt;@Nonnull String&gt; postConstructAnnotations,
+            @Nonnull Collection&lt;@Nonnull String&gt; preDestroyAnnotations
+        ) throws Exception {
+<span class="fc" id="L638">            Class&lt;?&gt; rawClass = rawClass(type);</span>
+            // fields
+<span class="fc" id="L640">            Field[] fields = rawClass.getDeclaredFields();</span>
+<span class="fc" id="L641">            ArrayList&lt;Field&gt; dependencyFields = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">            for (Field field : fields) {</span>
+<span class="fc" id="L643">                int mod = field.getModifiers();</span>
+<span class="fc bfc" id="L644" title="All 2 branches covered.">                if (Modifier.isFinal(mod)) {</span>
+<span class="fc" id="L645">                    continue;</span>
+                }
+<span class="fc bfc" id="L647" title="All 2 branches covered.">                for (Annotation annotation : field.getAnnotations()) {</span>
+<span class="fc bfc" id="L648" title="All 2 branches covered.">                    if (componentAnnotations.contains(annotation.annotationType().getName())) {</span>
+<span class="fc" id="L649">                        dependencyFields.add(field);</span>
+                    }
+                }
+            }
+<span class="fc" id="L653">            dependencyFields.trimToSize();</span>
+<span class="fc" id="L654">            List&lt;Field&gt; depFields = Collections.unmodifiableList(dependencyFields);</span>
+            // methods
+<span class="fc" id="L656">            Method postConstruct = null;</span>
+<span class="fc" id="L657">            Method preDestroy = null;</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">            for (Method method : rawClass.getMethods()) {</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">                for (Annotation annotation : method.getAnnotations()) {</span>
+<span class="fc bfc" id="L660" title="All 2 branches covered.">                    if (postConstructAnnotations.contains(annotation.annotationType().getName())) {</span>
+<span class="fc" id="L661">                        postConstruct = method;</span>
+                    }
+<span class="fc bfc" id="L663" title="All 2 branches covered.">                    if (preDestroyAnnotations.contains(annotation.annotationType().getName())) {</span>
+<span class="fc" id="L664">                        preDestroy = method;</span>
+                    }
+                }
+            }
+<span class="fc" id="L668">            Method postConstructMethod = postConstruct;</span>
+<span class="fc" id="L669">            Method preDestroyMethod = preDestroy;</span>
+<span class="fc" id="L670">            return new DIComponent.Descriptor() {</span>
+                @Override
+                public @Nonnull Type type() {
+<span class="fc" id="L673">                    return type;</span>
+                }
+
+                @Override
+                public @Nonnull Class&lt;?&gt; rawClass() {
+<span class="fc" id="L678">                    return rawClass;</span>
+                }
+
+                @Override
+                public @Nullable Method postConstructMethod() {
+<span class="fc" id="L683">                    return postConstructMethod;</span>
+                }
+
+                @Override
+                public @Nullable Method preDestroyMethod() {
+<span class="fc" id="L688">                    return preDestroyMethod;</span>
+                }
+
+                @Override
+                public @Nonnull @Immutable List&lt;@Nonnull Field&gt; dependencyFields() {
+<span class="fc" id="L693">                    return depFields;</span>
+                }
+            };
+        }
+    }
+
+<span class="fc" id="L699">    enum FieldSetter implements DIComponent.FieldSetter {</span>
+
+<span class="fc" id="L701">        INST;</span>
+
+        @Override
+        public void set(@Nonnull Field field, @Nonnull Object owner, @Nonnull Object value) throws Exception {
+<span class="fc" id="L705">            field.setAccessible(true);</span>
+<span class="fc" id="L706">            field.set(owner, value);</span>
+<span class="fc" id="L707">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

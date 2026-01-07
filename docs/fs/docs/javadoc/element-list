@@ -3,8 +3,6 @@ javax.annotation.concurrent
 javax.annotation.meta
 space.sunqian.annotation
 space.sunqian.fs
-space.sunqian.fs.app
-space.sunqian.fs.app.di
 space.sunqian.fs.asm
 space.sunqian.fs.asm.signature
 space.sunqian.fs.base
@@ -28,6 +26,7 @@ space.sunqian.fs.cache
 space.sunqian.fs.codec
 space.sunqian.fs.collect
 space.sunqian.fs.concurrent
+space.sunqian.fs.di
 space.sunqian.fs.dynamic
 space.sunqian.fs.dynamic.aop
 space.sunqian.fs.dynamic.aop.asm
