@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetSelectorImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.net</a> &gt; <span class="el_source">NetSelectorImpl.java</span></div><h1>NetSelectorImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.net;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.Set;
+
+final class NetSelectorImpl implements NetSelector {
+
+    private final int EMPTY_SELECT_THRESHOLD;
+    private volatile @Nonnull Selector selector;
+<span class="fc" id="L15">    private int emptySelectCount = 0;</span>
+
+<span class="fc" id="L17">    NetSelectorImpl(int emptySelectThreshold) throws NetException {</span>
+<span class="fc" id="L18">        this.selector = Fs.uncheck(Selector::open, NetException::new);</span>
+<span class="fc" id="L19">        this.EMPTY_SELECT_THRESHOLD = emptySelectThreshold;</span>
+<span class="fc" id="L20">    }</span>
+
+    @Override
+    public @Nonnull Selector selector() {
+<span class="fc" id="L24">        return selector;</span>
+    }
+
+    @Override
+    public int select(long timeout) throws NetException {
+<span class="fc" id="L29">        return Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L30">            int keysNum = selector.select(timeout);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">            if (keysNum == 0) {</span>
+<span class="fc" id="L32">                emptySelectCount++;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">                if (emptySelectCount &gt;= EMPTY_SELECT_THRESHOLD) {</span>
+<span class="fc" id="L34">                    rebuildSelector();</span>
+                }
+            } else {
+<span class="fc" id="L37">                emptySelectCount = 0;</span>
+            }
+<span class="fc" id="L39">            return keysNum;</span>
+        }, NetException::new);
+    }
+
+    @Override
+    public @Nonnull Set&lt;SelectionKey&gt; selectedKeys() throws NetException {
+<span class="fc" id="L45">        return Fs.uncheck(selector::selectedKeys, NetException::new);</span>
+    }
+
+    @Override
+    public @Nonnull Set&lt;SelectionKey&gt; keys() throws NetException {
+<span class="fc" id="L50">        return Fs.uncheck(selector::keys, NetException::new);</span>
+    }
+
+    @Override
+    public void wakeup() {
+<span class="fc" id="L55">        selector.wakeup();</span>
+<span class="fc" id="L56">    }</span>
+
+    @Override
+    public void close() throws NetException {
+<span class="fc" id="L60">        Fs.uncheck(selector::close, NetException::new);</span>
+<span class="fc" id="L61">    }</span>
+
+    @Override
+    public void cancel(@Nonnull SelectableChannel channel) throws NetException {
+<span class="fc" id="L65">        Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L66">            SelectionKey key = channel.keyFor(selector);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (key != null) {</span>
+<span class="fc" id="L68">                key.cancel();</span>
+            }
+<span class="fc" id="L70">        }, NetException::new);</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    public void rebuildSelector() throws NetException {
+<span class="fc" id="L75">        Fs.uncheck(() -&gt; {</span>
+<span class="fc" id="L76">            Selector newSelector = Selector.open();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            for (SelectionKey key : selector.keys()) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">                if (key.isValid()) {</span>
+                    @SuppressWarnings(&quot;resource&quot;)
+<span class="fc" id="L80">                    SelectableChannel channel = key.channel();</span>
+<span class="fc" id="L81">                    channel.register(newSelector, key.interestOps(), key.attachment());</span>
+                }
+<span class="fc" id="L83">            }</span>
+<span class="fc" id="L84">            selector.close();</span>
+<span class="fc" id="L85">            selector = newSelector;</span>
+<span class="fc" id="L86">        }, NetException::new);</span>
+<span class="fc" id="L87">        emptySelectCount = 0;</span>
+<span class="fc" id="L88">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

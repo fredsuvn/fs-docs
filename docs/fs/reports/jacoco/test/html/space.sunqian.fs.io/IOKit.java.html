@@ -3411,6 +3411,33 @@ public class IOKit {
 <span class="fc" id="L3411">        return IOBack.nullWriter();</span>
     }
 
+    /**
+     * Wraps the given {@link Appendable} object as a {@link Writer}.
+     *
+     * @param appendable the given appendable
+     * @return the given appendable as a {@link Writer}
+     */
+    public static @Nonnull Writer wrapWriter(@Nonnull Appendable appendable) {
+<span class="fc bfc" id="L3421" title="All 2 branches covered.">        if (appendable instanceof Writer) {</span>
+<span class="fc" id="L3422">            return (Writer) appendable;</span>
+        }
+<span class="fc" id="L3424">        return new Writer() {</span>
+
+            @Override
+            public void write(char @Nonnull [] cbuf, int off, int len) throws IOException {
+<span class="fc" id="L3428">                appendable.append(new String(cbuf, off, len));</span>
+<span class="fc" id="L3429">            }</span>
+
+            @Override
+            public void flush() throws IOException {
+<span class="fc" id="L3433">            }</span>
+
+            @Override
+            public void close() throws IOException {
+<span class="fc" id="L3437">            }</span>
+        };
+    }
+
     private IOKit() {
     }
 }

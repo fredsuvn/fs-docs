@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlRuntimeException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">SqlRuntimeException.java</span></div><h1>SqlRuntimeException.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.base.exception.FsRuntimeException;
+
+import java.sql.SQLException;
+
+/**
+ * This is the runtime version of {@link SQLException}.
+ *
+ * @author sunqian
+ */
+public class SqlRuntimeException extends FsRuntimeException {
+
+    /**
+     * Empty constructor.
+     */
+    public SqlRuntimeException() {
+<span class="fc" id="L19">        super();</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Constructs with the message.
+     *
+     * @param message the message
+     */
+    public SqlRuntimeException(@Nullable String message) {
+<span class="fc" id="L28">        super(message);</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Constructs with the message and cause.
+     *
+     * @param message the message
+     * @param cause   the cause
+     */
+    public SqlRuntimeException(@Nullable String message, @Nullable Throwable cause) {
+<span class="fc" id="L38">        super(message, cause);</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Constructs with the cause.
+     *
+     * @param cause the cause
+     */
+    public SqlRuntimeException(@Nullable Throwable cause) {
+<span class="fc" id="L47">        super(cause);</span>
+<span class="fc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NumFormatter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.base.number</a> &gt; <span class="el_source">NumFormatter.java</span></div><h1>NumFormatter.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.base.number;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.function.Supplier;
+
+/**
+ * Formatter for number. The implementation of this interface is immutable and thread-safe.
+ *
+ * @author sunqian
+ */
+public interface NumFormatter {
+
+    /**
+     * Returns a common {@link NumFormatter} which uses {@link Number#toString()} to format the number and
+     * {@link NumKit#toNumber(CharSequence, Class)} to parse the string. Note the returned instance is singleton.
+     *
+     * @return a common {@link NumFormatter} which uses {@link Number#toString()} to format the number and
+     * {@link NumKit#toNumber(CharSequence, Class)} to parse the string
+     */
+    static @Nonnull NumFormatter common() {
+<span class="fc" id="L25">        return NumFormatterImpl.Common.INST;</span>
+    }
+
+    /**
+     * Returns a new {@link NumFormatter} with the given number format supplier.
+     *
+     * @param supplier the number format supplier
+     * @return a new {@link NumFormatter} with the given number format supplier
+     */
+    static @Nonnull NumFormatter ofSupplier(@Nonnull Supplier&lt;? extends @Nonnull NumberFormat&gt; supplier) {
+<span class="fc" id="L35">        return new NumFormatterImpl(supplier);</span>
+    }
+
+    /**
+     * Returns a new {@link NumFormatter} with the given number format pattern.
+     * &lt;p&gt;
+     * By default, this method uses {@link DecimalFormat} and {@link ThreadLocal} to support multi-threading.
+     *
+     * @param pattern the number format pattern
+     * @return a new {@link NumFormatter} with the given number format pattern
+     */
+    static @Nonnull NumFormatter ofPattern(@Nonnull String pattern) {
+<span class="fc" id="L47">        ThreadLocal&lt;DecimalFormat&gt; format = ThreadLocal.withInitial(() -&gt; new DecimalFormat(pattern));</span>
+<span class="fc" id="L48">        return ofSupplier(format::get);</span>
+    }
+
+    /**
+     * Formats the given number.
+     *
+     * @param num the given number to format
+     * @return the formatted string
+     * @throws NumException if any error occurs
+     */
+    @Nonnull
+    String format(@Nonnull Number num) throws NumException;
+
+    /**
+     * Formats the given number. If the given number is {@code null}, or an exception thrown during formating, returns
+     * {@code null}.
+     *
+     * @param num the given number to format, can be {@code null}
+     * @return the formatted string, or {@code null} if the given number is {@code null} or an exception thrown
+     * @throws NumException if any error occurs
+     */
+    default @Nullable String formatSafe(@Nullable Number num) throws NumException {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (num == null) {</span>
+<span class="fc" id="L71">            return null;</span>
+        }
+        try {
+<span class="fc" id="L74">            return format(num);</span>
+<span class="fc" id="L75">        } catch (Exception e) {</span>
+<span class="fc" id="L76">            return null;</span>
+        }
+    }
+
+    /**
+     * Parses the given number string to an instance of the specified number type.
+     *
+     * @param numStr  the given number string to parse
+     * @param numType the specified number type
+     * @param &lt;T&gt;     the number type
+     * @return the parsed number instance
+     * @throws NumException if any error occurs
+     */
+    &lt;T&gt; @Nonnull T parse(@Nonnull CharSequence numStr, @Nonnull Class&lt;T&gt; numType) throws NumException;
+
+    /**
+     * Parses the given number string to an instance of the specified number type. If the given number string is
+     * {@code null}, or an exception thrown during parsing, returns {@code null}.
+     *
+     * @param numStr  the given number string to parse, can be {@code null}
+     * @param numType the specified number type
+     * @param &lt;T&gt;     the number type
+     * @return the parsed number instance, or {@code null} if the given number string is {@code null} or an exception
+     * thrown
+     * @throws NumException if any error occurs
+     */
+    default &lt;T&gt; @Nullable T parseSafe(
+        @Nullable CharSequence numStr, @Nonnull Class&lt;T&gt; numType
+    ) throws NumException {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (numStr == null) {</span>
+<span class="fc" id="L106">            return null;</span>
+        }
+        try {
+<span class="fc" id="L109">            return parse(numStr, numType);</span>
+<span class="fc" id="L110">        } catch (Exception e) {</span>
+<span class="fc" id="L111">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

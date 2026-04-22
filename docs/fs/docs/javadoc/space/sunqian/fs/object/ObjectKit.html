@@ -112,6 +112,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns whether the given objects are equal.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPropertyValue(java.lang.Object,java.lang.String)" class="member-name-link">getPropertyValue</a><wbr>(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the value of the specified property from the given object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPropertyValue(java.lang.Object,java.lang.String,space.sunqian.fs.object.schema.ObjectSchemaParser)" class="member-name-link">getPropertyValue</a><wbr>(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&nbsp;objectParser)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the value of the specified property from the given object.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hashAll(java.lang.Object...)" class="member-name-link">hashAll</a><wbr>(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;objs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -303,6 +316,57 @@ loadScripts(document, 'script');</script>
 <dd><code>obj</code> - the given object</dd>
 <dt>Returns:</dt>
 <dd>the identity hashcode of the given object</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPropertyValue(java.lang.Object,java.lang.String)">
+<h3>getPropertyValue</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">getPropertyValue</span><wbr><span class="parameters">(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+ <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName)</span></div>
+<div class="block">Returns the value of the specified property from the given object.
+ <p>
+ This method supports nested property access using dot notation (e.g., "parent.child.property"). If any part of
+ the property path is not found or is <code>null</code>, this method returns <code>null</code>.
+ <p>
+ Note this method use <a href="schema/ObjectSchemaParser.html#defaultCachedParser()"><code>ObjectSchemaParser.defaultCachedParser()</code></a> to parse object schemas, it is equivalent
+ to:
+ <pre><code>
+ ObjectKit.getPropertyValue(object, propertyName, ObjectSchemaParser.defaultCachedParser());
+ </code></pre></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>object</code> - the given object from which to retrieve the property value</dd>
+<dd><code>propertyName</code> - the name of the property to retrieve, supporting dot notation for nested properties</dd>
+<dt>Returns:</dt>
+<dd>the value of the specified property, or <code>null</code> if the property path is not found or is <code>null</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPropertyValue(java.lang.Object,java.lang.String,space.sunqian.fs.object.schema.ObjectSchemaParser)">
+<h3>getPropertyValue</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">getPropertyValue</span><wbr><span class="parameters">(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+ <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&nbsp;objectParser)</span></div>
+<div class="block">Returns the value of the specified property from the given object.
+ <p>
+ This method supports nested property access using dot notation (e.g., "parent.child.property"). If any part of
+ the property path is not found or is <code>null</code>, this method returns <code>null</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>object</code> - the given object from which to retrieve the property value</dd>
+<dd><code>propertyName</code> - the name of the property to retrieve, supporting dot notation for nested properties</dd>
+<dd><code>objectParser</code> - the parser used to resolve object schemas</dd>
+<dt>Returns:</dt>
+<dd>the value of the specified property, or <code>null</code> if the property path is not found or is <code>null</code></dd>
 </dl>
 </section>
 </li>

@@ -99,14 +99,14 @@ loadScripts(document, 'script');</script>
 <div class="block">The method name of constructor.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#EMPTY_CONSTRUCTOR_DESCRIPTOR" class="member-name-link">EMPTY_CONSTRUCTOR_DESCRIPTOR</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#EMPTY_METHOD_DESCRIPTOR" class="member-name-link">EMPTY_METHOD_DESCRIPTOR</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The descriptor of constructor with empty parameter.</div>
+<div class="block">The descriptor of method/constructor with empty parameter and no return value and no throws.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#GEN_CLASS_PREFIX" class="member-name-link">GEN_CLASS_PREFIX</a></code></div>
+<div class="col-second even-row-color"><code><a href="#GEN_SUFFIX" class="member-name-link">GEN_SUFFIX</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The prefix of generated class name.</div>
+<div class="block">The suffix of generated class name.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#OBJECT_NAME" class="member-name-link">OBJECT_NAME</a></code></div>
@@ -138,19 +138,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the slots count for the given method's parameters.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> <a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> []</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getExceptions(java.lang.reflect.Method)" class="member-name-link">getExceptions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&nbsp;method)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the exception internal names of the specified method.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invokeVirtual(space.sunqian.fs.asm.MethodVisitor,java.lang.String,java.lang.String,java.lang.String,boolean)" class="member-name-link">invokeVirtual</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../asm/MethodVisitor.html" title="class in space.sunqian.fs.asm">MethodVisitor</a>&nbsp;visitor,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invokeVirtual(space.sunqian.fs.asm.MethodVisitor,java.lang.String,java.lang.String,java.lang.String,boolean)" class="member-name-link">invokeVirtual</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../asm/MethodVisitor.html" title="class in space.sunqian.fs.asm">MethodVisitor</a>&nbsp;visitor,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;owner,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;descriptor,
  boolean&nbsp;isInterface)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Invokes method by <code>INVOKEINTERFACE</code> or <code>INVOKEVIRTUAL</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#lastClassCount()" class="member-name-link">lastClassCount</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the last count value which used in the last class name generated by
+ <a href="#newClassInternalName(java.lang.Package)"><code>newClassInternalName(Package)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newClassInternalName(java.lang.Package)" class="member-name-link">newClassInternalName</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Package.html" title="class or interface in java.lang" class="external-link">Package</a>&nbsp;pkg)</code></div>
@@ -158,10 +159,22 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
  package.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#paramSize(java.lang.reflect.Parameter%5B%5D)" class="member-name-link">paramSize</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Parameter.html" title="class or interface in java.lang.reflect" class="external-link">Parameter</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;parameters)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newClassInternalName(java.lang.Package,java.lang.String)" class="member-name-link">newClassInternalName</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Package.html" title="class or interface in java.lang" class="external-link">Package</a>&nbsp;pkg,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
+ package.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#paramSize(java.lang.reflect.Parameter%5B%5D)" class="member-name-link">paramSize</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Parameter.html" title="class or interface in java.lang.reflect" class="external-link">Parameter</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the all slot count of the specified parameters.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toGeneratedClassName(java.lang.String)" class="member-name-link">toGeneratedClassName</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Converts the specified version string to a generated class name.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#varSize(java.lang.Class)" class="member-name-link">varSize</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type)</code></div>
@@ -245,26 +258,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="EMPTY_CONSTRUCTOR_DESCRIPTOR">
-<h3>EMPTY_CONSTRUCTOR_DESCRIPTOR</h3>
+<section class="detail" id="EMPTY_METHOD_DESCRIPTOR">
+<h3>EMPTY_METHOD_DESCRIPTOR</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">EMPTY_CONSTRUCTOR_DESCRIPTOR</span></div>
-<div class="block">The descriptor of constructor with empty parameter.</div>
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">EMPTY_METHOD_DESCRIPTOR</span></div>
+<div class="block">The descriptor of method/constructor with empty parameter and no return value and no throws.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="../../../../../constant-values.html#space.sunqian.fs.third.asm.AsmKit.EMPTY_CONSTRUCTOR_DESCRIPTOR">Constant Field Values</a></li>
+<li><a href="../../../../../constant-values.html#space.sunqian.fs.third.asm.AsmKit.EMPTY_METHOD_DESCRIPTOR">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="GEN_CLASS_PREFIX">
-<h3>GEN_CLASS_PREFIX</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">GEN_CLASS_PREFIX</span></div>
-<div class="block">The prefix of generated class name.</div>
+<section class="detail" id="GEN_SUFFIX">
+<h3>GEN_SUFFIX</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">GEN_SUFFIX</span></div>
+<div class="block">The suffix of generated class name.</div>
 </section>
 </li>
 </ul>
@@ -275,6 +288,21 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="toGeneratedClassName(java.lang.String)">
+<h3>toGeneratedClassName</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toGeneratedClassName</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;version)</span></div>
+<div class="block">Converts the specified version string to a generated class name.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>version</code> - the specified version string</dd>
+<dt>Returns:</dt>
+<dd>the generated class name</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="visitConst(space.sunqian.fs.asm.MethodVisitor,int)">
 <h3>visitConst</h3>
@@ -424,31 +452,52 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getExceptions(java.lang.reflect.Method)">
-<h3>getExceptions</h3>
-<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> <a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> []</span>&nbsp;<span class="element-name">getExceptions</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&nbsp;method)</span></div>
-<div class="block">Returns the exception internal names of the specified method.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>method</code> - the specified method</dd>
-<dt>Returns:</dt>
-<dd>the exception internal names of the specified method</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="newClassInternalName(java.lang.Package)">
 <h3>newClassInternalName</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">newClassInternalName</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Package.html" title="class or interface in java.lang" class="external-link">Package</a>&nbsp;pkg)</span></div>
 <div class="block">Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
- package.</div>
+ package. The class name will be automatically generated and is unique in the specified package.
+ <p>
+ Note this method uses internal class counter to generate the class name, using <a href="#lastClassCount()"><code>lastClassCount()</code></a> can get
+ the last count value which used in the last class name generated by this method.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>pkg</code> - the specified package</dd>
 <dt>Returns:</dt>
 <dd>a class name</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newClassInternalName(java.lang.Package,java.lang.String)">
+<h3>newClassInternalName</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">newClassInternalName</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Package.html" title="class or interface in java.lang" class="external-link">Package</a>&nbsp;pkg,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</span></div>
+<div class="block">Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
+ package. The class name will be automatically generated following the specified prefix, and the specified prefix
+ should be unique in the specified package.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>pkg</code> - the specified package</dd>
+<dd><code>prefix</code> - the prefix of class name generated</dd>
+<dt>Returns:</dt>
+<dd>a class name</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="lastClassCount()">
+<h3>lastClassCount</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">lastClassCount</span>()</div>
+<div class="block">Returns the last count value which used in the last class name generated by
+ <a href="#newClassInternalName(java.lang.Package)"><code>newClassInternalName(Package)</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the last count value which used in the last class name generated by
+ <a href="#newClassInternalName(java.lang.Package)"><code>newClassInternalName(Package)</code></a>.</dd>
 </dl>
 </section>
 </li>

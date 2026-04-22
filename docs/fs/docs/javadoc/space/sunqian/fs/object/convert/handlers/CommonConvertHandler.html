@@ -84,7 +84,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../ObjectConverter.Handler.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter.Handler</a></span></div>
 <div class="block">The common implementation of <a href="../ObjectConverter.Handler.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectConverter.Handler</code></a>, also be the default last handler of
- <a href="../ObjectConverter.html#defaultConverter()"><code>ObjectConverter.defaultConverter()</code></a>.
+ <a href="../ObjectConverter.html#defaultConverter()"><code>ObjectConverter.defaultConverter()</code></a>. Using <a href="#getInstance()"><code>getInstance()</code></a> can get a same one instance of this
+ handler.
  <p>
  This handler providers the common conversion logic for all types. This is a table showing the conversion logic of
  this handler for different target types:
@@ -95,7 +96,7 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
      <th>Conversion Logic</th>
  </tr>
  <tr>
-     <td rowspan="5"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link"><code>CharSequence</code></a></td>
+     <td rowspan="6"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link"><code>CharSequence</code></a></td>
      <td><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link"><code>InputStream</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/ReadableByteChannel.html" title="class or interface in java.nio.channels" class="external-link"><code>ReadableByteChannel</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link"><code>Reader</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/ByteBuffer.html" title="class or interface in java.nio" class="external-link"><code>ByteBuffer</code></a>, <code>byte[]</code></td>
      <td>Using <a href="../ConvertOption.html#ioOperator(space.sunqian.fs.io.IOOperator)"><code>ConvertOption.ioOperator(IOOperator)</code></a> and <a href="../ConvertOption.html#charset(java.nio.charset.Charset)"><code>ConvertOption.charset(Charset)</code></a>
      to decode to string.</td>
@@ -110,7 +111,11 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
  </tr>
  <tr>
      <td>Date and Time Objects</td>
-     <td>Using <a href="../ConvertOption.html#timeFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.timeFormatter(DateFormatter)</code></a> to handle.</td>
+     <td>Using <a href="../ConvertOption.html#dateFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.dateFormatter(DateFormatter)</code></a> to handle.</td>
+ </tr>
+ <tr>
+     <td>Numbers</td>
+     <td>Using <a href="../../../base/number/NumFormatter.html#format(java.lang.Number)"><code>NumFormatter.format(Number)</code></a>.</td>
  </tr>
  <tr>
      <td>Others</td>
@@ -147,11 +152,11 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
  <tr>
      <td rowspan="2">Date and Time</td>
      <td><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> and Other Date Time Objects</td>
-     <td>Using <a href="../ConvertOption.html#timeFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.timeFormatter(DateFormatter)</code></a> to handle.</td>
+     <td>Using <a href="../ConvertOption.html#dateFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.dateFormatter(DateFormatter)</code></a> to handle.</td>
  </tr>
  <tr>
      <td><code>long</code> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link"><code>Long</code></a></td>
-     <td>Treated as an epoch milliseconds, then using <a href="../ConvertOption.html#timeFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.timeFormatter(DateFormatter)</code></a> to
+     <td>Treated as an epoch milliseconds, then using <a href="../ConvertOption.html#dateFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>ConvertOption.dateFormatter(DateFormatter)</code></a> to
      handle.</td>
  </tr>
  <tr>
@@ -162,27 +167,32 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
  <tr>
      <td>Array and Collection Objects</td>
      <td>Array or Iterable Objects</td>
-     <td>Array created using reflection. Collection created using its constructor, the supported collection types:
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link"><code>Iterable</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link"><code>Collection</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/AbstractList.html" title="class or interface in java.util" class="external-link"><code>AbstractList</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link"><code>ArrayList</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/LinkedList.html" title="class or interface in java.util" class="external-link"><code>LinkedList</code></a>,
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CopyOnWriteArrayList.html" title="class or interface in java.util.concurrent" class="external-link"><code>CopyOnWriteArrayList</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/LinkedHashSet.html" title="class or interface in java.util" class="external-link"><code>LinkedHashSet</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashSet.html" title="class or interface in java.util" class="external-link"><code>HashSet</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/TreeSet.html" title="class or interface in java.util" class="external-link"><code>TreeSet</code></a>,
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentSkipListSet.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentSkipListSet</code></a>. After creating the container, uses the <code>converter</code> parameter to handle
-     component types.
+     <td>Array created using reflection. Collection created using its constructor, the supported collection types
+     follow the <a href="../../../collect/SetKit.html#newFunction(java.lang.reflect.Type)"><code>SetKit.newFunction(Type)</code></a> and <a href="../../../collect/ListKit.html#newFunction(java.lang.reflect.Type)"><code>ListKit.newFunction(Type)</code></a>. After creating the container,
+     uses the <code>converter</code> parameter to handle component types.
      </td>
  </tr>
  <tr>
      <td>Map and Data Objects</td>
      <td>Any Objects</td>
-     <td>Generating data object is based on <a href="../ConvertOption.html#builderProvider(space.sunqian.fs.object.data.ObjectBuilderProvider)"><code>ConvertOption.builderProvider(ObjectBuilderProvider)</code></a> and
-     <a href="../ConvertOption.html#dataMapper(space.sunqian.fs.object.convert.DataMapper)"><code>ConvertOption.dataMapper(DataMapper)</code></a>. Generating map using its constructor, and copying properties
-     also using <a href="../ConvertOption.html#dataMapper(space.sunqian.fs.object.convert.DataMapper)"><code>ConvertOption.dataMapper(DataMapper)</code></a>. The supported map types:
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/AbstractMap.html" title="class or interface in java.util" class="external-link"><code>AbstractMap</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/LinkedHashMap.html" title="class or interface in java.util" class="external-link"><code>LinkedHashMap</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link"><code>HashMap</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/TreeMap.html" title="class or interface in java.util" class="external-link"><code>TreeMap</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentMap</code></a>,
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Hashtable.html" title="class or interface in java.util" class="external-link"><code>Hashtable</code></a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentSkipListMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentSkipListMap</code></a>.
+     <td>Generating data object is based on <a href="../ConvertOption.html#builderOperatorProvider(space.sunqian.fs.object.builder.BuilderOperatorProvider)"><code>ConvertOption.builderOperatorProvider(BuilderOperatorProvider)</code></a> and
+     <a href="../ConvertOption.html#objectCopier(space.sunqian.fs.object.convert.ObjectCopier)"><code>ConvertOption.objectCopier(ObjectCopier)</code></a>. Generating map using its constructor, and copying properties
+     also using <a href="../ConvertOption.html#objectCopier(space.sunqian.fs.object.convert.ObjectCopier)"><code>ConvertOption.objectCopier(ObjectCopier)</code></a>. The supported map types follow the
+     <a href="../../../collect/MapKit.html#newFunction(java.lang.reflect.Type)"><code>MapKit.newFunction(Type)</code></a>.
      </td>
  </tr>
  </table>
  <p>
- Note that this handler typically creates new objects and does not perform the same handing as
- <a href="AssignableConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers"><code>AssignableConvertHandler</code></a>.</div>
+ Note:
+ <ul>
+     <li>
+         This handler typically creates new objects for each conversion, and does not perform the same handing as
+         <a href="AssignableConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers"><code>AssignableConvertHandler</code></a>;
+     </li>
+     <li>
+         This handler directly returns <code>null</code> when the source is <code>null</code>;
+     </li>
+ </ul></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -204,7 +214,7 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -213,11 +223,16 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#convert(java.lang.Object,java.lang.reflect.Type,java.lang.reflect.Type,space.sunqian.fs.object.convert.ObjectConverter,space.sunqian.fs.base.option.Option...)" class="member-name-link">convert</a><wbr>(<a href="../../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;src,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
- <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts the given source object to the given target type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="CommonConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers">CommonConvertHandler</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a same one instance of this handler.</div>
 </div>
 </div>
 </div>
@@ -251,6 +266,14 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getInstance()">
+<h3>getInstance</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="CommonConvertHandler.html" title="class in space.sunqian.fs.object.convert.handlers">CommonConvertHandler</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Returns a same one instance of this handler.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="convert(java.lang.Object,java.lang.reflect.Type,java.lang.reflect.Type,space.sunqian.fs.object.convert.ObjectConverter,space.sunqian.fs.base.option.Option...)">
 <h3>convert</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">convert</span><wbr><span class="parameters">(<a href="../../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
@@ -258,7 +281,7 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -272,7 +295,7 @@ implements <a href="../ObjectConverter.Handler.html" title="interface in space.s
 <dt>Parameters:</dt>
 <dd><code>src</code> - the given source object</dd>
 <dd><code>srcType</code> - the specified type of the given source object</dd>
-<dd><code>target</code> - the specified type of the target object</dd>
+<dd><code>targetType</code> - the specified type of the target object</dd>
 <dd><code>converter</code> - the converter where this handler in</dd>
 <dd><code>options</code> - the other conversion options</dd>
 <dt>Returns:</dt>

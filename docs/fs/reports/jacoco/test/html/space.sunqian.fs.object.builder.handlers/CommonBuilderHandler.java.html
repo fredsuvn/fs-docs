@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonBuilderHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.builder.handlers</a> &gt; <span class="el_source">CommonBuilderHandler.java</span></div><h1>CommonBuilderHandler.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.builder.handlers;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.invoke.Invocable;
+import space.sunqian.fs.object.builder.BuilderOperator;
+import space.sunqian.fs.object.builder.BuilderOperatorProvider;
+import space.sunqian.fs.object.builder.ObjectBuilderException;
+import space.sunqian.fs.reflect.TypeKit;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+
+/**
+ * This is the common implementation of {@link BuilderOperatorProvider.Handler}. The {@link BuilderOperator} returned by
+ * this handler using the empty constructor of the target class to create the builder instance, and returns builder
+ * instance itself as the final target object.
+ * &lt;p&gt;
+ * Using {@link #getInstance()} can get a same one instance of this handler.
+ *
+ * @author sunqian
+ */
+<span class="fc" id="L23">public class CommonBuilderHandler implements BuilderOperatorProvider.Handler {</span>
+
+<span class="fc" id="L25">    private static final @Nonnull CommonBuilderHandler INST = new CommonBuilderHandler();</span>
+
+    /**
+     * Returns a same one instance of this handler.
+     */
+    public static @Nonnull CommonBuilderHandler getInstance() {
+<span class="fc" id="L31">        return INST;</span>
+    }
+
+    @Override
+    public @Nullable BuilderOperator newOperator(@Nonnull Type target) throws Exception {
+<span class="fc" id="L36">        Class&lt;?&gt; rawTarget = TypeKit.getRawClass(target);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (rawTarget == null) {</span>
+<span class="fc" id="L38">            return null;</span>
+        }
+        try {
+<span class="fc" id="L41">            Constructor&lt;?&gt; cst = rawTarget.getConstructor();</span>
+<span class="fc" id="L42">            return new CommonBuilderOperator(target, cst);</span>
+<span class="fc" id="L43">        } catch (NoSuchMethodException e) {</span>
+<span class="fc" id="L44">            return null;</span>
+        }
+    }
+
+    private static final class CommonBuilderOperator implements BuilderOperator {
+
+        private final @Nonnull Type targetType;
+        private final @Nonnull Invocable constructor;
+
+        private CommonBuilderOperator(
+            @Nonnull Type targetType,
+            @Nonnull Constructor&lt;?&gt; constructor
+<span class="fc" id="L56">        ) {</span>
+<span class="fc" id="L57">            this.targetType = targetType;</span>
+<span class="fc" id="L58">            this.constructor = Invocable.of(constructor);</span>
+<span class="fc" id="L59">        }</span>
+
+        @Override
+        public @Nonnull Type builderType() {
+<span class="fc" id="L63">            return targetType;</span>
+        }
+
+        @Override
+        public @Nonnull Type targetType() {
+<span class="fc" id="L68">            return targetType;</span>
+        }
+
+        @Override
+        public @Nonnull Object createBuilder() throws ObjectBuilderException {
+            try {
+<span class="fc" id="L74">                return constructor.invoke(null);</span>
+<span class="fc" id="L75">            } catch (Exception e) {</span>
+<span class="fc" id="L76">                throw new ObjectBuilderException(e);</span>
+            }
+        }
+
+        @Override
+        public @Nonnull Object buildTarget(@Nonnull Object builder) throws ObjectBuilderException {
+<span class="fc" id="L82">            return builder;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

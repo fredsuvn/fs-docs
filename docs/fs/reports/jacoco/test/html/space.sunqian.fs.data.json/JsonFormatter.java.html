@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonFormatter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.json</a> &gt; <span class="el_source">JsonFormatter.java</span></div><h1>JsonFormatter.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.json;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.base.bytes.BytesBuilder;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.data.ByteDataFormatter;
+import space.sunqian.fs.data.CharDataFormatter;
+import space.sunqian.fs.data.DataFormattingException;
+import space.sunqian.fs.io.IOKit;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.object.schema.ObjectSchemaParser;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+
+/**
+ * Represents JSON data formatter that formats a given JSON data. By default, it uses {@link CharsKit#defaultCharset()}
+ * to formats the data in bytes.
+ * &lt;p&gt;
+ * Note the JsonFormatter does not support {@link JsonData}, using {@link JsonData}'s own methods (such as
+ * {@link JsonData#writeTo(Appendable)}) or converting the  {@link JsonData} (such as {@link JsonData#asMap()}) to
+ * format.
+ *
+ * @author sunqian
+ */
+public interface JsonFormatter extends ByteDataFormatter&lt;Object&gt;, CharDataFormatter&lt;Object&gt; {
+
+    /**
+     * Returns the default {@link JsonFormatter}, which uses {@link ObjectSchemaParser#defaultCachedParser()} and
+     * {@link ObjectConverter#defaultConverter()} to pars and convert objects, and doesn't ignore the properties of
+     * which values are {@code null}, or {@code null} values of map, when formatting.
+     * &lt;p&gt;
+     * The returned formatter will format {@code byte[]}/{@link ByteBuffer} as Base64 string, and it is the only way to
+     * format binary data.
+     *
+     * @return the default {@link JsonFormatter}
+     */
+    static @Nonnull JsonFormatter defaultFormatter() {
+<span class="fc" id="L43">        return JsonFormatterBack.defaultFormatter();</span>
+    }
+
+    /**
+     * Returns the default {@link JsonFormatter}, which uses {@link ObjectSchemaParser#defaultCachedParser()} and
+     * {@link ObjectConverter#defaultConverter()} to pars and convert objects, and does ignore the properties of which
+     * values are {@code null}, or {@code null} values of map, when formatting.
+     * &lt;p&gt;
+     * The returned formatter will format {@code byte[]}/{@link ByteBuffer} as Base64 string, and it is the only way to
+     * format binary data.
+     *
+     * @return the default {@link JsonFormatter}
+     */
+    static @Nonnull JsonFormatter newFormatter(boolean ignoreNullValue) {
+<span class="fc" id="L57">        return JsonFormatterBack.newFormatter(ignoreNullValue);</span>
+    }
+
+    /**
+     * Returns a new {@link JsonFormatter} with the specified {@link ObjectSchemaParser} and {@link ObjectConverter} to
+     * parse and convert objects.
+     * &lt;p&gt;
+     * The returned formatter will format {@code byte[]}/{@link ByteBuffer} as Base64 string, and it is the only way to
+     * format binary data.
+     *
+     * @param objectParser    the specified {@link ObjectSchemaParser}
+     * @param objectConverter the specified {@link ObjectConverter}
+     * @param ignoreNullValue whether to ignore the properties of which values are {@code null}, or {@code null} values
+     *                        of map, when formatting
+     * @return a new {@link JsonFormatter} with the specified {@link ObjectSchemaParser} and {@link ObjectConverter} to
+     * parse and convert objects
+     */
+    static @Nonnull JsonFormatter newFormatter(
+        @Nonnull ObjectSchemaParser objectParser,
+        @Nonnull ObjectConverter objectConverter,
+        boolean ignoreNullValue
+    ) {
+<span class="fc" id="L79">        return JsonFormatterBack.newFormatter(objectParser, objectConverter, ignoreNullValue);</span>
+    }
+
+    /**
+     * Formates and writes the given data as JSON string to the given output stream, using
+     * {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * Note for the data of type {@code byte[]}, {@link ByteBuffer}, {@link InputStream} or {@link ReadableByteChannel},
+     * it will be read and formatted as Base64 string; for the data of type {@code char[]}, it will be formatted as JSON
+     * string rather than JSON array.
+     *
+     * @param data the given data to be formatted
+     * @param out  the output stream to write to
+     * @throws DataFormattingException if any error occurs during formatting
+     */
+    @Override
+    default void formatTo(@Nullable Object data, @Nonnull OutputStream out) throws DataFormattingException {
+<span class="fc" id="L96">        formatTo(data, IOKit.newWriter(out));</span>
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Formates and writes the given data as JSON string to the given writable byte channel, using
+     * {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * Note for the data of type {@code byte[]}, {@link ByteBuffer}, {@link InputStream} or {@link ReadableByteChannel},
+     * it will be read and formatted as Base64 string; for the data of type {@code char[]}, it will be formatted as JSON
+     * string rather than JSON array.
+     *
+     * @param data    the given data to be formatted
+     * @param channel the output channel to write to
+     * @throws DataFormattingException if any error occurs during formatting
+     */
+    @SuppressWarnings(&quot;DataFlowIssue&quot;)
+    @Override
+    default void formatTo(@Nullable Object data, @Nonnull WritableByteChannel channel) throws DataFormattingException {
+<span class="fc" id="L114">        ByteDataFormatter.super.formatTo(data, channel);</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Formates and writes the given data as JSON string to the given appender.
+     * &lt;p&gt;
+     * Note for the data of type {@code byte[]}, {@link ByteBuffer}, {@link InputStream} or {@link ReadableByteChannel},
+     * it will be read and formatted as Base64 string; for the data of type {@code char[]}, it will be formatted as JSON
+     * string rather than JSON array.
+     *
+     * @param data     the given data to be formatted
+     * @param appender the output appender to write to
+     * @throws DataFormattingException if any error occurs during formatting
+     */
+    @Override
+    void formatTo(@Nullable Object data, @Nonnull Appendable appender) throws DataFormattingException;
+
+    /**
+     * Formates and writes the given data as a JSON string.
+     * &lt;p&gt;
+     * Note for the data of type {@code byte[]}, {@link ByteBuffer}, {@link InputStream} or {@link ReadableByteChannel},
+     * it will be read and formatted as Base64 string; for the data of type {@code char[]}, it will be formatted as JSON
+     * string rather than JSON array.
+     *
+     * @param data the given data to be formatted
+     * @return the JSON string
+     * @throws DataFormattingException if any error occurs during formatting
+     */
+    @Nonnull
+    default String format(@Nullable Object data) throws DataFormattingException {
+<span class="fc" id="L144">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L145">        formatTo(data, sb);</span>
+<span class="fc" id="L146">        return sb.toString();</span>
+    }
+
+    /**
+     * Formates and writes the given data as JSON string to a byte array, using {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * Note for the data of type {@code byte[]}, {@link ByteBuffer}, {@link InputStream} or {@link ReadableByteChannel},
+     * it will be read and formatted as Base64 string; for the data of type {@code char[]}, it will be formatted as JSON
+     * string rather than JSON array.
+     *
+     * @param data the given data to be formatted
+     * @return the byte array formatted from the given data
+     * @throws DataFormattingException if any error occurs during formatting
+     */
+    default byte @Nonnull [] formatBytes(@Nullable Object data) throws DataFormattingException {
+<span class="fc" id="L161">        BytesBuilder out = new BytesBuilder();</span>
+<span class="fc" id="L162">        formatTo(data, out);</span>
+<span class="fc" id="L163">        return out.toByteArray();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

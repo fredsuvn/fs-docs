@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuilderOperatorProviderBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.builder</a> &gt; <span class="el_source">BuilderOperatorProviderBack.java</span></div><h1>BuilderOperatorProviderBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.builder;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.base.FsLoader;
+import space.sunqian.fs.cache.SimpleCache;
+import space.sunqian.fs.object.builder.handlers.CommonBuilderHandler;
+import space.sunqian.fs.third.ThirdKit;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
+final class BuilderOperatorProviderBack {
+
+    static @Nonnull BuilderOperatorProvider defaultProvider() {
+<span class="fc" id="L17">        return BuilderOperatorProviderImpl.DEFAULT;</span>
+    }
+
+    static @Nonnull BuilderOperatorProvider defaultCachedProvider() {
+<span class="fc" id="L21">        return CachedBuilderOperatorProvider.DEFAULT;</span>
+    }
+
+    static @Nonnull BuilderOperatorProvider newProvider(
+        @Nonnull @RetainedParam List&lt;BuilderOperatorProvider.@Nonnull Handler&gt; handlers
+    ) {
+<span class="fc" id="L27">        return new BuilderOperatorProviderImpl(handlers);</span>
+    }
+
+    static @Nonnull BuilderOperatorProviderBack.CachedBuilderOperatorProvider newCachedProvider(
+        @Nonnull SimpleCache&lt;@Nonnull Type, @Nonnull BuilderOperator&gt; cache,
+        @Nonnull BuilderOperatorProvider provider
+    ) {
+<span class="fc" id="L34">        return new CachedBuilderOperatorProvider(cache, provider);</span>
+    }
+
+    static @Nullable BuilderOperator operatorForType(
+        @Nonnull Type target,
+        @Nonnull List&lt;BuilderOperatorProvider.@Nonnull Handler&gt; handlers
+    ) throws Exception {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (BuilderOperatorProvider.Handler handler : handlers) {</span>
+<span class="fc" id="L42">            BuilderOperator operator = handler.newOperator(target);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (operator != null) {</span>
+<span class="fc" id="L44">                return operator;</span>
+            }
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">        return null;</span>
+    }
+
+    private static final class BuilderOperatorProviderImpl implements BuilderOperatorProvider, BuilderOperatorProvider.Handler {
+
+<span class="fc" id="L52">        private static final @Nonnull BuilderOperatorProvider DEFAULT = new BuilderOperatorProviderImpl(</span>
+<span class="fc" id="L53">            FsLoader.loadInstances(</span>
+<span class="fc" id="L54">                FsLoader.loadClassByDependent(</span>
+<span class="fc" id="L55">                    ThirdKit.thirdClassName(&quot;protobuf&quot;, &quot;ProtobufCreatorHandler&quot;),</span>
+                    &quot;com.google.protobuf.Message&quot;
+                ),
+<span class="fc" id="L58">                CommonBuilderHandler.getInstance()</span>
+            )
+        );
+
+        private final @Nonnull List&lt;@Nonnull Handler&gt; handlers;
+
+        private BuilderOperatorProviderImpl(
+            @Nonnull @RetainedParam List&lt;@Nonnull Handler&gt; handlers
+<span class="fc" id="L66">        ) {</span>
+<span class="fc" id="L67">            this.handlers = handlers;</span>
+<span class="fc" id="L68">        }</span>
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
+<span class="fc" id="L72">            return handlers;</span>
+        }
+
+        @Override
+        public @Nonnull Handler asHandler() {
+<span class="fc" id="L77">            return this;</span>
+        }
+
+        @Override
+        public @Nullable BuilderOperator newOperator(@Nonnull Type target) throws Exception {
+<span class="fc" id="L82">            return BuilderOperatorProviderBack.operatorForType(target, handlers);</span>
+        }
+    }
+
+    private static final class CachedBuilderOperatorProvider implements BuilderOperatorProvider {
+
+<span class="fc" id="L88">        private static final @Nonnull BuilderOperatorProviderBack.CachedBuilderOperatorProvider DEFAULT = newCachedProvider(</span>
+<span class="fc" id="L89">            SimpleCache.ofSoft(),</span>
+<span class="fc" id="L90">            BuilderOperatorProvider.defaultProvider()</span>
+        );
+
+        private final @Nonnull SimpleCache&lt;@Nonnull Type, @Nullable BuilderOperator&gt; cache;
+        private final @Nonnull BuilderOperatorProvider provider;
+
+        private CachedBuilderOperatorProvider(
+            @Nonnull SimpleCache&lt;@Nonnull Type, @Nullable BuilderOperator&gt; cache,
+            @Nonnull BuilderOperatorProvider provider
+<span class="fc" id="L99">        ) {</span>
+<span class="fc" id="L100">            this.cache = cache;</span>
+<span class="fc" id="L101">            this.provider = provider;</span>
+<span class="fc" id="L102">        }</span>
+
+        @Override
+        public @Nullable BuilderOperator forType(@Nonnull Type target) throws ObjectBuilderException {
+<span class="fc" id="L106">            return cache.get(target, provider::forType);</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
+<span class="fc" id="L111">            return provider.handlers();</span>
+        }
+
+        @Override
+        public @Nonnull Handler asHandler() {
+<span class="fc" id="L116">            return provider.asHandler();</span>
+        }
+    }
+
+    private BuilderOperatorProviderBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

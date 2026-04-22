@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectSchemaParserBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.schema</a> &gt; <span class="el_source">ObjectSchemaParserBack.java</span></div><h1>ObjectSchemaParserBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.schema;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.base.FsLoader;
+import space.sunqian.fs.cache.SimpleCache;
+import space.sunqian.fs.object.schema.handlers.CommonSchemaHandler;
+import space.sunqian.fs.object.schema.handlers.RecordSchemaHandler;
+import space.sunqian.fs.third.ThirdKit;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
+final class ObjectSchemaParserBack {
+
+    static @Nonnull ObjectSchemaParser defaultParser() {
+<span class="fc" id="L17">        return ObjectSchemaParserImpl.DEFAULT;</span>
+    }
+
+
+    static @Nonnull ObjectSchemaParser defaultCachedParser() {
+<span class="fc" id="L22">        return CachedObjectSchemaParser.DEFAULT;</span>
+    }
+
+    static @Nonnull ObjectSchemaParser newParser(
+        @Nonnull @RetainedParam List&lt;ObjectSchemaParser.@Nonnull Handler&gt; handlers
+    ) {
+<span class="fc" id="L28">        return new ObjectSchemaParserImpl(handlers);</span>
+    }
+
+    static @Nonnull ObjectSchemaParserBack.CachedObjectSchemaParser newCachedParser(
+        @Nonnull SimpleCache&lt;@Nonnull Type, @Nonnull ObjectSchema&gt; cache,
+        @Nonnull ObjectSchemaParser parser
+    ) {
+<span class="fc" id="L35">        return new CachedObjectSchemaParser(cache, parser);</span>
+    }
+
+    private static final class ObjectSchemaParserImpl implements ObjectSchemaParser, ObjectSchemaParser.Handler {
+
+<span class="fc" id="L40">        private static final @Nonnull ObjectSchemaParserBack.ObjectSchemaParserImpl DEFAULT = new ObjectSchemaParserImpl(FsLoader.loadInstances(</span>
+<span class="fc" id="L41">            FsLoader.loadClassByDependent(</span>
+<span class="fc" id="L42">                ThirdKit.thirdClassName(&quot;protobuf&quot;, &quot;ProtobufSchemaHandler&quot;),</span>
+                &quot;com.google.protobuf.Message&quot;
+            ),
+<span class="fc" id="L45">            FsLoader.supplyByDependent(</span>
+<span class="fc" id="L46">                RecordSchemaHandler::getInstance, RecordSchemaHandler.class.getName() + &quot;ImplByJ16&quot;</span>
+            ),
+<span class="fc" id="L48">            CommonSchemaHandler.getInstance()</span>
+        ));
+
+        private final @Nonnull List&lt;@Nonnull Handler&gt; handlers;
+
+<span class="fc" id="L53">        private ObjectSchemaParserImpl(@Nonnull @RetainedParam List&lt;@Nonnull Handler&gt; handlers) {</span>
+<span class="fc" id="L54">            this.handlers = handlers;</span>
+<span class="fc" id="L55">        }</span>
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
+<span class="fc" id="L59">            return handlers;</span>
+        }
+
+        @Override
+        public @Nonnull Handler asHandler() {
+<span class="fc" id="L64">            return this;</span>
+        }
+
+        @Override
+        public boolean parse(@Nonnull Context context) throws Exception {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            for (Handler handler : handlers) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                if (!handler.parse(context)) {</span>
+<span class="fc" id="L71">                    return false;</span>
+                }
+<span class="fc" id="L73">            }</span>
+<span class="fc" id="L74">            return true;</span>
+        }
+    }
+
+    private static final class CachedObjectSchemaParser implements ObjectSchemaParser {
+
+<span class="fc" id="L80">        private static final @Nonnull ObjectSchemaParserBack.CachedObjectSchemaParser DEFAULT = newCachedParser(</span>
+<span class="fc" id="L81">            SimpleCache.ofSoft(),</span>
+<span class="fc" id="L82">            ObjectSchemaParser.defaultParser()</span>
+        );
+
+        private final @Nonnull SimpleCache&lt;@Nonnull Type, @Nonnull ObjectSchema&gt; cache;
+        private final @Nonnull ObjectSchemaParser parser;
+
+        private CachedObjectSchemaParser(
+            @Nonnull SimpleCache&lt;@Nonnull Type, @Nonnull ObjectSchema&gt; cache,
+            @Nonnull ObjectSchemaParser parser
+<span class="fc" id="L91">        ) {</span>
+<span class="fc" id="L92">            this.cache = cache;</span>
+<span class="fc" id="L93">            this.parser = parser;</span>
+<span class="fc" id="L94">        }</span>
+
+        @Override
+        public @Nonnull ObjectSchema parse(@Nonnull Type type) throws DataSchemaException {
+<span class="fc" id="L98">            return cache.get(type, parser::parse);</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
+<span class="fc" id="L103">            return parser.handlers();</span>
+        }
+
+        @Override
+        public @Nonnull Handler asHandler() {
+<span class="fc" id="L108">            return parser.asHandler();</span>
+        }
+    }
+
+    private ObjectSchemaParserBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

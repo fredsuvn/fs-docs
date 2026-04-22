@@ -128,39 +128,35 @@ loadScripts(document, 'script');</script>
 <div class="block">Binds the server's socket to the specified local address and configures the socket to listen for connections.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#bufferSize(int)" class="member-name-link">bufferSize</a><wbr>(int&nbsp;bufSize)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handler(space.sunqian.fs.net.tcp.TcpServerHandler)" class="member-name-link">handler</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerHandler.html" title="interface in space.sunqian.fs.net.tcp">TcpServerHandler</a>&nbsp;handler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the buffer size for advanced IO operations.</div>
+<div class="block">Sets the handler to handle server events.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handler(space.sunqian.fs.net.tcp.TcpServerHandler)" class="member-name-link">handler</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerHandler.html" title="interface in space.sunqian.fs.net.tcp">TcpServerHandler</a>&nbsp;handler)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ioBufferSize(int)" class="member-name-link">ioBufferSize</a><wbr>(int&nbsp;bufSize)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the handler to handle server events.</div>
+<div class="block">Sets the I/O buffer size for advanced IO operations, typically used for read/write operations on
+ <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mainThreadFactory(java.util.concurrent.ThreadFactory)" class="member-name-link">mainThreadFactory</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadFactory.html" title="class or interface in java.util.concurrent" class="external-link">ThreadFactory</a>&nbsp;mainThreadFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the main thread factory to create main thread.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectTimeout(long)" class="member-name-link">selectTimeout</a><wbr>(long&nbsp;selectTimeout)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the timeout for underlying <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/Selector.html#select(long)" title="class or interface in java.nio.channels" class="external-link"><code>Selector.select(long)</code></a>, in milliseconds.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#socketOption(java.net.SocketOption,T)" class="member-name-link">socketOption</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/SocketOption.html" title="class or interface in java.net" class="external-link">SocketOption</a>&lt;T&gt;&nbsp;name,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#socketOption(java.net.SocketOption,T)" class="member-name-link">socketOption</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/SocketOption.html" title="class or interface in java.net" class="external-link">SocketOption</a>&lt;T&gt;&nbsp;name,
  T&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets a socket option.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#workerThreadFactory(java.util.concurrent.ThreadFactory)" class="member-name-link">workerThreadFactory</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadFactory.html" title="class or interface in java.util.concurrent" class="external-link">ThreadFactory</a>&nbsp;workerThreadFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#workerThreadFactory(java.util.concurrent.ThreadFactory)" class="member-name-link">workerThreadFactory</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadFactory.html" title="class or interface in java.util.concurrent" class="external-link">ThreadFactory</a>&nbsp;workerThreadFactory)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the worker thread factory to create worker thread.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#workerThreadNum(int)" class="member-name-link">workerThreadNum</a><wbr>(int&nbsp;workThreadNum)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#workerThreadNum(int)" class="member-name-link">workerThreadNum</a><wbr>(int&nbsp;workThreadNum)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the number of worker thread.</div>
 </div>
 </div>
@@ -269,20 +265,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="bufferSize(int)">
-<h3>bufferSize</h3>
+<section class="detail" id="ioBufferSize(int)">
+<h3>ioBufferSize</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></span>&nbsp;<span class="element-name">bufferSize</span><wbr><span class="parameters">(int&nbsp;bufSize)</span>
-                                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
-<div class="block">Sets the buffer size for advanced IO operations. Note this buffer size is not the kernel network buffer size, it
- is an I/O advanced operations buffer size.</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></span>&nbsp;<span class="element-name">ioBufferSize</span><wbr><span class="parameters">(int&nbsp;bufSize)</span>
+                                       throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
+<div class="block">Sets the I/O buffer size for advanced IO operations, typically used for read/write operations on
+ <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a>. The default size is <a href="../../io/IOKit.html#bufferSize()"><code>IOKit.bufferSize()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>bufSize</code> - the buffer size for advanced IO operations</dd>
+<dd><code>bufSize</code> - the I/O buffer size for advanced IO operations</dd>
 <dt>Returns:</dt>
 <dd>this builder</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the buffer size is negative or <code>0</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the I/O buffer size is negative or <code>0</code></dd>
 </dl>
 </section>
 </li>
@@ -312,26 +308,6 @@ loadScripts(document, 'script');</script>
 <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/StandardSocketOptions.html" title="class or interface in java.net" class="external-link"><code>StandardSocketOptions</code></a></li>
 </ul>
 </dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="selectTimeout(long)">
-<h3>selectTimeout</h3>
-<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpServerBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpServerBuilder</a></span>&nbsp;<span class="element-name">selectTimeout</span><wbr><span class="parameters">(long&nbsp;selectTimeout)</span>
-                                        throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
-<div class="block">Sets the timeout for underlying <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/Selector.html#select(long)" title="class or interface in java.nio.channels" class="external-link"><code>Selector.select(long)</code></a>, in milliseconds. This timeout must <code>&gt;= 0</code>,
- and will affect the triggering interval of <a href="TcpServerHandler.html#channelLoop(space.sunqian.fs.net.tcp.TcpContext)"><code>TcpServerHandler.channelLoop(TcpContext)</code></a>. If it is <code>0</code>,
- there may be a large interval or even never triggering.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>selectTimeout</code> - the timeout for underlying <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/Selector.html#select(long)" title="class or interface in java.nio.channels" class="external-link"><code>Selector.select(long)</code></a>, in milliseconds, must
-                      <code>&gt;= 0</code></dd>
-<dt>Returns:</dt>
-<dd>this builder</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the timeout is negative</dd>
 </dl>
 </section>
 </li>

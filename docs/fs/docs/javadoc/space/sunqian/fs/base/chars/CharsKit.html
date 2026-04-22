@@ -161,6 +161,32 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the charset from the host environment, which is typically the charset of current OS.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toUnicode(char)" class="member-name-link">toUnicode</a><wbr>(char&nbsp;c)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Converts the given char to the corresponding Unicode escape string.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toUnicode(char,boolean)" class="member-name-link">toUnicode</a><wbr>(char&nbsp;c,
+ boolean&nbsp;uppercase)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Converts the given char to the corresponding Unicode escape string.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toUnicode(char,boolean,java.lang.Appendable)" class="member-name-link">toUnicode</a><wbr>(char&nbsp;c,
+ boolean&nbsp;uppercase,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a>&nbsp;appender)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Converts the given char to the corresponding Unicode escape string and appends it to the given appender.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unicodeToChar(char,char,char,char)" class="member-name-link">unicodeToChar</a><wbr>(char&nbsp;c1,
+ char&nbsp;c2,
+ char&nbsp;c3,
+ char&nbsp;c4)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Converts the Unicode escape sequence to the corresponding character.</div>
+</div>
 </div>
 </div>
 </div>
@@ -327,6 +353,95 @@ loadScripts(document, 'script');</script>
 <dd><code>name</code> - the specified name</dd>
 <dt>Returns:</dt>
 <dd>the charset with the specified name</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toUnicode(char)">
+<h3>toUnicode</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toUnicode</span><wbr><span class="parameters">(char&nbsp;c)</span></div>
+<div class="block">Converts the given char to the corresponding Unicode escape string. For example:
+ <ul>
+    <li><code>'a'</code> -> <code>\\u0061</code></li>
+    <li><code>'h'</code> -> <code>\\u0068</code></li>
+    <li><code>'中'</code> -> <code>\\u4E20</code></li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>c</code> - the given char</dd>
+<dt>Returns:</dt>
+<dd>the corresponding Unicode escape string</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toUnicode(char,boolean)">
+<h3>toUnicode</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toUnicode</span><wbr><span class="parameters">(char&nbsp;c,
+ boolean&nbsp;uppercase)</span></div>
+<div class="block">Converts the given char to the corresponding Unicode escape string. For example:
+ <ul>
+    <li><code>'a'</code> -> <code>\\u0061</code></li>
+    <li><code>'h'</code> -> <code>\\u0068</code></li>
+    <li><code>'中'</code> -> <code>\\u4E20</code></li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>c</code> - the given char</dd>
+<dd><code>uppercase</code> - <code>true</code> to use uppercase letters, <code>false</code> to use lowercase letters</dd>
+<dt>Returns:</dt>
+<dd>the corresponding Unicode escape string</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toUnicode(char,boolean,java.lang.Appendable)">
+<h3>toUnicode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">toUnicode</span><wbr><span class="parameters">(char&nbsp;c,
+ boolean&nbsp;uppercase,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a>&nbsp;appender)</span>
+                      throws <span class="exceptions"><a href="../../io/IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
+<div class="block">Converts the given char to the corresponding Unicode escape string and appends it to the given appender. For
+ example:
+ <ul>
+    <li><code>'a'</code> -> <code>\\u0061</code></li>
+    <li><code>'h'</code> -> <code>\\u0068</code></li>
+    <li><code>'中'</code> -> <code>\\u4E20</code></li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>c</code> - the given char</dd>
+<dd><code>uppercase</code> - <code>true</code> to use uppercase letters, <code>false</code> to use lowercase letters</dd>
+<dd><code>appender</code> - the appender to append the result</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../../io/IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="unicodeToChar(char,char,char,char)">
+<h3>unicodeToChar</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char</span>&nbsp;<span class="element-name">unicodeToChar</span><wbr><span class="parameters">(char&nbsp;c1,
+ char&nbsp;c2,
+ char&nbsp;c3,
+ char&nbsp;c4)</span></div>
+<div class="block">Converts the Unicode escape sequence to the corresponding character. For example:
+ <ul>
+    <li><code>\\u0061</code> -> <code>'a'</code></li>
+    <li><code>\\u0068</code> -> <code>'h'</code></li>
+    <li><code>\\u4E20</code> -> <code>'中'</code></li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>c1</code> - the first character of the Unicode escape sequence</dd>
+<dd><code>c2</code> - the second character of the Unicode escape sequence</dd>
+<dd><code>c3</code> - the third character of the Unicode escape sequence</dd>
+<dd><code>c4</code> - the fourth character of the Unicode escape sequence</dd>
+<dt>Returns:</dt>
+<dd>the corresponding character</dd>
 </dl>
 </section>
 </li>

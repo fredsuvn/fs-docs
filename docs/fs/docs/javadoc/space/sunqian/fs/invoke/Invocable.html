@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
  scope or other similar entity.
  <p>
  This interface provides two equivalent methods: <a href="#invoke(java.lang.Object,java.lang.Object...)"><code>invoke(Object, Object...)</code></a> which declares an unchecked
- exception, and <a href="#invokeChecked(java.lang.Object,java.lang.Object...)"><code>invokeChecked(Object, Object...)</code></a> which declares a checked exception.
+ exception, and <a href="#invokeDirectly(java.lang.Object,java.lang.Object...)"><code>invokeDirectly(Object, Object...)</code></a> which declares a checked exception.
  <p>
  The thread-safety of this interface depends on invocable entity it holds.</div>
 </section>
@@ -107,10 +107,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Executes this invocable entity with an instance and the invocation arguments.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#invokeChecked(java.lang.Object,java.lang.Object...)" class="member-name-link">invokeChecked</a><wbr>(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;inst,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#invokeDirectly(java.lang.Object,java.lang.Object...)" class="member-name-link">invokeDirectly</a><wbr>(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;inst,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;args)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Executes this invocable entity with an instance and the invocation arguments.</div>
+<div class="block">Executes this invocable entity with an instance and the invocation arguments, and directly throws any exception
+ thrown from the underlying invocation (if any).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Invocable.html" title="interface in space.sunqian.fs.invoke">Invocable</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#of(java.lang.invoke.MethodHandle,boolean)" class="member-name-link">of</a><wbr>(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/MethodHandle.html" title="class or interface in java.lang.invoke" class="external-link">MethodHandle</a>&nbsp;handle,
@@ -286,18 +287,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="invokeChecked(java.lang.Object,java.lang.Object...)">
-<h3>invokeChecked</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">invokeChecked</span><wbr><span class="parameters">(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+<section class="detail" id="invokeDirectly(java.lang.Object,java.lang.Object...)">
+<h3>invokeDirectly</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">invokeDirectly</span><wbr><span class="parameters">(<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
  <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;inst,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;args)</span>
-              throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a></span></div>
-<div class="block">Executes this invocable entity with an instance and the invocation arguments. The instance typically represents
- the owner object of a method or the scope of '<code>this</code>', and the arguments typically represent the actual
- arguments passed to the method or function. The instance can be <code>null</code> if this entity is a static method,
- constructor, or other similar entity.
- <p>
- This method directly throws any exception thrown from the underlying invocation.</div>
+               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a></span></div>
+<div class="block">Executes this invocable entity with an instance and the invocation arguments, and directly throws any exception
+ thrown from the underlying invocation (if any). The instance typically represents the owner object of a method or
+ the scope of '<code>this</code>', and the arguments typically represent the actual arguments passed to the method or
+ function. The instance can be <code>null</code> if this entity is a static method, constructor, or other similar
+ entity.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inst</code> - the instance</dd>
@@ -305,7 +305,7 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>the invocation result</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a></code> - directly throws any exception thrown from the underlying invocation</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a></code> - the exception directly thrown from the underlying invocation</dd>
 </dl>
 </section>
 </li>

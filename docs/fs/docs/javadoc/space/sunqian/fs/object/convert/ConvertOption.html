@@ -79,12 +79,11 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/Constable.html" title="class or interface in java.lang.constant" class="external-link">Constable</a></code>, <code><a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/Constable.html" title="class or interface in java.lang.constant" class="external-link">Constable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public enum </span><span class="element-name type-name-label">ConvertOption</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>&gt;
-implements <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>&gt;</span></div>
 <div class="block">Option for object conversion and data mapping.</div>
 </section>
 <section class="summary">
@@ -106,29 +105,29 @@ implements <a href="../../base/option/Option.html" title="interface in space.sun
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="#BUILDER_PROVIDER" class="member-name-link">BUILDER_PROVIDER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#BUILDER_OPERATOR_PROVIDER" class="member-name-link">BUILDER_OPERATOR_PROVIDER</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Key of <a href="#builderProvider(space.sunqian.fs.object.data.ObjectBuilderProvider)"><code>builderProvider(ObjectBuilderProvider)</code></a>.</div>
+<div class="block">Key of <a href="#builderOperatorProvider(space.sunqian.fs.object.builder.BuilderOperatorProvider)"><code>builderOperatorProvider(BuilderOperatorProvider)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#CHARSET" class="member-name-link">CHARSET</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Key of <a href="#charset(java.nio.charset.Charset)"><code>charset(Charset)</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#DATA_MAPPER" class="member-name-link">DATA_MAPPER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATE_FORMATTER" class="member-name-link">DATE_FORMATTER</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Key of <a href="#dataMapper(space.sunqian.fs.object.convert.DataMapper)"><code>dataMapper(DataMapper)</code></a>.</div>
+<div class="block">Key of <a href="#dateFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>dateFormatter(DateFormatter)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="#EXCEPTION_HANDLER" class="member-name-link">EXCEPTION_HANDLER</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#IGNORE_NULL" class="member-name-link">IGNORE_NULL</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Key of <a href="#exceptionHandler(space.sunqian.fs.object.convert.DataMapper.ExceptionHandler)"><code>exceptionHandler(DataMapper.ExceptionHandler)</code></a>.</div>
+<div class="block">Key of <a href="#ignoreNull(boolean)"><code>ignoreNull(boolean)</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#IGNORE_NULL" class="member-name-link">IGNORE_NULL</a></code></div>
+<div class="col-first even-row-color"><code><a href="#IGNORE_PROPERTIES" class="member-name-link">IGNORE_PROPERTIES</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Option to ignore copy properties with <code>null</code> values.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="#IGNORE_PROPERTIES" class="member-name-link">IGNORE_PROPERTIES</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block">Key of <a href="#ignoreProperties(java.lang.Object...)"><code>ignoreProperties(Object...)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#INCLUDE_CLASS" class="member-name-link">INCLUDE_CLASS</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Key of <a href="#includeClass(boolean)"><code>includeClass(boolean)</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#IO_OPERATOR" class="member-name-link">IO_OPERATOR</a></code></div>
 <div class="col-last even-row-color">
@@ -136,23 +135,35 @@ implements <a href="../../base/option/Option.html" title="interface in space.sun
 </div>
 <div class="col-first odd-row-color"><code><a href="#MAP_SCHEMA_PARSER" class="member-name-link">MAP_SCHEMA_PARSER</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Key of <a href="#schemaParser(space.sunqian.fs.object.data.MapSchemaParser)"><code>schemaParser(MapSchemaParser)</code></a>.</div>
+<div class="block">Key of <a href="#mapSchemaParser(space.sunqian.fs.object.schema.MapSchemaParser)"><code>mapSchemaParser(MapSchemaParser)</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#NAME_MAPPER" class="member-name-link">NAME_MAPPER</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Key of <a href="#nameMapper(space.sunqian.fs.base.string.NameMapper)"><code>nameMapper(NameMapper)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#NEW_INSTANCE_MODE" class="member-name-link">NEW_INSTANCE_MODE</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Key of <a href="#newInstanceMode(boolean)"><code>newInstanceMode(boolean)</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#NUM_FORMATTER" class="member-name-link">NUM_FORMATTER</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Key of <a href="#numFormatter(space.sunqian.fs.base.number.NumFormatter)"><code>numFormatter(NumFormatter)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#OBJECT_COPIER" class="member-name-link">OBJECT_COPIER</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Key of <a href="#objectCopier(space.sunqian.fs.object.convert.ObjectCopier)"><code>objectCopier(ObjectCopier)</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#OBJECT_SCHEMA_PARSER" class="member-name-link">OBJECT_SCHEMA_PARSER</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Key of <a href="#schemaParser(space.sunqian.fs.object.data.ObjectSchemaParser)"><code>schemaParser(ObjectSchemaParser)</code></a>.</div>
+<div class="block">Key of <a href="#objectSchemaParser(space.sunqian.fs.object.schema.ObjectSchemaParser)"><code>objectSchemaParser(ObjectSchemaParser)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="#PROPERTY_MAPPER" class="member-name-link">PROPERTY_MAPPER</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#STRICT_SOURCE_TYPE_MODE" class="member-name-link">STRICT_SOURCE_TYPE_MODE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Key of <a href="#propertyMapper(space.sunqian.fs.object.convert.DataMapper.PropertyMapper)"><code>propertyMapper(DataMapper.PropertyMapper)</code></a>.</div>
+<div class="block">Key of <a href="#strictSourceTypeMode(boolean)"><code>strictSourceTypeMode(boolean)</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#STRICT_TYPE_MODE" class="member-name-link">STRICT_TYPE_MODE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#STRICT_TARGET_TYPE_MODE" class="member-name-link">STRICT_TARGET_TYPE_MODE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Option to enable strict type mode.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="#TIME_FORMATTER" class="member-name-link">TIME_FORMATTER</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Key of <a href="#timeFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>timeFormatter(DateFormatter)</code></a>.</div>
+<div class="block">Key of <a href="#strictTargetTypeMode(boolean)"><code>strictTargetTypeMode(boolean)</code></a>.</div>
 </div>
 </div>
 </section>
@@ -162,71 +173,175 @@ implements <a href="../../base/option/Option.html" title="interface in space.sun
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builderProvider(space.sunqian.fs.object.data.ObjectBuilderProvider)" class="member-name-link">builderProvider</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider</a>&nbsp;builderFactory)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builderOperatorProvider(space.sunqian.fs.object.builder.BuilderOperatorProvider)" class="member-name-link">builderOperatorProvider</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a>&nbsp;operatorProvider)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an option to specify the <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a> to generate data object during the conversion.</div>
+<div class="block">Returns an option to specify the <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> to generate data object during the conversion.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#charset(java.nio.charset.Charset)" class="member-name-link">charset</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an option to specify the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link"><code>Charset</code></a> if needed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dataMapper(space.sunqian.fs.object.convert.DataMapper)" class="member-name-link">dataMapper</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper</a>&nbsp;dataMapper)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dateFormatter(space.sunqian.fs.base.date.DateFormatter)" class="member-name-link">dateFormatter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&nbsp;dateFormatter)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an option to specify the <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper</code></a>.</div>
+<div class="block">Returns an option to specify the <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> if needed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert">DataMapper.ExceptionHandler</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#exceptionHandler(space.sunqian.fs.object.convert.DataMapper.ExceptionHandler)" class="member-name-link">exceptionHandler</a><wbr>(<a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert">DataMapper.ExceptionHandler</a>&nbsp;exceptionHandler)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBuilderOperatorProvider(space.sunqian.fs.base.option.Option...)" class="member-name-link">getBuilderOperatorProvider</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an option to specify the <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.ExceptionHandler</code></a>.</div>
+<div class="block">Returns the specified <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> from the given options, or
+ <a href="../builder/BuilderOperatorProvider.html#defaultCachedProvider()"><code>BuilderOperatorProvider.defaultCachedProvider()</code></a> if the given options does not contain a
+ <a href="#BUILDER_OPERATOR_PROVIDER"><code>BUILDER_OPERATOR_PROVIDER</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ignoreProperties(java.lang.Object...)" class="member-name-link">ignoreProperties</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;ignoredProperties)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCharset(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">getCharset</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link"><code>Charset</code></a> from the given options, or <a href="../../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a> if the given
+ options does not contain a <a href="#CHARSET"><code>CHARSET</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDateFormatter(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">getDateFormatter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> from the given options, or <a href="../../base/date/DateFormatter.html#defaultFormatter()"><code>DateFormatter.defaultFormatter()</code></a>
+ if the given options does not contain a <a href="#DATE_FORMATTER"><code>DATE_FORMATTER</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io">IOOperator</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIOOperator(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">getIOOperator</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a> from the given options, or <a href="../../io/IOOperator.html#defaultOperator()"><code>IOOperator.defaultOperator()</code></a> if the
+ given options does not contain a <a href="#IO_OPERATOR"><code>IO_OPERATOR</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMapSchemaParser(space.sunqian.fs.base.option.Option...)" class="member-name-link">getMapSchemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>MapSchemaParser</code></a> from the given options, or
+ <a href="../schema/MapSchemaParser.html#defaultCachedParser()"><code>MapSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#MAP_SCHEMA_PARSER"><code>MAP_SCHEMA_PARSER</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNameMapper(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">getNameMapper</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a>specified by the options.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNumFormatter(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">getNumFormatter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> from the given options, or <a href="../../base/number/NumFormatter.html#common()"><code>NumFormatter.common()</code></a> if the given
+ options does not contain a <a href="#NUM_FORMATTER"><code>NUM_FORMATTER</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getObjectCopier(space.sunqian.fs.base.option.Option...)" class="member-name-link">getObjectCopier</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a> from the given options, or <a href="ObjectCopier.html#defaultCopier()"><code>ObjectCopier.defaultCopier()</code></a> if the
+ given options does not contain a <a href="#OBJECT_COPIER"><code>OBJECT_COPIER</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getObjectSchemaParser(space.sunqian.fs.base.option.Option...)" class="member-name-link">getObjectSchemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the specified <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchemaParser</code></a> from the given options, or
+ <a href="../schema/ObjectSchemaParser.html#defaultCachedParser()"><code>ObjectSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#OBJECT_SCHEMA_PARSER"><code>OBJECT_SCHEMA_PARSER</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ignoreNull(boolean)" class="member-name-link">ignoreNull</a><wbr>(boolean&nbsp;ignoreNull)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns an option to specify whether ignores <code>null</code> properties from the source object in the conversion.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ignoreProperties(java.lang.Object...)" class="member-name-link">ignoreProperties</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;ignoredProperties)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an option to ignore copy properties with the specified property names (or key for map).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#includeClass(boolean)" class="member-name-link">includeClass</a><wbr>(boolean&nbsp;includeClass)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns an option to specify whether includes <code>class</code> properties, which from <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>, for
+ the source object in the conversion.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io">IOOperator</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ioOperator(space.sunqian.fs.io.IOOperator)" class="member-name-link">ioOperator</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io">IOOperator</a>&nbsp;ioOperator)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an option to specify the <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a> if needed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#key()" class="member-name-link">key</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the key of this option.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isIgnoreNull(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isIgnoreNull</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Check whether the given option specifies to enable to ignore null values.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper.PropertyMapper</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#propertyMapper(space.sunqian.fs.object.convert.DataMapper.PropertyMapper)" class="member-name-link">propertyMapper</a><wbr>(<a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper.PropertyMapper</a>&nbsp;propertyMapper)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isIgnoreProperty(java.lang.Object,space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isIgnoreProperty</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;propertyName,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an option to specify the <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.PropertyMapper</code></a>.</div>
+<div class="block">Check whether the property is specified to ignore by the given options.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/MapSchemaParser.html" title="interface in space.sunqian.fs.object.data">MapSchemaParser</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#schemaParser(space.sunqian.fs.object.data.MapSchemaParser)" class="member-name-link">schemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/MapSchemaParser.html" title="interface in space.sunqian.fs.object.data">MapSchemaParser</a>&nbsp;schemaParser)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isIncludeClass(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isIncludeClass</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Check whether the given option specifies to enable to include <code>class</code> properties, which from
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isNewInstanceMode(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isNewInstanceMode</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether the given options specify to enable new instance mode.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isStrictSourceTypeMode(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isStrictSourceTypeMode</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether the given options specify to enable strict source type mode.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isStrictTargetTypeMode(space.sunqian.fs.base.option.Option%5B%5D)" class="member-name-link">isStrictTargetTypeMode</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether the given options specify to enable strict target type mode.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mapSchemaParser(space.sunqian.fs.object.schema.MapSchemaParser)" class="member-name-link">mapSchemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a>&nbsp;schemaParser)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an option to specify the map schema parser.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#schemaParser(space.sunqian.fs.object.data.ObjectSchemaParser)" class="member-name-link">schemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser</a>&nbsp;schemaParser)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#nameMapper(space.sunqian.fs.base.string.NameMapper)" class="member-name-link">nameMapper</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a>&nbsp;nameMapper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns an option to specify the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstanceMode(boolean)" class="member-name-link">newInstanceMode</a><wbr>(boolean&nbsp;newInstanceMode)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets option to enable new instance mode.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#numFormatter(space.sunqian.fs.base.number.NumFormatter)" class="member-name-link">numFormatter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a>&nbsp;numFormatter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns an option to specify the <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> if needed.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#objectCopier(space.sunqian.fs.object.convert.ObjectCopier)" class="member-name-link">objectCopier</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a>&nbsp;objectCopier)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns an option to specify the <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#objectSchemaParser(space.sunqian.fs.object.schema.ObjectSchemaParser)" class="member-name-link">objectSchemaParser</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&nbsp;schemaParser)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an option to specify the object schema parser.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#timeFormatter(space.sunqian.fs.base.date.DateFormatter)" class="member-name-link">timeFormatter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&nbsp;dateFormatter)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#strictSourceTypeMode(boolean)" class="member-name-link">strictSourceTypeMode</a><wbr>(boolean&nbsp;strictSourceType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an option to specify the <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> if needed.</div>
+<div class="block">Sets option to enable strict source type mode.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#value()" class="member-name-link">value</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of this option.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#strictTargetTypeMode(boolean)" class="member-name-link">strictTargetTypeMode</a><wbr>(boolean&nbsp;strictTargetType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets option to enable new instance mode.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -260,51 +375,78 @@ the order they are declared.</div>
 <h2>Enum Constant Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="STRICT_TYPE_MODE">
-<h3>STRICT_TYPE_MODE</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">STRICT_TYPE_MODE</span></div>
-<div class="block">Option to enable strict type mode. In strict type mode, the target type for wildcard and type variables will be
- strictly converted.
+<section class="detail" id="STRICT_SOURCE_TYPE_MODE">
+<h3>STRICT_SOURCE_TYPE_MODE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">STRICT_SOURCE_TYPE_MODE</span></div>
+<div class="block">Key of <a href="#strictSourceTypeMode(boolean)"><code>strictSourceTypeMode(boolean)</code></a>.
  <p>
- This option is disabled by default, in this case, the target type for wildcard and type variables will be
- converted as their bounds type. For example, the target type of <code>? extends String</code> will be treated as
+ Option to enable strict source type mode. In strict type mode, the conversion will strictly treat the source
+ object as the specified source type.
+ <p>
+ By default, this option is disabled. In this case, if some error occurs when parsing the source type, the
+ conversion will try again with the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a> as the source type.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="STRICT_TARGET_TYPE_MODE">
+<h3>STRICT_TARGET_TYPE_MODE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">STRICT_TARGET_TYPE_MODE</span></div>
+<div class="block">Key of <a href="#strictTargetTypeMode(boolean)"><code>strictTargetTypeMode(boolean)</code></a>.
+ <p>
+ Option to enable strict target type mode. In strict type mode, the conversion will strictly convert the source
+ object to the target type, especially for target wildcard type and type variables.
+ <p>
+ By default, this option is disabled. In this case, the target type for wildcard and type variables will be
+ treated as their bounds type. For example, the target type of <code>? extends String</code> will be treated as
  <code>String</code>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="NEW_INSTANCE_MODE">
+<h3>NEW_INSTANCE_MODE</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">NEW_INSTANCE_MODE</span></div>
+<div class="block">Key of <a href="#newInstanceMode(boolean)"><code>newInstanceMode(boolean)</code></a>.
+ <p>
+ Option to enable new instance mode. In new instance mode, the conversion will always create a new instance of the
+ target type even if the target type is assignable from the source type.
+ <p>
+ By default, this option is disabled. In this case, the conversion could return the source object if the target
+ type is assignable from the source type.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="OBJECT_SCHEMA_PARSER">
 <h3>OBJECT_SCHEMA_PARSER</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">OBJECT_SCHEMA_PARSER</span></div>
-<div class="block">Key of <a href="#schemaParser(space.sunqian.fs.object.data.ObjectSchemaParser)"><code>schemaParser(ObjectSchemaParser)</code></a>.</div>
+<div class="block">Key of <a href="#objectSchemaParser(space.sunqian.fs.object.schema.ObjectSchemaParser)"><code>objectSchemaParser(ObjectSchemaParser)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="MAP_SCHEMA_PARSER">
 <h3>MAP_SCHEMA_PARSER</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">MAP_SCHEMA_PARSER</span></div>
-<div class="block">Key of <a href="#schemaParser(space.sunqian.fs.object.data.MapSchemaParser)"><code>schemaParser(MapSchemaParser)</code></a>.</div>
+<div class="block">Key of <a href="#mapSchemaParser(space.sunqian.fs.object.schema.MapSchemaParser)"><code>mapSchemaParser(MapSchemaParser)</code></a>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="PROPERTY_MAPPER">
-<h3>PROPERTY_MAPPER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">PROPERTY_MAPPER</span></div>
-<div class="block">Key of <a href="#propertyMapper(space.sunqian.fs.object.convert.DataMapper.PropertyMapper)"><code>propertyMapper(DataMapper.PropertyMapper)</code></a>.</div>
+<section class="detail" id="BUILDER_OPERATOR_PROVIDER">
+<h3>BUILDER_OPERATOR_PROVIDER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">BUILDER_OPERATOR_PROVIDER</span></div>
+<div class="block">Key of <a href="#builderOperatorProvider(space.sunqian.fs.object.builder.BuilderOperatorProvider)"><code>builderOperatorProvider(BuilderOperatorProvider)</code></a>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="EXCEPTION_HANDLER">
-<h3>EXCEPTION_HANDLER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">EXCEPTION_HANDLER</span></div>
-<div class="block">Key of <a href="#exceptionHandler(space.sunqian.fs.object.convert.DataMapper.ExceptionHandler)"><code>exceptionHandler(DataMapper.ExceptionHandler)</code></a>.</div>
+<section class="detail" id="OBJECT_COPIER">
+<h3>OBJECT_COPIER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">OBJECT_COPIER</span></div>
+<div class="block">Key of <a href="#objectCopier(space.sunqian.fs.object.convert.ObjectCopier)"><code>objectCopier(ObjectCopier)</code></a>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="IGNORE_NULL">
-<h3>IGNORE_NULL</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">IGNORE_NULL</span></div>
-<div class="block">Option to ignore copy properties with <code>null</code> values. If a <a href="#PROPERTY_MAPPER"><code>PROPERTY_MAPPER</code></a> is set, this option
- becomes invalid. This option is disabled by default.</div>
+<section class="detail" id="NAME_MAPPER">
+<h3>NAME_MAPPER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">NAME_MAPPER</span></div>
+<div class="block">Key of <a href="#nameMapper(space.sunqian.fs.base.string.NameMapper)"><code>nameMapper(NameMapper)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -315,17 +457,17 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="DATA_MAPPER">
-<h3>DATA_MAPPER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">DATA_MAPPER</span></div>
-<div class="block">Key of <a href="#dataMapper(space.sunqian.fs.object.convert.DataMapper)"><code>dataMapper(DataMapper)</code></a>.</div>
+<section class="detail" id="IGNORE_NULL">
+<h3>IGNORE_NULL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">IGNORE_NULL</span></div>
+<div class="block">Key of <a href="#ignoreNull(boolean)"><code>ignoreNull(boolean)</code></a>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="BUILDER_PROVIDER">
-<h3>BUILDER_PROVIDER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">BUILDER_PROVIDER</span></div>
-<div class="block">Key of <a href="#builderProvider(space.sunqian.fs.object.data.ObjectBuilderProvider)"><code>builderProvider(ObjectBuilderProvider)</code></a>.</div>
+<section class="detail" id="INCLUDE_CLASS">
+<h3>INCLUDE_CLASS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">INCLUDE_CLASS</span></div>
+<div class="block">Key of <a href="#includeClass(boolean)"><code>includeClass(boolean)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -343,10 +485,17 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="TIME_FORMATTER">
-<h3>TIME_FORMATTER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">TIME_FORMATTER</span></div>
-<div class="block">Key of <a href="#timeFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>timeFormatter(DateFormatter)</code></a>.</div>
+<section class="detail" id="DATE_FORMATTER">
+<h3>DATE_FORMATTER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">DATE_FORMATTER</span></div>
+<div class="block">Key of <a href="#dateFormatter(space.sunqian.fs.base.date.DateFormatter)"><code>dateFormatter(DateFormatter)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="NUM_FORMATTER">
+<h3>NUM_FORMATTER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">NUM_FORMATTER</span></div>
+<div class="block">Key of <a href="#numFormatter(space.sunqian.fs.base.number.NumFormatter)"><code>numFormatter(NumFormatter)</code></a>.</div>
 </section>
 </li>
 </ul>
@@ -389,14 +538,113 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="schemaParser(space.sunqian.fs.object.data.ObjectSchemaParser)">
-<h3>schemaParser</h3>
+<section class="detail" id="strictSourceTypeMode(boolean)">
+<h3>strictSourceTypeMode</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser</a>&gt;</span>&nbsp;<span class="element-name">schemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser</a>&nbsp;schemaParser)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</span>&nbsp;<span class="element-name">strictSourceTypeMode</span><wbr><span class="parameters">(boolean&nbsp;strictSourceType)</span></div>
+<div class="block">Sets option to enable strict source type mode. In strict type mode, the conversion will strictly treat the source
+ object as the specified source type.
+ <p>
+ By default, this option is disabled. In this case, if some error occurs when parsing the source type, the
+ conversion will try again with the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a> as the source type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>strictSourceType</code> - whether to enable strict source type mode</dd>
+<dt>Returns:</dt>
+<dd>an option to specify to enable/disable strict source type mode</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isStrictSourceTypeMode(space.sunqian.fs.base.option.Option[])">
+<h3>isStrictSourceTypeMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStrictSourceTypeMode</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns whether the given options specify to enable strict source type mode. The related option configuration
+ method is <a href="#strictSourceTypeMode(boolean)"><code>strictSourceTypeMode(boolean)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the given options specify to enable strict source type mode, <code>false</code> otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="strictTargetTypeMode(boolean)">
+<h3>strictTargetTypeMode</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</span>&nbsp;<span class="element-name">strictTargetTypeMode</span><wbr><span class="parameters">(boolean&nbsp;strictTargetType)</span></div>
+<div class="block">Sets option to enable new instance mode. In new instance mode, the conversion will always create a new instance
+ of the target type even if the target type is assignable from the source type.
+ <p>
+ By default, this option is disabled. In this case, the conversion could return the source object if the target
+ type is assignable from the source type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>strictTargetType</code> - whether to enable strict target type mode</dd>
+<dt>Returns:</dt>
+<dd>an option to specify to enable/disable strict target type mode</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isStrictTargetTypeMode(space.sunqian.fs.base.option.Option[])">
+<h3>isStrictTargetTypeMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStrictTargetTypeMode</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns whether the given options specify to enable strict target type mode. The related option configuration
+ method is <a href="#strictTargetTypeMode(boolean)"><code>strictTargetTypeMode(boolean)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the given options specify to enable strict target type mode, <code>false</code> otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newInstanceMode(boolean)">
+<h3>newInstanceMode</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</span>&nbsp;<span class="element-name">newInstanceMode</span><wbr><span class="parameters">(boolean&nbsp;newInstanceMode)</span></div>
+<div class="block">Sets option to enable new instance mode. In new instance mode, the conversion will always create a new instance
+ of the target type even if the target type is assignable from the source type.
+ <p>
+ By default, this option is disabled. In this case, the conversion could return the source object if the target
+ type is assignable from the source type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>newInstanceMode</code> - whether to enable new instance mode</dd>
+<dt>Returns:</dt>
+<dd>an option to specify to enable/disable new instance mode</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isNewInstanceMode(space.sunqian.fs.base.option.Option[])">
+<h3>isNewInstanceMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNewInstanceMode</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns whether the given options specify to enable new instance mode. The related option configuration method is
+ <a href="#newInstanceMode(boolean)"><code>newInstanceMode(boolean)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the given options specify to enable new instance mode, <code>false</code> otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="objectSchemaParser(space.sunqian.fs.object.schema.ObjectSchemaParser)">
+<h3>objectSchemaParser</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&gt;</span>&nbsp;<span class="element-name">objectSchemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a>&nbsp;schemaParser)</span></div>
 <div class="block">Returns an option to specify the object schema parser.
  <p>
- By default, <a href="../data/ObjectSchemaParser.html#defaultParser()"><code>ObjectSchemaParser.defaultParser()</code></a> is used.</div>
+ By default, <a href="../schema/ObjectSchemaParser.html#defaultCachedParser()"><code>ObjectSchemaParser.defaultCachedParser()</code></a> is used.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>schemaParser</code> - the specified object schema parser</dd>
@@ -406,14 +654,33 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="schemaParser(space.sunqian.fs.object.data.MapSchemaParser)">
-<h3>schemaParser</h3>
+<section class="detail" id="getObjectSchemaParser(space.sunqian.fs.base.option.Option...)">
+<h3>getObjectSchemaParser</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/MapSchemaParser.html" title="interface in space.sunqian.fs.object.data">MapSchemaParser</a>&gt;</span>&nbsp;<span class="element-name">schemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/MapSchemaParser.html" title="interface in space.sunqian.fs.object.data">MapSchemaParser</a>&nbsp;schemaParser)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser</a></span>&nbsp;<span class="element-name">getObjectSchemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchemaParser</code></a> from the given options, or
+ <a href="../schema/ObjectSchemaParser.html#defaultCachedParser()"><code>ObjectSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#OBJECT_SCHEMA_PARSER"><code>OBJECT_SCHEMA_PARSER</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="../schema/ObjectSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchemaParser</code></a> from the given options, or
+ <a href="../schema/ObjectSchemaParser.html#defaultCachedParser()"><code>ObjectSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#OBJECT_SCHEMA_PARSER"><code>OBJECT_SCHEMA_PARSER</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mapSchemaParser(space.sunqian.fs.object.schema.MapSchemaParser)">
+<h3>mapSchemaParser</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a>&gt;</span>&nbsp;<span class="element-name">mapSchemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a>&nbsp;schemaParser)</span></div>
 <div class="block">Returns an option to specify the map schema parser.
  <p>
- By default, <a href="../data/MapSchemaParser.html#defaultParser()"><code>MapSchemaParser.defaultParser()</code></a> is used.</div>
+ By default, <a href="../schema/MapSchemaParser.html#defaultCachedParser()"><code>MapSchemaParser.defaultCachedParser()</code></a> is used.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>schemaParser</code> - the specified map schema parser</dd>
@@ -423,36 +690,129 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="propertyMapper(space.sunqian.fs.object.convert.DataMapper.PropertyMapper)">
-<h3>propertyMapper</h3>
+<section class="detail" id="getMapSchemaParser(space.sunqian.fs.base.option.Option...)">
+<h3>getMapSchemaParser</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper.PropertyMapper</a>&gt;</span>&nbsp;<span class="element-name">propertyMapper</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper.PropertyMapper</a>&nbsp;propertyMapper)</span></div>
-<div class="block">Returns an option to specify the <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.PropertyMapper</code></a>.
- <p>
- By default, all properties which is both readable and writable will be copied with their original names.</div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema">MapSchemaParser</a></span>&nbsp;<span class="element-name">getMapSchemaParser</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>MapSchemaParser</code></a> from the given options, or
+ <a href="../schema/MapSchemaParser.html#defaultCachedParser()"><code>MapSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#MAP_SCHEMA_PARSER"><code>MAP_SCHEMA_PARSER</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>propertyMapper</code> - the <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.PropertyMapper</code></a> to be specified</dd>
+<dd><code>options</code> - the given options</dd>
 <dt>Returns:</dt>
-<dd>an option to specify the <a href="DataMapper.PropertyMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.PropertyMapper</code></a></dd>
+<dd>the specified <a href="../schema/MapSchemaParser.html" title="interface in space.sunqian.fs.object.schema"><code>MapSchemaParser</code></a> from the given options, or
+ <a href="../schema/MapSchemaParser.html#defaultCachedParser()"><code>MapSchemaParser.defaultCachedParser()</code></a> if the given options does not contain a
+ <a href="#MAP_SCHEMA_PARSER"><code>MAP_SCHEMA_PARSER</code></a></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="exceptionHandler(space.sunqian.fs.object.convert.DataMapper.ExceptionHandler)">
-<h3>exceptionHandler</h3>
+<section class="detail" id="builderOperatorProvider(space.sunqian.fs.object.builder.BuilderOperatorProvider)">
+<h3>builderOperatorProvider</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert">DataMapper.ExceptionHandler</a>&gt;</span>&nbsp;<span class="element-name">exceptionHandler</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert">DataMapper.ExceptionHandler</a>&nbsp;exceptionHandler)</span></div>
-<div class="block">Returns an option to specify the <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.ExceptionHandler</code></a>.
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a>&gt;</span>&nbsp;<span class="element-name">builderOperatorProvider</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a>&nbsp;operatorProvider)</span></div>
+<div class="block">Returns an option to specify the <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> to generate data object during the conversion.
  <p>
- By default, the exception will be thrown directly.</div>
+ By default, the <a href="../builder/BuilderOperatorProvider.html#defaultCachedProvider()"><code>BuilderOperatorProvider.defaultCachedProvider()</code></a> is used.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>exceptionHandler</code> - the <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.ExceptionHandler</code></a> to be specified</dd>
+<dd><code>operatorProvider</code> - the <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> to be specified</dd>
 <dt>Returns:</dt>
-<dd>an option to specify the <a href="DataMapper.ExceptionHandler.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper.ExceptionHandler</code></a></dd>
+<dd>an option to specify the <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> to generate data object during the conversion</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBuilderOperatorProvider(space.sunqian.fs.base.option.Option...)">
+<h3>getBuilderOperatorProvider</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider</a></span>&nbsp;<span class="element-name">getBuilderOperatorProvider</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> from the given options, or
+ <a href="../builder/BuilderOperatorProvider.html#defaultCachedProvider()"><code>BuilderOperatorProvider.defaultCachedProvider()</code></a> if the given options does not contain a
+ <a href="#BUILDER_OPERATOR_PROVIDER"><code>BUILDER_OPERATOR_PROVIDER</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a> from the given options, or
+ <a href="../builder/BuilderOperatorProvider.html#defaultCachedProvider()"><code>BuilderOperatorProvider.defaultCachedProvider()</code></a> if the given options does not contain a
+ <a href="#BUILDER_OPERATOR_PROVIDER"><code>BUILDER_OPERATOR_PROVIDER</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="objectCopier(space.sunqian.fs.object.convert.ObjectCopier)">
+<h3>objectCopier</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a>&gt;</span>&nbsp;<span class="element-name">objectCopier</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a>&nbsp;objectCopier)</span></div>
+<div class="block">Returns an option to specify the <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a>.
+ <p>
+ By default, the <a href="ObjectCopier.html#defaultCopier()"><code>ObjectCopier.defaultCopier()</code></a> is used.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>objectCopier</code> - the <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a> to be specified</dd>
+<dt>Returns:</dt>
+<dd>an option to specify the <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getObjectCopier(space.sunqian.fs.base.option.Option...)">
+<h3>getObjectCopier</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert">ObjectCopier</a></span>&nbsp;<span class="element-name">getObjectCopier</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a> from the given options, or <a href="ObjectCopier.html#defaultCopier()"><code>ObjectCopier.defaultCopier()</code></a> if the
+ given options does not contain a <a href="#OBJECT_COPIER"><code>OBJECT_COPIER</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a> from the given options, or <a href="ObjectCopier.html#defaultCopier()"><code>ObjectCopier.defaultCopier()</code></a> if the
+ given options does not contain a <a href="#OBJECT_COPIER"><code>OBJECT_COPIER</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nameMapper(space.sunqian.fs.base.string.NameMapper)">
+<h3>nameMapper</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a>&gt;</span>&nbsp;<span class="element-name">nameMapper</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a>&nbsp;nameMapper)</span></div>
+<div class="block">Returns an option to specify the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a>.
+ <p>
+ Note that this configuration is only valid for the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> type names, mainly for the property names (both
+ source and target), and executed before the configured <a href="ObjectCopier.Handler.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier.Handler</code></a> (if any, and it means the
+ property name received by the property mapper will be mapped by the name mapper first). For the property names
+ whose type is not <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>, such as non-<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> keys of a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>, this configuration will not
+ take effect.
+ <p>
+ By default, this option is disabled.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>nameMapper</code> - the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a> to be specified</dd>
+<dt>Returns:</dt>
+<dd>an option to specify the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNameMapper(space.sunqian.fs.base.option.Option[])">
+<h3>getNameMapper</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string">NameMapper</a></span>&nbsp;<span class="element-name">getNameMapper</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a>specified by the options. The related option <a href="#nameMapper(space.sunqian.fs.base.string.NameMapper)"><code>nameMapper(NameMapper)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the options to check</dd>
+<dt>Returns:</dt>
+<dd>the <a href="../../base/string/NameMapper.html" title="interface in space.sunqian.fs.base.string"><code>NameMapper</code></a> specified by the options, or <a href="../../base/string/NameMapper.html#keep()"><code>NameMapper.keep()</code></a> if not specified</dd>
 </dl>
 </section>
 </li>
@@ -474,36 +834,86 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="dataMapper(space.sunqian.fs.object.convert.DataMapper)">
-<h3>dataMapper</h3>
-<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper</a>&gt;</span>&nbsp;<span class="element-name">dataMapper</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert">DataMapper</a>&nbsp;dataMapper)</span></div>
-<div class="block">Returns an option to specify the <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper</code></a>.
- <p>
- By default, the <a href="DataMapper.html#defaultMapper()"><code>DataMapper.defaultMapper()</code></a> is used.</div>
+<section class="detail" id="isIgnoreProperty(java.lang.Object,space.sunqian.fs.base.option.Option[])">
+<h3>isIgnoreProperty</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIgnoreProperty</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;propertyName,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Check whether the property is specified to ignore by the given options. The related option
+ <a href="#ignoreProperties(java.lang.Object...)"><code>ignoreProperties(Object...)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>dataMapper</code> - the <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper</code></a> to be specified</dd>
+<dd><code>propertyName</code> - the property name to check</dd>
+<dd><code>options</code> - the given options</dd>
 <dt>Returns:</dt>
-<dd>an option to specify the <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper</code></a></dd>
+<dd><code>true</code> if the property is specified to ignore, <code>false</code> otherwise</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="builderProvider(space.sunqian.fs.object.data.ObjectBuilderProvider)">
-<h3>builderProvider</h3>
+<section class="detail" id="ignoreNull(boolean)">
+<h3>ignoreNull</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider</a>&gt;</span>&nbsp;<span class="element-name">builderProvider</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider</a>&nbsp;builderFactory)</span></div>
-<div class="block">Returns an option to specify the <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a> to generate data object during the conversion.
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</span>&nbsp;<span class="element-name">ignoreNull</span><wbr><span class="parameters">(boolean&nbsp;ignoreNull)</span></div>
+<div class="block">Returns an option to specify whether ignores <code>null</code> properties from the source object in the conversion.
  <p>
- By default, the <a href="../data/ObjectBuilderProvider.html#defaultProvider()"><code>ObjectBuilderProvider.defaultProvider()</code></a> is used.</div>
+ By default, this option is disabled.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>builderFactory</code> - the <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a> to be specified</dd>
+<dd><code>ignoreNull</code> - whether ignores <code>null</code> properties from the source object</dd>
 <dt>Returns:</dt>
-<dd>an option to specify the <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a> to generate data object during the conversion</dd>
+<dd>an option to specify to ignore null properties from the source object in the conversion</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isIgnoreNull(space.sunqian.fs.base.option.Option[])">
+<h3>isIgnoreNull</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIgnoreNull</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Check whether the given option specifies to enable to ignore null values. The related option
+ <a href="#ignoreNull(boolean)"><code>ignoreNull(boolean)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options to check</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the option specifies to enable to ignore null values, <code>false</code> otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="includeClass(boolean)">
+<h3>includeClass</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr>?&gt;</span>&nbsp;<span class="element-name">includeClass</span><wbr><span class="parameters">(boolean&nbsp;includeClass)</span></div>
+<div class="block">Returns an option to specify whether includes <code>class</code> properties, which from <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>, for
+ the source object in the conversion.
+ <p>
+ By default, this option is disabled.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>includeClass</code> - whether includes <code>class</code> properties, which from <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>, for the
+                     source object</dd>
+<dt>Returns:</dt>
+<dd>an option to specify to include <code>class</code> properties, which from <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>, for the
+ source object in the conversion</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isIncludeClass(space.sunqian.fs.base.option.Option[])">
+<h3>isIncludeClass</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIncludeClass</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Check whether the given option specifies to enable to include <code>class</code> properties, which from
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a>. The related option configuration method is <a href="#includeClass(boolean)"><code>includeClass(boolean)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options to check</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the option specifies to enable to include <code>class</code> properties, <code>false</code>
+ otherwise</dd>
 </dl>
 </section>
 </li>
@@ -525,6 +935,23 @@ not permitted.)</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getIOOperator(space.sunqian.fs.base.option.Option[])">
+<h3>getIOOperator</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io">IOOperator</a></span>&nbsp;<span class="element-name">getIOOperator</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a> from the given options, or <a href="../../io/IOOperator.html#defaultOperator()"><code>IOOperator.defaultOperator()</code></a> if the
+ given options does not contain a <a href="#IO_OPERATOR"><code>IO_OPERATOR</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a> from the given options, or <a href="../../io/IOOperator.html#defaultOperator()"><code>IOOperator.defaultOperator()</code></a> if the
+ given options does not contain a <a href="#IO_OPERATOR"><code>IO_OPERATOR</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="charset(java.nio.charset.Charset)">
 <h3>charset</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -542,10 +969,27 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="timeFormatter(space.sunqian.fs.base.date.DateFormatter)">
-<h3>timeFormatter</h3>
+<section class="detail" id="getCharset(space.sunqian.fs.base.option.Option[])">
+<h3>getCharset</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&gt;</span>&nbsp;<span class="element-name">timeFormatter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a></span>&nbsp;<span class="element-name">getCharset</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link"><code>Charset</code></a> from the given options, or <a href="../../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a> if the given
+ options does not contain a <a href="#CHARSET"><code>CHARSET</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link"><code>Charset</code></a> from the given options, or <a href="../../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a> if the given
+ options does not contain a <a href="#CHARSET"><code>CHARSET</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="dateFormatter(space.sunqian.fs.base.date.DateFormatter)">
+<h3>dateFormatter</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&gt;</span>&nbsp;<span class="element-name">dateFormatter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a>&nbsp;dateFormatter)</span></div>
 <div class="block">Returns an option to specify the <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> if needed.
  <p>
@@ -559,32 +1003,53 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="key()">
-<h3>key</h3>
+<section class="detail" id="getDateFormatter(space.sunqian.fs.base.option.Option[])">
+<h3>getDateFormatter</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></span>&nbsp;<span class="element-name">key</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../base/option/Option.html#key()">Option</a></code></span></div>
-<div class="block">Returns the key of this option.</div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date">DateFormatter</a></span>&nbsp;<span class="element-name">getDateFormatter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> from the given options, or <a href="../../base/date/DateFormatter.html#defaultFormatter()"><code>DateFormatter.defaultFormatter()</code></a>
+ if the given options does not contain a <a href="#DATE_FORMATTER"><code>DATE_FORMATTER</code></a>.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../base/option/Option.html#key()">key</a></code>&nbsp;in interface&nbsp;<code><a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
 <dt>Returns:</dt>
-<dd>the key of this option</dd>
+<dd>the specified <a href="../../base/date/DateFormatter.html" title="interface in space.sunqian.fs.base.date"><code>DateFormatter</code></a> from the given options, or <a href="../../base/date/DateFormatter.html#defaultFormatter()"><code>DateFormatter.defaultFormatter()</code></a>
+ if the given options does not contain a <a href="#DATE_FORMATTER"><code>DATE_FORMATTER</code></a></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="value()">
-<h3>value</h3>
-<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">value</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../base/option/Option.html#value()">Option</a></code></span></div>
-<div class="block">Returns the value of this option.</div>
+<section class="detail" id="numFormatter(space.sunqian.fs.base.number.NumFormatter)">
+<h3>numFormatter</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a>&gt;</span>&nbsp;<span class="element-name">numFormatter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a>&nbsp;numFormatter)</span></div>
+<div class="block">Returns an option to specify the <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> if needed.
+ <p>
+ By default, no <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> is used.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../base/option/Option.html#value()">value</a></code>&nbsp;in interface&nbsp;<code><a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;<a href="ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>numFormatter</code> - the <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> to be specified</dd>
 <dt>Returns:</dt>
-<dd>the value of this option.</dd>
+<dd>an option to specify the <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> if needed</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNumFormatter(space.sunqian.fs.base.option.Option[])">
+<h3>getNumFormatter</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number">NumFormatter</a></span>&nbsp;<span class="element-name">getNumFormatter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;options)</span></div>
+<div class="block">Returns the specified <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> from the given options, or <a href="../../base/number/NumFormatter.html#common()"><code>NumFormatter.common()</code></a> if the given
+ options does not contain a <a href="#NUM_FORMATTER"><code>NUM_FORMATTER</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the given options</dd>
+<dt>Returns:</dt>
+<dd>the specified <a href="../../base/number/NumFormatter.html" title="interface in space.sunqian.fs.base.number"><code>NumFormatter</code></a> from the given options, or <a href="../../base/number/NumFormatter.html#common()"><code>NumFormatter.common()</code></a> if the given
+ options does not contain a <a href="#NUM_FORMATTER"><code>NUM_FORMATTER</code></a></dd>
 </dl>
 </section>
 </li>

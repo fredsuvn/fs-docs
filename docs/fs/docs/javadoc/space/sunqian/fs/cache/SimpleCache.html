@@ -78,12 +78,17 @@ loadScripts(document, 'script');</script>
 <dd><code>V</code> - the value type</dd>
 </dl>
 <dl class="notes">
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="CacheFunction.html" title="interface in space.sunqian.fs.cache">CacheFunction</a>&lt;K,<wbr>V&gt;</code></dd>
+</dl>
+<dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="AbstractSimpleCache.html" title="class in space.sunqian.fs.cache">AbstractSimpleCache</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="../../annotation/ThreadSafe.html" title="annotation interface in space.sunqian.annotation">@ThreadSafe</a>
-</span><span class="modifiers">public interface </span><span class="element-name type-name-label">SimpleCache&lt;K,<wbr>V&gt;</span></div>
+</span><span class="modifiers">public interface </span><span class="element-name type-name-label">SimpleCache&lt;K,<wbr>V&gt;</span><span class="extends-implements">
+extends <a href="CacheFunction.html" title="interface in space.sunqian.fs.cache">CacheFunction</a>&lt;K,<wbr>V&gt;</span></div>
 <div class="block">This interface is a simplified key-value pair cache interface (implementations must be thread-safe). It only provides
  get, put, remove and clean operations, and supports null value but does not allow null key. It is suitable for
  scenarios that require simple cache operations and do not care about the cache lifecycle.
@@ -121,51 +126,62 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Removes all entries from this cache.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#get(K)" class="member-name-link">get</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#copyEntries()" class="member-name-link">copyEntries</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Returns the value for the specified key, or <code>null</code> if the value is invalid or is <code>null</code> itself.</div>
+<div class="block">Copies and returns all current entries in this cache.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#get(K,java.util.function.Function)" class="member-name-link">get</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
- <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&nbsp;producer)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#get(K)" class="member-name-link">get</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns the value for the specified key, or <code>null</code> if the value is invalid or is <code>null</code> itself.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#get(K,java.util.function.Function)" class="member-name-link">get</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&nbsp;loader)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the value for the specified key.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getVal(K)" class="member-name-link">getVal</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getVal(K)" class="member-name-link">getVal</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key, or <code>null</code> if the value is invalid.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getVal(K,java.util.function.Function)" class="member-name-link">getVal</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
- <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&gt;&nbsp;producer)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getVal(K,java.util.function.Function)" class="member-name-link">getVal</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&gt;&nbsp;loader)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
+V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#ofMap(java.util.Map)" class="member-name-link">ofMap</a><wbr>(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,<wbr>V&gt;&nbsp;map)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on the given map.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#ofPhantom()" class="member-name-link">ofPhantom</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a>.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#ofSoft()" class="member-name-link">ofSoft</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a>.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#ofStrong()" class="member-name-link">ofStrong</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on strong reference.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on strong reference and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#ofWeak()" class="member-name-link">ofWeak</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a>.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#put(K,V)" class="member-name-link">put</a><wbr>(<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
@@ -203,10 +219,10 @@ V&gt;&nbsp;<a href="../../annotation/Nonnull.html" title="annotation interface i
 <div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
 </span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
 V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">ofWeak</span>()</div>
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a>. The values of the returned cache will be
- automatically collected by the garbage collection based on the characteristics of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a>. Its
- <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and this method is automatically
- invoked once every time another method is executed.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>. The values of the
+ returned cache will be automatically collected by the garbage collection based on the characteristics of
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link"><code>WeakReference</code></a>. Its <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and this
+ method is automatically invoked once every time another method is executed.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>K</code> - the key type</dd>
@@ -222,10 +238,10 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 <div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
 </span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
 V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">ofSoft</span>()</div>
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a>. The values of the returned cache will be
- automatically collected by the garbage collection based on the characteristics of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a>. Its
- <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and this method is automatically
- invoked once every time another method is executed.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>. The values of the
+ returned cache will be automatically collected by the garbage collection based on the characteristics of
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/SoftReference.html" title="class or interface in java.lang.ref" class="external-link"><code>SoftReference</code></a>. Its <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and this
+ method is automatically invoked once every time another method is executed.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>K</code> - the key type</dd>
@@ -241,10 +257,10 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 <div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
 </span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
 V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">ofPhantom</span>()</div>
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a>. The values of the returned cache will be
- automatically collected by the garbage collection based on the characteristics of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a>. Its
- <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and this method is automatically
- invoked once every time another method is executed.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a> and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>. The values of
+ the returned cache will be automatically collected by the garbage collection based on the characteristics of
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/PhantomReference.html" title="class or interface in java.lang.ref" class="external-link"><code>PhantomReference</code></a>. Its <a href="#clean()"><code>clean()</code></a> method releases all entries of which values are collected, and
+ this method is automatically invoked once every time another method is executed.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>K</code> - the key type</dd>
@@ -260,15 +276,37 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 <div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
 </span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
 V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">ofStrong</span>()</div>
-<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on strong reference. The values of the returned cache will never
- automatically be invalid, and its <a href="#clean()"><code>clean()</code></a> method does nothing. The behavior of the returned cache is
- just like a regular <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>.</div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on strong reference and <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html" title="class or interface in java.util.concurrent" class="external-link"><code>ConcurrentHashMap</code></a>. The values of the
+ returned cache will never automatically be invalid, and its <a href="#clean()"><code>clean()</code></a> method does nothing. The behavior of
+ the returned cache is just like a regular <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>K</code> - the key type</dd>
 <dd><code>V</code> - the value type</dd>
 <dt>Returns:</dt>
 <dd>a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on strong reference</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="ofMap(java.util.Map)">
+<h3>ofMap</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
+V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">ofMap</span><wbr><span class="parameters">(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,<wbr>V&gt;&nbsp;map)</span></div>
+<div class="block">Returns a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on the given map.
+ <p>
+ Note the returned cache treats <code>null</code> values as absent, which will lead to certain results in processing
+ <code>null</code> values. Therefore, putting <code>null</code> values are not encouraged for returned map cache.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>K</code> - the type of the key</dd>
+<dd><code>V</code> - the type of the value</dd>
+<dt>Parameters:</dt>
+<dd><code>map</code> - the given map to cache the value</dd>
+<dt>Returns:</dt>
+<dd>a new <a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a> based on the given map</dd>
 </dl>
 </section>
 </li>
@@ -309,17 +347,19 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 <div class="member-signature"><span class="return-type"><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
  <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&nbsp;producer)</span></div>
-<div class="block">Returns the value for the specified key. If the value is invalid, the <code>producer</code> will be called to generate
- a new value, and the new value will be cached and returned. If an exception is thrown during the generation, the
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&nbsp;loader)</span></div>
+<div class="block">Returns the value for the specified key. If the value is invalid, the loader will be called to generate a new
+ value, and the new value will be cached and returned. If an exception is thrown during the generation, the
  exception will be thrown directly. This operation is atomic.
  <p>
- Any value, including <code>null</code>, generated by the <code>producer</code> will be cached. To distinguish between
- <code>null</code> value or no-cached, try <a href="#getVal(K,java.util.function.Function)"><code>getVal(Object, Function)</code></a>.</div>
+ Any value, including <code>null</code>, generated by the loader will be cached. To more explicitly to deal with the
+ value, especially the <code>null</code> value, try <a href="#getVal(K,java.util.function.Function)"><code>getVal(Object, Function)</code></a>.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="CacheFunction.html#get(K,java.util.function.Function)">get</a></code>&nbsp;in interface&nbsp;<code><a href="CacheFunction.html" title="interface in space.sunqian.fs.cache">CacheFunction</a>&lt;<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>key</code> - the specified key</dd>
-<dd><code>producer</code> - the producer to generate new value</dd>
+<dd><code>loader</code> - the function to generate new value for the specified key</dd>
 <dt>Returns:</dt>
 <dd>the value for the specified key, including <code>null</code></dd>
 </dl>
@@ -332,19 +372,19 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 </span><span class="return-type"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</span>&nbsp;<span class="element-name">getVal</span><wbr><span class="parameters">(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>&nbsp;key,
  <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&gt;&nbsp;producer)</span></div>
-<div class="block">Returns the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key. If the value is invalid, the <code>producer</code>
- will be called to generate a new value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a>, and the new value will be cached and returned. If
- an exception is thrown during the generation, the exception will be thrown directly. This operation is atomic.
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr>? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value">Val</a>&lt;? extends <a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;&gt;&nbsp;loader)</span></div>
+<div class="block">Returns the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key. If the value is invalid, the loader will be
+ called to generate a new value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a>, and the new value will be cached and returned. If an
+ exception is thrown during the generation, the exception will be thrown directly. This operation is atomic.
  <p>
- If the <code>producer</code> generates a <code>null</code>, no value will be cached, and this method will return null.</div>
+ If the loader generates a <code>null</code>, no value will be cached, and this method will return null.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>key</code> - the specified key</dd>
-<dd><code>producer</code> - the producer to generate new value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a></dd>
+<dd><code>loader</code> - the function to generate new value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key</dd>
 <dt>Returns:</dt>
-<dd>the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key, or <code>null</code> if the <code>producer</code> generates
- a <code>null</code></dd>
+<dd>the value wrapped by <a href="../base/value/Val.html" title="interface in space.sunqian.fs.base.value"><code>Val</code></a> for the specified key, or <code>null</code> if the loader generates a
+ <code>null</code></dd>
 </dl>
 </section>
 </li>
@@ -398,6 +438,19 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.ht
 <h3>clean</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">clean</span>()</div>
 <div class="block">Tries to release invalid entries from this cache.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="copyEntries()">
+<h3>copyEntries</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="SimpleCache.html" title="type parameter in SimpleCache">K</a>,<wbr><a href="SimpleCache.html" title="type parameter in SimpleCache">V</a>&gt;</span>&nbsp;<span class="element-name">copyEntries</span>()</div>
+<div class="block">Copies and returns all current entries in this cache. The result map is independent of the cache, so any changes
+ to the cache, including status changes of this cache itself, are not reflected to the map, and vice versa.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a> contains the copy of the current entries in this cache</dd>
+</dl>
 </section>
 </li>
 </ul>

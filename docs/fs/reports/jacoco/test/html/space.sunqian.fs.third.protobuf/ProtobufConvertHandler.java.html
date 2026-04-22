@@ -9,28 +9,37 @@ import space.sunqian.fs.Fs;
 import space.sunqian.fs.base.exception.UnsupportedEnvException;
 import space.sunqian.fs.base.option.Option;
 import space.sunqian.fs.object.convert.ObjectConverter;
-import space.sunqian.fs.object.data.ObjectBuilderProvider;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * {@link ObjectBuilderProvider.Handler} implementation for
+ * {@link ObjectConverter.Handler} implementation for
  * &lt;a href=&quot;https://github.com/protocolbuffers/protobuf&quot;&gt;Protocol Buffers&lt;/a&gt;, can be quickly used through similar
  * codes:
  * &lt;pre&gt;{@code
- * ObjectConverter converter = ObjectConverter
- *     .defaultConverter()
- *     .withFirstHandler(new ProtobufConvertHandler());
+ * ObjectConverter converter = ...;
+ * ObjectConverter protoConverter = converter
+ *     .withFirstHandler(ProtobufConvertHandler.getInstance());
  * }&lt;/pre&gt;
  * &lt;p&gt;
  * This handler provides support for {@link ProtocolStringList} and {@link ByteString}.
  * &lt;p&gt;
- * To use this class, the protobuf package {@code com.google.protobuf} must in the runtime environment.
+ * To use this class, the protobuf package {@code com.google.protobuf} must in the runtime environment. And in this
+ * environment, the {@link ObjectConverter#defaultConverter()} will automatically load this handler.
  *
  * @author sunqian
  */
 public class ProtobufConvertHandler implements ObjectConverter.Handler {
+
+<span class="fc" id="L35">    private static final @Nonnull ProtobufConvertHandler INST = new ProtobufConvertHandler();</span>
+
+    /**
+     * Returns a same one instance of this handler.
+     */
+    public static @Nonnull ProtobufConvertHandler getInstance() {
+<span class="fc" id="L41">        return INST;</span>
+    }
 
     /**
      * Constructs a new handler instance. This constructor will check whether the protobuf package is available in the
@@ -38,39 +47,40 @@ public class ProtobufConvertHandler implements ObjectConverter.Handler {
      *
      * @throws UnsupportedEnvException if the protobuf package is not available in the current environment.
      */
-<span class="fc" id="L41">    public ProtobufConvertHandler() throws UnsupportedEnvException {</span>
-<span class="fc" id="L42">        Fs.uncheck(() -&gt; Class.forName(&quot;com.google.protobuf.Message&quot;), UnsupportedEnvException::new);</span>
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L50">    public ProtobufConvertHandler() throws UnsupportedEnvException {</span>
+<span class="fc" id="L51">        Fs.uncheck(() -&gt; Class.forName(&quot;com.google.protobuf.Message&quot;), UnsupportedEnvException::new);</span>
+<span class="fc" id="L52">    }</span>
 
     @Override
     public Object convert(
         @Nullable Object src,
         @Nonnull Type srcType,
-        @Nonnull Type target,
+        @Nonnull Type targetType,
         @Nonnull ObjectConverter converter,
         @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
     ) throws Exception {
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (src == null) {</span>
-<span class="fc" id="L54">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (src == null) {</span>
+<span class="fc" id="L63">            return ObjectConverter.Status.HANDLER_CONTINUE;</span>
         }
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (src instanceof ByteString) {</span>
-<span class="fc" id="L57">            ByteString bs = (ByteString) src;</span>
-<span class="fc" id="L58">            return converter.asHandler().convert(bs.asReadOnlyByteBuffer(), srcType, target, converter, options);</span>
-<span class="fc bfc" id="L59" title="All 2 branches covered.">        } else if (target.equals(ByteString.class)) {</span>
-<span class="fc" id="L60">            Object ret = converter.asHandler().convert(src, srcType, byte[].class, converter, options);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">            if (ret instanceof byte[]) {</span>
-<span class="fc" id="L62">                return ByteString.copyFrom((byte[]) ret);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (src instanceof ByteString) {</span>
+            @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L67">            ByteString bs = (ByteString) src;</span>
+<span class="fc" id="L68">            return converter.asHandler().convert(bs.asReadOnlyByteBuffer(), srcType, targetType, converter, options);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        } else if (targetType.equals(ByteString.class)) {</span>
+<span class="fc" id="L70">            Object ret = converter.asHandler().convert(src, srcType, byte[].class, converter, options);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if (ret instanceof byte[]) {</span>
+<span class="fc" id="L72">                return ByteString.copyFrom((byte[]) ret);</span>
             }
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        } else if (target.equals(ProtocolStringList.class)) {</span>
-<span class="fc" id="L65">            Object ret = converter.asHandler().convert(</span>
-<span class="fc" id="L66">                src, srcType, ProtobufSchemaHandler.StringListTypeRef.SINGLETON.type(), converter, options</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        } else if (targetType.equals(ProtocolStringList.class)) {</span>
+<span class="fc" id="L75">            Object ret = converter.asHandler().convert(</span>
+<span class="fc" id="L76">                src, srcType, ProtobufSchemaHandler.StringListTypeRef.SINGLETON.type(), converter, options</span>
             );
-<span class="fc bfc" id="L68" title="All 2 branches covered.">            if (ret instanceof List) {</span>
-<span class="fc" id="L69">                List&lt;String&gt; list = Fs.as(ret);</span>
-<span class="fc" id="L70">                return new LazyStringArrayList(list);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (ret instanceof List) {</span>
+<span class="fc" id="L79">                List&lt;String&gt; list = Fs.as(ret);</span>
+<span class="fc" id="L80">                return new LazyStringArrayList(list);</span>
             }
         }
-<span class="fc" id="L73">        return ObjectConverter.Status.HANDLER_CONTINUE;</span>
+<span class="fc" id="L83">        return ObjectConverter.Status.HANDLER_CONTINUE;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

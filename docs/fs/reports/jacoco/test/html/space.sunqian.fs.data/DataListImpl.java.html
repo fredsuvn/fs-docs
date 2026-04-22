@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataListImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data</a> &gt; <span class="el_source">DataListImpl.java</span></div><h1>DataListImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.Checker;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.reflect.TypeRef;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
+final class DataListImpl implements DataList {
+
+<span class="fc" id="L25">    private static final @Nonnull Type LIST_OBJECT_TYPE = new TypeRef&lt;List&lt;?&gt;&gt;() {}.type();</span>
+
+    private final @Nonnull List&lt;Object&gt; delegate;
+    private final @Nonnull ObjectConverter converter;
+    private final @Nonnull Option&lt;?, ?&gt; @Nonnull [] defaultOptions;
+
+    DataListImpl(
+        @Nonnull List&lt;?&gt; delegate,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull [] defaultOptions
+<span class="fc" id="L35">    ) {</span>
+<span class="fc" id="L36">        this.delegate = Fs.as(delegate);</span>
+<span class="fc" id="L37">        this.converter = converter;</span>
+<span class="fc" id="L38">        this.defaultOptions = defaultOptions;</span>
+<span class="fc" id="L39">    }</span>
+
+    @Override
+    public &lt;T&gt; T get(int index, @Nonnull Type type, T defaultValue) throws DataException {
+        try {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (!Checker.isInBounds(index, 0, delegate.size())) {</span>
+<span class="fc" id="L45">                return defaultValue;</span>
+            }
+<span class="fc" id="L47">            return Fs.as(converter.convert(delegate.get(index), type, defaultOptions));</span>
+<span class="fc" id="L48">        } catch (Exception e) {</span>
+<span class="fc" id="L49">            throw new DataException(e);</span>
+        }
+    }
+
+    @Override
+    public @Nonnull Object toObject(@Nonnull Type type) throws DataException {
+        try {
+<span class="fc" id="L56">            return Fs.as(converter.convert(this, LIST_OBJECT_TYPE, type, defaultOptions));</span>
+<span class="fc" id="L57">        } catch (Exception e) {</span>
+<span class="fc" id="L58">            throw new DataException(e);</span>
+        }
+    }
+
+    @Override
+    public int size() {
+<span class="fc" id="L64">        return delegate.size();</span>
+    }
+
+    @Override
+    public boolean isEmpty() {
+<span class="fc" id="L69">        return delegate.isEmpty();</span>
+    }
+
+    @Override
+    public boolean contains(Object o) {
+<span class="fc" id="L74">        return delegate.contains(o);</span>
+    }
+
+    @Override
+    public @Nonnull Iterator&lt;Object&gt; iterator() {
+<span class="fc" id="L79">        return delegate.iterator();</span>
+    }
+
+    @Override
+    public Object @Nonnull [] toArray() {
+<span class="fc" id="L84">        return delegate.toArray();</span>
+    }
+
+    @Override
+    public &lt;T&gt; T @Nonnull [] toArray(T @Nonnull [] a) {
+<span class="fc" id="L89">        return delegate.toArray(a);</span>
+    }
+
+    @Override
+    public boolean add(Object object) {
+<span class="fc" id="L94">        return delegate.add(object);</span>
+    }
+
+    @Override
+    public boolean remove(Object o) {
+<span class="fc" id="L99">        return delegate.remove(o);</span>
+    }
+
+    @SuppressWarnings(&quot;SlowListContainsAll&quot;)
+    @Override
+    public boolean containsAll(@Nonnull Collection&lt;?&gt; c) {
+<span class="fc" id="L105">        return delegate.containsAll(c);</span>
+    }
+
+    @Override
+    public boolean addAll(@Nonnull Collection&lt;?&gt; c) {
+<span class="fc" id="L110">        return delegate.addAll(c);</span>
+    }
+
+    @Override
+    public boolean addAll(int index, @Nonnull Collection&lt;?&gt; c) {
+<span class="fc" id="L115">        return delegate.addAll(index, c);</span>
+    }
+
+    @Override
+    public boolean removeAll(@Nonnull Collection&lt;?&gt; c) {
+<span class="fc" id="L120">        return delegate.removeAll(c);</span>
+    }
+
+    @Override
+    public boolean retainAll(@Nonnull Collection&lt;?&gt; c) {
+<span class="fc" id="L125">        return delegate.retainAll(c);</span>
+    }
+
+    @Override
+    public void replaceAll(@Nonnull UnaryOperator&lt;Object&gt; operator) {
+<span class="fc" id="L130">        delegate.replaceAll(operator);</span>
+<span class="fc" id="L131">    }</span>
+
+    @Override
+    public void sort(Comparator&lt;? super Object&gt; c) {
+<span class="fc" id="L135">        delegate.sort(c);</span>
+<span class="fc" id="L136">    }</span>
+
+    @Override
+    public void clear() {
+<span class="fc" id="L140">        delegate.clear();</span>
+<span class="fc" id="L141">    }</span>
+
+    @Override
+    public Object get(int index) {
+<span class="fc" id="L145">        return delegate.get(index);</span>
+    }
+
+    @Override
+    public Object set(int index, Object element) {
+<span class="fc" id="L150">        return delegate.set(index, element);</span>
+    }
+
+    @Override
+    public void add(int index, Object element) {
+<span class="fc" id="L155">        delegate.add(index, element);</span>
+<span class="fc" id="L156">    }</span>
+
+    @Override
+    public Object remove(int index) {
+<span class="fc" id="L160">        return delegate.remove(index);</span>
+    }
+
+    @Override
+    public int indexOf(Object o) {
+<span class="fc" id="L165">        return delegate.indexOf(o);</span>
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+<span class="fc" id="L170">        return delegate.lastIndexOf(o);</span>
+    }
+
+    @Override
+    public @Nonnull ListIterator&lt;Object&gt; listIterator() {
+<span class="fc" id="L175">        return delegate.listIterator();</span>
+    }
+
+    @Override
+    public @Nonnull ListIterator&lt;Object&gt; listIterator(int index) {
+<span class="fc" id="L180">        return delegate.listIterator(index);</span>
+    }
+
+    @Override
+    public @Nonnull List&lt;Object&gt; subList(int fromIndex, int toIndex) {
+<span class="fc" id="L185">        return delegate.subList(fromIndex, toIndex);</span>
+    }
+
+    @Override
+    public @Nonnull Spliterator&lt;Object&gt; spliterator() {
+<span class="fc" id="L190">        return delegate.spliterator();</span>
+    }
+
+    @Override
+    public boolean removeIf(@Nonnull Predicate&lt;? super Object&gt; filter) {
+<span class="fc" id="L195">        return delegate.removeIf(filter);</span>
+    }
+
+    @Override
+    public @Nonnull Stream&lt;Object&gt; stream() {
+<span class="fc" id="L200">        return delegate.stream();</span>
+    }
+
+    @Override
+    public @Nonnull Stream&lt;Object&gt; parallelStream() {
+<span class="fc" id="L205">        return delegate.parallelStream();</span>
+    }
+
+    @Override
+    public void forEach(Consumer&lt;? super Object&gt; action) {
+<span class="fc" id="L210">        delegate.forEach(action);</span>
+<span class="fc" id="L211">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L215">        return delegate.toString();</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (!(object instanceof List&lt;?&gt;)) {</span>
+<span class="fc" id="L221">            return false;</span>
+        }
+<span class="fc" id="L223">        return contentEquals((List&lt;?&gt;) object);</span>
+    }
+
+    @Override
+    public boolean contentEquals(@Nullable List&lt;?&gt; o) {
+<span class="fc" id="L228">        return delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L233">        return delegate.hashCode();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

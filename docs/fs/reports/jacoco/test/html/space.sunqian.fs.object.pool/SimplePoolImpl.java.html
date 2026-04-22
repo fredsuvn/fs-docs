@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimplePoolImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.pool</a> &gt; <span class="el_source">SimplePoolImpl.java</span></div><h1>SimplePoolImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.pool;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+final class SimplePoolImpl&lt;T&gt; implements SimplePool&lt;T&gt; {
+
+    private final int coreSize;
+    private final int maxSize;
+    private final long idleTimeoutMillis;
+    private final @Nonnull Supplier&lt;? extends @Nonnull T&gt; supplier;
+    private final @Nonnull Predicate&lt;? super @Nonnull T&gt; validator;
+    private final @Nonnull Consumer&lt;? super @Nonnull T&gt; discarder;
+
+    // objects
+<span class="fc" id="L26">    private final @Nonnull Map&lt;@Nonnull T, @Nonnull Status&gt; idleMap = new IdentityHashMap&lt;&gt;();</span>
+<span class="fc" id="L27">    private final @Nonnull Map&lt;@Nonnull T, @Nonnull Status&gt; activeMap = new IdentityHashMap&lt;&gt;();</span>
+    private volatile int totalSize;
+    // close state
+<span class="fc" id="L30">    private volatile boolean closed = false;</span>
+
+    SimplePoolImpl(
+        int coreSize, int maxSize, long idleTimeoutMillis,
+        @Nonnull Supplier&lt;? extends @Nonnull T&gt; supplier,
+        @Nonnull Predicate&lt;? super @Nonnull T&gt; validator,
+        @Nonnull Consumer&lt;? super @Nonnull T&gt; discarder
+<span class="fc" id="L37">    ) throws ObjectPoolException {</span>
+
+<span class="fc" id="L39">        this.coreSize = coreSize;</span>
+<span class="fc" id="L40">        this.maxSize = maxSize;</span>
+<span class="fc" id="L41">        this.idleTimeoutMillis = idleTimeoutMillis;</span>
+<span class="fc" id="L42">        this.supplier = supplier;</span>
+<span class="fc" id="L43">        this.validator = validator;</span>
+<span class="fc" id="L44">        this.discarder = discarder;</span>
+
+        // initialize core objects
+        try {
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            for (int i = 0; i &lt; coreSize; i++) {</span>
+<span class="fc" id="L49">                T obj = supplier.get();</span>
+<span class="fc" id="L50">                Status status = new Status();</span>
+<span class="fc" id="L51">                idleMap.put(obj, status);</span>
+            }
+<span class="fc" id="L53">            this.totalSize = idleMap.size();</span>
+<span class="fc" id="L54">        } catch (Exception e) {</span>
+<span class="fc" id="L55">            close();</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc" id="L57">    }</span>
+
+    @Override
+    public synchronized @Nullable T get() throws ObjectPoolException {
+
+<span class="fc" id="L62">        checkClosed();</span>
+
+        try {
+            // get one
+<span class="fc" id="L66">            Iterator&lt;Map.Entry&lt;T, Status&gt;&gt; idleIt = idleMap.entrySet().iterator();</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            while (idleIt.hasNext()) {</span>
+<span class="fc" id="L68">                Map.Entry&lt;T, Status&gt; entry = idleIt.next();</span>
+<span class="fc" id="L69">                T obj = entry.getKey();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                if (!validator.test(obj)) {</span>
+<span class="fc" id="L71">                    discarder.accept(obj);</span>
+<span class="fc" id="L72">                    idleIt.remove();</span>
+<span class="fc" id="L73">                    totalSize--;</span>
+                } else {
+<span class="fc" id="L75">                    Status status = entry.getValue();</span>
+<span class="fc" id="L76">                    status.active();</span>
+<span class="fc" id="L77">                    activeMap.put(obj, status);</span>
+<span class="fc" id="L78">                    idleIt.remove();</span>
+<span class="fc" id="L79">                    return obj;</span>
+                }
+<span class="fc" id="L81">            }</span>
+
+            // no idle objects available, try to create a new one
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if (totalSize &lt; maxSize) {</span>
+<span class="fc" id="L85">                T obj = supplier.get();</span>
+<span class="fc" id="L86">                Status newStatus = new Status();</span>
+<span class="fc" id="L87">                activeMap.put(obj, newStatus);</span>
+<span class="fc" id="L88">                totalSize++;</span>
+<span class="fc" id="L89">                return obj;</span>
+            }
+<span class="fc" id="L91">        } catch (Exception e) {</span>
+<span class="fc" id="L92">            close();</span>
+<span class="fc" id="L93">            throw new ObjectPoolException(&quot;Failed to get object from pool.&quot;, e);</span>
+<span class="fc" id="L94">        }</span>
+
+        // cannot create new object (reached max size), return null
+<span class="fc" id="L97">        return null;</span>
+    }
+
+    @Override
+    public synchronized boolean release(@Nonnull T obj) throws ObjectPoolException {
+
+<span class="fc" id="L103">        checkClosed();</span>
+
+        try {
+<span class="fc" id="L106">            Status status = activeMap.remove(obj);</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (status == null) {</span>
+<span class="fc" id="L108">                return false;</span>
+            }
+<span class="fc bfc" id="L110" title="All 2 branches covered.">            if (validator.test(obj)) {</span>
+<span class="fc" id="L111">                status.idle();</span>
+<span class="fc" id="L112">                idleMap.put(obj, status);</span>
+            } else {
+<span class="fc" id="L114">                discarder.accept(obj);</span>
+<span class="fc" id="L115">                totalSize--;</span>
+            }
+<span class="fc" id="L117">            return true;</span>
+<span class="fc" id="L118">        } catch (Exception e) {</span>
+<span class="fc" id="L119">            close();</span>
+<span class="fc" id="L120">            throw new ObjectPoolException(&quot;Failed to release object to pool.&quot;, e);</span>
+        }
+    }
+
+    @Override
+    public synchronized void clean() throws ObjectPoolException {
+
+<span class="fc" id="L127">        checkClosed();</span>
+
+        try {
+<span class="fc" id="L130">            Iterator&lt;Map.Entry&lt;T, Status&gt;&gt; idleIt = idleMap.entrySet().iterator();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            while (idleIt.hasNext()) {</span>
+<span class="fc" id="L132">                Map.Entry&lt;T, Status&gt; entry = idleIt.next();</span>
+<span class="fc" id="L133">                T obj = entry.getKey();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                if (!validator.test(obj)) {</span>
+<span class="fc" id="L135">                    discarder.accept(obj);</span>
+<span class="fc" id="L136">                    idleIt.remove();</span>
+<span class="fc" id="L137">                    totalSize--;</span>
+<span class="fc" id="L138">                    continue;</span>
+                }
+<span class="fc bfc" id="L140" title="All 2 branches covered.">                if (totalSize &gt; coreSize) {</span>
+<span class="fc" id="L141">                    Status status = entry.getValue();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                    if (status.isIdleTimeout()) {</span>
+<span class="fc" id="L143">                        discarder.accept(obj);</span>
+<span class="fc" id="L144">                        idleIt.remove();</span>
+<span class="fc" id="L145">                        totalSize--;</span>
+                    }
+                }
+<span class="fc" id="L148">            }</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (totalSize &lt; coreSize) {</span>
+<span class="fc" id="L150">                int newSize = coreSize - totalSize;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">                for (int i = 0; i &lt; newSize; i++) {</span>
+<span class="fc" id="L152">                    T obj = supplier.get();</span>
+<span class="fc" id="L153">                    Status newStatus = new Status();</span>
+<span class="fc" id="L154">                    idleMap.put(obj, newStatus);</span>
+<span class="fc" id="L155">                    totalSize++;</span>
+                }
+            }
+<span class="fc" id="L158">        } catch (Exception e) {</span>
+<span class="fc" id="L159">            close();</span>
+<span class="fc" id="L160">            throw new ObjectPoolException(&quot;Failed to clean pool.&quot;, e);</span>
+<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">    }</span>
+
+    @Override
+    public synchronized void close() {
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (closed) {</span>
+<span class="fc" id="L167">            return;</span>
+        }
+
+        try {
+<span class="fc" id="L171">            Iterator&lt;Map.Entry&lt;T, Status&gt;&gt; idleIt = idleMap.entrySet().iterator();</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            while (idleIt.hasNext()) {</span>
+<span class="fc" id="L173">                Map.Entry&lt;T, Status&gt; entry = idleIt.next();</span>
+<span class="fc" id="L174">                T obj = entry.getKey();</span>
+                try {
+<span class="fc" id="L176">                    discarder.accept(obj);</span>
+<span class="fc" id="L177">                    idleIt.remove();</span>
+<span class="fc" id="L178">                    totalSize--;</span>
+<span class="fc" id="L179">                } catch (Exception e) {</span>
+                    // do nothing
+<span class="fc" id="L181">                }</span>
+<span class="fc" id="L182">            }</span>
+        } finally {
+<span class="fc" id="L184">            totalSize = 0;</span>
+<span class="fc" id="L185">            closed = true;</span>
+        }
+<span class="fc" id="L187">    }</span>
+
+    @Override
+    public boolean isClosed() {
+<span class="fc" id="L191">        return closed;</span>
+    }
+
+    @Override
+    public synchronized @Nonnull List&lt;T&gt; unreleasedObjects() {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (!closed) {</span>
+<span class="fc" id="L197">            return Collections.emptyList();</span>
+        }
+<span class="fc" id="L199">        List&lt;T&gt; list = new ArrayList&lt;&gt;(totalSize);</span>
+<span class="fc" id="L200">        list.addAll(idleMap.keySet());</span>
+<span class="fc" id="L201">        list.addAll(activeMap.keySet());</span>
+<span class="fc" id="L202">        return list;</span>
+    }
+
+    @Override
+    public int size() {
+<span class="fc" id="L207">        return totalSize;</span>
+    }
+
+    @Override
+    public synchronized int idleSize() {
+<span class="fc" id="L212">        return idleMap.size();</span>
+    }
+
+    @Override
+    public synchronized int activeSize() {
+<span class="fc" id="L217">        return activeMap.size();</span>
+    }
+
+    private void checkClosed() throws ObjectPoolException {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (closed) {</span>
+<span class="fc" id="L222">            throw new ObjectPoolException(&quot;Pool is closed.&quot;);</span>
+        }
+<span class="fc" id="L224">    }</span>
+
+<span class="fc" id="L226">    private final class Status {</span>
+
+<span class="fc" id="L228">        private volatile long lastReleaseTime = System.currentTimeMillis();</span>
+
+        public void active() {
+<span class="fc" id="L231">            lastReleaseTime = -1;</span>
+<span class="fc" id="L232">        }</span>
+
+        public void idle() {
+<span class="fc" id="L235">            lastReleaseTime = System.currentTimeMillis();</span>
+<span class="fc" id="L236">        }</span>
+
+        public boolean isIdleTimeout() {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            return lastReleaseTime + idleTimeoutMillis &lt; System.currentTimeMillis();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

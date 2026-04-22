@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectSchemaBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.schema</a> &gt; <span class="el_source">ObjectSchemaBuilder.java</span></div><h1>ObjectSchemaBuilder.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.schema;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.collect.ListKit;
+import space.sunqian.fs.invoke.Invocable;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+final class ObjectSchemaBuilder implements ObjectSchemaParser.Context {
+
+    private final @Nonnull Type type;
+<span class="fc" id="L20">    private final @Nonnull Map&lt;@Nonnull String, @Nonnull ObjectPropertyBase&gt; properties = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L22">    ObjectSchemaBuilder(@Nonnull Type type) {</span>
+<span class="fc" id="L23">        this.type = type;</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public @Nonnull Type parsedType() {
+<span class="fc" id="L28">        return type;</span>
+    }
+
+    @Override
+    public @Nonnull Map&lt;@Nonnull String, @Nonnull ObjectPropertyBase&gt; propertyBaseMap() {
+<span class="fc" id="L33">        return properties;</span>
+    }
+
+    @Nonnull
+    ObjectSchema build(@Nonnull ObjectSchemaParser parser) {
+<span class="fc" id="L38">        return new ObjectSchemaImpl(parser, type, properties);</span>
+    }
+
+    private static final class ObjectSchemaImpl implements ObjectSchema {
+
+        private final @Nonnull ObjectSchemaParser parser;
+        private final @Nonnull Type type;
+        private final @Nonnull Map&lt;@Nonnull String, @Nonnull ObjectProperty&gt; properties;
+
+        private ObjectSchemaImpl(
+            @Nonnull ObjectSchemaParser parser,
+            @Nonnull Type type,
+            @Nonnull Map&lt;@Nonnull String, @Nonnull ObjectPropertyBase&gt; propBases
+<span class="fc" id="L51">        ) {</span>
+<span class="fc" id="L52">            this.parser = parser;</span>
+<span class="fc" id="L53">            this.type = type;</span>
+<span class="fc" id="L54">            Map&lt;@Nonnull String, @Nonnull ObjectProperty&gt; props = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L55">            propBases.forEach((name, propBase) -&gt; props.put(name, new PropertyImpl(propBase)));</span>
+<span class="fc" id="L56">            this.properties = Collections.unmodifiableMap(props);</span>
+<span class="fc" id="L57">        }</span>
+
+        @Override
+        public @Nonnull ObjectSchemaParser parser() {
+<span class="fc" id="L61">            return parser;</span>
+        }
+
+        @Override
+        public @Nonnull Type type() {
+<span class="fc" id="L66">            return type;</span>
+        }
+
+        @Override
+        public @Nonnull Map&lt;@Nonnull String, @Nonnull ObjectProperty&gt; properties() {
+<span class="fc" id="L71">            return properties;</span>
+        }
+
+        @SuppressWarnings(&quot;EqualsWhichDoesntCheckParameterClass&quot;)
+        @Override
+        public boolean equals(Object o) {
+<span class="fc" id="L77">            return SchemaKit.equals(this, o);</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="fc" id="L82">            return SchemaKit.hashCode(this);</span>
+        }
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L87">            return SchemaKit.toString(this);</span>
+        }
+
+        private final class PropertyImpl implements ObjectProperty {
+
+            private final @Nonnull String name;
+            private final @Nonnull Type type;
+            private final @Nullable Method getterMethod;
+            private final @Nullable Method setterMethod;
+            private final @Nullable Field field;
+            private final @Nullable Invocable getter;
+            private final @Nullable Invocable setter;
+
+            // annotations:
+            private final @Nonnull List&lt;@Nonnull Annotation&gt; fieldAnnotations;
+            private final @Nonnull List&lt;@Nonnull Annotation&gt; getterAnnotations;
+            private final @Nonnull List&lt;@Nonnull Annotation&gt; setterAnnotations;
+
+<span class="fc" id="L105">            private PropertyImpl(@Nonnull ObjectPropertyBase propertyBase) {</span>
+<span class="fc" id="L106">                this.name = propertyBase.name();</span>
+<span class="fc" id="L107">                this.type = propertyBase.type();</span>
+<span class="fc" id="L108">                this.getterMethod = propertyBase.getterMethod();</span>
+<span class="fc" id="L109">                this.setterMethod = propertyBase.setterMethod();</span>
+<span class="fc" id="L110">                this.field = propertyBase.field();</span>
+<span class="fc" id="L111">                this.getter = propertyBase.getter();</span>
+<span class="fc" id="L112">                this.setter = propertyBase.setter();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                this.fieldAnnotations = field == null ?</span>
+<span class="fc" id="L114">                    Collections.emptyList() : ListKit.list(field.getAnnotations());</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">                this.getterAnnotations = getterMethod == null ?</span>
+<span class="fc" id="L116">                    Collections.emptyList() : ListKit.list(getterMethod.getAnnotations());</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                this.setterAnnotations = setterMethod == null ?</span>
+<span class="fc" id="L118">                    Collections.emptyList() : ListKit.list(setterMethod.getAnnotations());</span>
+<span class="fc" id="L119">            }</span>
+
+            @Override
+            public @Nonnull ObjectSchema owner() {
+<span class="fc" id="L123">                return ObjectSchemaImpl.this;</span>
+            }
+
+            @Override
+            public @Nonnull String name() {
+<span class="fc" id="L128">                return name;</span>
+            }
+
+            @Override
+            public @Nonnull Type type() {
+<span class="fc" id="L133">                return type;</span>
+            }
+
+            @Override
+            public @Nullable Method getterMethod() {
+<span class="fc" id="L138">                return getterMethod;</span>
+            }
+
+            @Override
+            public @Nullable Method setterMethod() {
+<span class="fc" id="L143">                return setterMethod;</span>
+            }
+
+            @Override
+            public @Nullable Field field() {
+<span class="fc" id="L148">                return field;</span>
+            }
+
+            @Override
+            public @Nullable Invocable getter() {
+<span class="fc" id="L153">                return getter;</span>
+            }
+
+            @Override
+            public @Nullable Invocable setter() {
+<span class="fc" id="L158">                return setter;</span>
+            }
+
+            @Override
+            public @Nonnull List&lt;@Nonnull Annotation&gt; fieldAnnotations() {
+<span class="fc" id="L163">                return fieldAnnotations;</span>
+            }
+
+            @Override
+            public @Nonnull List&lt;@Nonnull Annotation&gt; getterAnnotations() {
+<span class="fc" id="L168">                return getterAnnotations;</span>
+            }
+
+            @Override
+            public @Nonnull List&lt;@Nonnull Annotation&gt; setterAnnotations() {
+<span class="fc" id="L173">                return setterAnnotations;</span>
+            }
+
+            @SuppressWarnings(&quot;EqualsWhichDoesntCheckParameterClass&quot;)
+            @Override
+            public boolean equals(Object o) {
+<span class="fc" id="L179">                return SchemaKit.equals(this, o);</span>
+            }
+
+            @Override
+            public int hashCode() {
+<span class="fc" id="L184">                return SchemaKit.hashCode(this);</span>
+            }
+
+            @Override
+            public @Nonnull String toString() {
+<span class="fc" id="L189">                return SchemaKit.toString(this);</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

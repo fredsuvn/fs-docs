@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimplePool.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.pool</a> &gt; <span class="el_source">SimplePool.java</span></div><h1>SimplePool.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.pool;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+/**
+ * Simple object pool interface, provides methods for acquiring, releasing objects. If the pool is closed due to some
+ * exception, the {@link #unreleasedObjects()} can be still invoked to get the list of unreleased objects.
+ *
+ * @param &lt;T&gt; the type of objects in the pool
+ * @author sunqian
+ */
+public interface SimplePool&lt;T&gt; {
+
+    /**
+     * Returns a builder for {@link SimplePool}.
+     *
+     * @param &lt;T&gt; the type of objects in the pool
+     * @return a builder for {@link SimplePool}
+     */
+    static &lt;T&gt; @Nonnull Builder&lt;T&gt; newBuilder() {
+<span class="fc" id="L30">        return new Builder&lt;&gt;();</span>
+    }
+
+    /**
+     * Acquires an object from the pool, or {@code null} if no object is available.
+     * &lt;p&gt;
+     * If any exception occurs during the acquisition process, {@link #close()} will be invoked to close this pool and
+     * the {@link #unreleasedObjects()} will return the list of unreleased objects, including idle objects and active
+     * objects.
+     *
+     * @return the acquired object, or {@code null} if no object is available
+     * @throws ObjectPoolException if failed to acquire object
+     */
+    @Nullable
+    T get() throws ObjectPoolException;
+
+    /**
+     * Releases the given object to the pool. Returns {@code true} if the object is released successfully, {@code false}
+     * otherwise. If the object is not acquired from this pool, this method will do nothing just return {@code false}.
+     * &lt;p&gt;
+     * If any exception occurs during the release process, {@link #close()} will be invoked to close this pool and the
+     * {@link #unreleasedObjects()} will return the list of unreleased objects, including idle objects and active
+     * objects.
+     *
+     * @param obj the given object to release
+     * @return {@code true} if the object is released successfully, {@code false} otherwise
+     * @throws ObjectPoolException if failed to release object
+     */
+    boolean release(@Nonnull T obj) throws ObjectPoolException;
+
+    /**
+     * Cleans the pool, removing idle objects that idle timeout or invalidated by validator, or over the core size,
+     * adding new objects up to the core size if necessary. The active objects will not be cleaned.
+     * &lt;p&gt;
+     * If any exception occurs during the clean process, {@link #close()} will be invoked to close this pool and the
+     * {@link #unreleasedObjects()} will return the list of unreleased objects, including idle objects and active
+     * objects.
+     *
+     * @throws ObjectPoolException if any exception occurs during the clean process
+     */
+    void clean() throws ObjectPoolException;
+
+    /**
+     * Closes the pool. The idle objects will be discarded by configured discarder, and the active objects will not be
+     * discarded. If this process is failed, the pool will be in a closed state, and the {@link #unreleasedObjects()}
+     * will return the list of unreleased objects, including idle objects and active objects.
+     */
+    void close();
+
+    /**
+     * Returns whether the pool is closed.
+     *
+     * @return {@code true} if the pool is closed, {@code false} otherwise
+     */
+    boolean isClosed();
+
+    /**
+     * Returns the list of unreleased objects after the pool is closed, including idle objects and active objects. If
+     * the pool is not closed, this method will return an empty list.
+     *
+     * @return the list of unreleased objects after the pool is closed, or an empty list if the pool is not closed
+     */
+    @Nonnull
+    @Immutable
+    List&lt;@Nonnull T&gt; unreleasedObjects();
+
+    /**
+     * Returns the number of objects in the pool.
+     *
+     * @return the number of objects in the pool
+     */
+    int size();
+
+    /**
+     * Returns the number of idle objects in the pool.
+     *
+     * @return the number of idle objects in the pool
+     */
+    int idleSize();
+
+    /**
+     * Returns the number of active objects in the pool. If the pool is closed, this method will return the number of
+     * unreleased active objects.
+     *
+     * @return the number of active objects in the pool
+     */
+    int activeSize();
+
+    /**
+     * Builder class for {@link SimplePool}.
+     *
+     * @param &lt;T&gt; the type of objects in the pool
+     */
+<span class="fc" id="L123">    class Builder&lt;T&gt; {</span>
+
+        // size:
+
+<span class="fc" id="L127">        private int coreSize = 1;</span>
+<span class="fc" id="L128">        private int maxSize = -1;</span>
+<span class="fc" id="L129">        private long idleTimeoutMillis = 60000;</span>
+
+        // actions:
+
+        private Supplier&lt;? extends @Nonnull T&gt; supplier;
+<span class="fc" id="L134">        private @Nonnull Predicate&lt;? super @Nonnull T&gt; validator = t -&gt; true;</span>
+<span class="fc" id="L135">        private @Nonnull Consumer&lt;? super @Nonnull T&gt; discarder = t -&gt; {};</span>
+
+        /**
+         * Sets the supplier for creating new objects.
+         *
+         * @param supplier the supplier for creating new objects
+         * @return this builder
+         */
+        public @Nonnull Builder&lt;T&gt; supplier(@Nonnull Supplier&lt;? extends @Nonnull T&gt; supplier) {
+<span class="fc" id="L144">            this.supplier = supplier;</span>
+<span class="fc" id="L145">            return this;</span>
+        }
+
+        /**
+         * Sets the validator for checking object validity.
+         *
+         * @param validator the validator for checking object validity
+         * @return this builder
+         */
+        public @Nonnull Builder&lt;T&gt; validator(@Nonnull Predicate&lt;? super @Nonnull T&gt; validator) {
+<span class="fc" id="L155">            this.validator = validator;</span>
+<span class="fc" id="L156">            return this;</span>
+        }
+
+        /**
+         * Sets the discarder for destroying objects.
+         *
+         * @param discarder the discarder for destroying objects
+         * @return this builder
+         */
+        public @Nonnull Builder&lt;T&gt; discarder(@Nonnull Consumer&lt;? super @Nonnull T&gt; discarder) {
+<span class="fc" id="L166">            this.discarder = discarder;</span>
+<span class="fc" id="L167">            return this;</span>
+        }
+
+        /**
+         * Sets the core size of the pool.
+         *
+         * @param coreSize the core size of the pool
+         * @return this builder
+         * @throws IllegalArgumentException if coreSize is less than or equal to 0
+         */
+        public @Nonnull Builder&lt;T&gt; coreSize(int coreSize) throws IllegalArgumentException {
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            if (coreSize &lt;= 0) {</span>
+<span class="fc" id="L179">                throw new IllegalArgumentException(&quot;coreSize must be greater than 0.&quot;);</span>
+            }
+<span class="fc" id="L181">            this.coreSize = coreSize;</span>
+<span class="fc" id="L182">            return this;</span>
+        }
+
+        /**
+         * Sets the max size of the pool.
+         *
+         * @param maxSize the max size of the pool
+         * @return this builder
+         * @throws IllegalArgumentException if maxSize is less than coreSize
+         */
+        public @Nonnull Builder&lt;T&gt; maxSize(int maxSize) throws IllegalArgumentException {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if (maxSize &lt; coreSize) {</span>
+<span class="fc" id="L194">                throw new IllegalArgumentException(&quot;maxSize must be greater than or equal to coreSize.&quot;);</span>
+            }
+<span class="fc" id="L196">            this.maxSize = maxSize;</span>
+<span class="fc" id="L197">            return this;</span>
+        }
+
+        /**
+         * Sets the idle timeout in milliseconds of the pool.
+         *
+         * @param idleTimeoutMillis the idle timeout in milliseconds of the pool
+         * @return this builder
+         * @throws IllegalArgumentException if idleTimeout is less than or equal to 0
+         */
+        public @Nonnull Builder&lt;T&gt; idleTimeout(long idleTimeoutMillis) throws IllegalArgumentException {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            if (idleTimeoutMillis &lt;= 0) {</span>
+<span class="fc" id="L209">                throw new IllegalArgumentException(&quot;idleTimeout must be greater than 0.&quot;);</span>
+            }
+<span class="fc" id="L211">            this.idleTimeoutMillis = idleTimeoutMillis;</span>
+<span class="fc" id="L212">            return this;</span>
+        }
+
+        /**
+         * Sets the idle timeout in milliseconds of the pool.
+         *
+         * @param idleTimeout the idle timeout in milliseconds of the pool
+         * @return this builder
+         * @throws IllegalArgumentException if idleTimeout is less than or equal to 0
+         */
+        public @Nonnull Builder&lt;T&gt; idleTimeout(@Nonnull Duration idleTimeout) throws IllegalArgumentException {
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (idleTimeout.isNegative()) {</span>
+<span class="fc" id="L224">                throw new IllegalArgumentException(&quot;idleTimeout must be greater than 0.&quot;);</span>
+            }
+<span class="fc" id="L226">            this.idleTimeoutMillis = idleTimeout.toMillis();</span>
+<span class="fc" id="L227">            return this;</span>
+        }
+
+        /**
+         * Builds a {@link SimplePool} instance. If some exception occurs during the initialization, a closed pool with
+         * unreleased objects (if any) will be returned.
+         *
+         * @param &lt;T1&gt; the type of objects in the pool, it is used to pass the generic type in method-chaining
+         * @return the built {@link SimplePool} instance
+         * @throws IllegalArgumentException if supplier is not set
+         */
+        public &lt;T1 extends T&gt; @Nonnull SimplePool&lt;T1&gt; build() throws IllegalArgumentException {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            if (supplier == null) {</span>
+<span class="fc" id="L240">                throw new IllegalArgumentException(&quot;Supplier must be set.&quot;);</span>
+            }
+<span class="fc" id="L242">            return Fs.as(new SimplePoolImpl&lt;&gt;(</span>
+<span class="fc" id="L243">                coreSize, Math.max(coreSize, maxSize), idleTimeoutMillis, supplier, validator, discarder</span>
+            ));
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

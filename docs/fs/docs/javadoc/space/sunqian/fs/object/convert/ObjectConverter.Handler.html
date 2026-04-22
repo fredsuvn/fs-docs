@@ -84,8 +84,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public static interface </span><span class="element-name type-name-label">ObjectConverter.Handler</span></div>
 <div class="block">Handler for <a href="ObjectConverter.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectConverter</code></a>, provides the specific conversion logic.
  <p>
- The thread safety of the methods in this interface is determined by its dependent <a href="DataMapper.html" title="interface in space.sunqian.fs.object.convert"><code>DataMapper</code></a>,
- <a href="../data/ObjectBuilderProvider.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider</code></a>, and other objects. By default, they are all thread-safe.</div>
+ The thread safety of the methods in this interface is determined by its dependent <a href="ObjectCopier.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectCopier</code></a>,
+ <a href="../builder/BuilderOperatorProvider.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider</code></a>, and other objects. By default, they are all thread-safe.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -103,7 +103,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#convert(java.lang.Object,java.lang.reflect.Type,java.lang.reflect.Type,space.sunqian.fs.object.convert.ObjectConverter,space.sunqian.fs.base.option.Option...)" class="member-name-link">convert</a><wbr>(<a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;src,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -131,7 +131,7 @@ loadScripts(document, 'script');</script>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -142,7 +142,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>src</code> - the given source object</dd>
 <dd><code>srcType</code> - the specified type of the given source object</dd>
-<dd><code>target</code> - the specified type of the target object</dd>
+<dd><code>targetType</code> - the specified type of the target object</dd>
 <dd><code>converter</code> - the converter where this handler in</dd>
 <dd><code>options</code> - the other conversion options</dd>
 <dt>Returns:</dt>

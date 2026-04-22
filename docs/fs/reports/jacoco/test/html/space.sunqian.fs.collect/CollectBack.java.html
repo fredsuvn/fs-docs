@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.collect</a> &gt; <span class="el_source">CollectBack.java</span></div><h1>CollectBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.collect;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+
+import java.lang.reflect.Type;
+import java.util.AbstractList;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.IntFunction;
+
+final class CollectBack {
+
+    static @Nullable IntFunction&lt;@Nonnull Map&lt;?, ?&gt;&gt; mapFunction(@Nonnull Type target) {
+<span class="fc" id="L34">        return MapClasses.CLASS_MAP.get(target);</span>
+    }
+
+    static @Nullable IntFunction&lt;@Nonnull Set&lt;?&gt;&gt; setFunction(@Nonnull Type target) {
+<span class="fc" id="L38">        return SetClasses.CLASS_MAP.get(target);</span>
+    }
+
+    static @Nullable IntFunction&lt;@Nonnull List&lt;?&gt;&gt; listFunction(@Nonnull Type target) {
+<span class="fc" id="L42">        return ListClasses.CLASS_MAP.get(target);</span>
+    }
+
+    private static final class MapClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull IntFunction&lt;@Nonnull Map&lt;?, ?&gt;&gt;&gt; CLASS_MAP;
+
+        static {
+<span class="fc" id="L50">            CLASS_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L51">            CLASS_MAP.put(Map.class, HashMap::new);</span>
+<span class="fc" id="L52">            CLASS_MAP.put(AbstractMap.class, HashMap::new);</span>
+<span class="fc" id="L53">            CLASS_MAP.put(HashMap.class, HashMap::new);</span>
+<span class="fc" id="L54">            CLASS_MAP.put(LinkedHashMap.class, LinkedHashMap::new);</span>
+<span class="fc" id="L55">            CLASS_MAP.put(TreeMap.class, size -&gt; new TreeMap&lt;&gt;());</span>
+<span class="fc" id="L56">            CLASS_MAP.put(ConcurrentMap.class, ConcurrentHashMap::new);</span>
+<span class="fc" id="L57">            CLASS_MAP.put(ConcurrentHashMap.class, ConcurrentHashMap::new);</span>
+<span class="fc" id="L58">            CLASS_MAP.put(Hashtable.class, Hashtable::new);</span>
+<span class="fc" id="L59">            CLASS_MAP.put(ConcurrentSkipListMap.class, size -&gt; new ConcurrentSkipListMap&lt;&gt;());</span>
+<span class="fc" id="L60">        }</span>
+    }
+
+    private static final class SetClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull IntFunction&lt;@Nonnull Set&lt;?&gt;&gt;&gt; CLASS_MAP;
+
+        static {
+<span class="fc" id="L68">            CLASS_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L69">            CLASS_MAP.put(Iterable.class, HashSet::new);</span>
+<span class="fc" id="L70">            CLASS_MAP.put(Collection.class, HashSet::new);</span>
+<span class="fc" id="L71">            CLASS_MAP.put(Set.class, HashSet::new);</span>
+<span class="fc" id="L72">            CLASS_MAP.put(AbstractSet.class, HashSet::new);</span>
+<span class="fc" id="L73">            CLASS_MAP.put(HashSet.class, HashSet::new);</span>
+<span class="fc" id="L74">            CLASS_MAP.put(LinkedHashSet.class, LinkedHashSet::new);</span>
+<span class="fc" id="L75">            CLASS_MAP.put(TreeSet.class, size -&gt; new TreeSet&lt;&gt;());</span>
+<span class="fc" id="L76">            CLASS_MAP.put(CopyOnWriteArraySet.class, size -&gt; new CopyOnWriteArraySet&lt;&gt;());</span>
+<span class="fc" id="L77">            CLASS_MAP.put(ConcurrentSkipListSet.class, size -&gt; new ConcurrentSkipListSet&lt;&gt;());</span>
+<span class="fc" id="L78">        }</span>
+    }
+
+    private static final class ListClasses {
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull IntFunction&lt;@Nonnull List&lt;?&gt;&gt;&gt; CLASS_MAP;
+
+        static {
+<span class="fc" id="L86">            CLASS_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L87">            CLASS_MAP.put(Iterable.class, ArrayList::new);</span>
+<span class="fc" id="L88">            CLASS_MAP.put(Collection.class, ArrayList::new);</span>
+<span class="fc" id="L89">            CLASS_MAP.put(List.class, ArrayList::new);</span>
+<span class="fc" id="L90">            CLASS_MAP.put(AbstractList.class, ArrayList::new);</span>
+<span class="fc" id="L91">            CLASS_MAP.put(ArrayList.class, ArrayList::new);</span>
+<span class="fc" id="L92">            CLASS_MAP.put(LinkedList.class, size -&gt; new LinkedList&lt;&gt;());</span>
+<span class="fc" id="L93">            CLASS_MAP.put(CopyOnWriteArrayList.class, size -&gt; new CopyOnWriteArrayList&lt;&gt;());</span>
+<span class="fc" id="L94">        }</span>
+    }
+
+    private CollectBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

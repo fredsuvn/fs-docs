@@ -580,9 +580,9 @@ loadScripts(document, 'script');</script>
                               throws <span class="exceptions"><a href="IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
 <div class="block">Starts the processing, and returns the result as a new array. This method is equivalent to:
  <pre><code>
-     CharsBuilder builder = new CharsBuilder();
-     processeTo(builder);
-     return builder.toCharArray();
+ CharsBuilder builder = new CharsBuilder();
+ processeTo(builder);
+ return builder.toCharArray();
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.
@@ -610,9 +610,9 @@ loadScripts(document, 'script');</script>
                                   throws <span class="exceptions"><a href="IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
 <div class="block">Starts the processing, and returns the result as a new buffer. This method is equivalent to:
  <pre><code>
-     CharsBuilder builder = new CharsBuilder();
-     processeTo(builder);
-     return builder.toCharBuffer();
+ CharsBuilder builder = new CharsBuilder();
+ processeTo(builder);
+ return builder.toCharBuffer();
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.
@@ -640,7 +640,7 @@ loadScripts(document, 'script');</script>
                   throws <span class="exceptions"><a href="IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
 <div class="block">Starts the processing, and returns the result as a new string. This method is equivalent to:
  <pre><code>
-     return new String(toCharArray());
+ return new String(toCharArray());
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.

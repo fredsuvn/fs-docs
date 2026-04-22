@@ -2,15 +2,20 @@
 
 import space.sunqian.annotation.Immutable;
 import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
 import space.sunqian.annotation.RetainedParam;
 import space.sunqian.fs.Fs;
 
+import java.lang.reflect.Type;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.RandomAccess;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.IntFunction;
 
 /**
  * Utilities for {@link List}.
@@ -30,7 +35,7 @@ public class ListKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull @Immutable List&lt;T&gt; list(T @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L33">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L38">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -42,7 +47,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Boolean&gt; booleanList(boolean @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L45">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L50">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -54,7 +59,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Byte&gt; byteList(byte @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L57">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L62">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -66,7 +71,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Short&gt; shortList(short @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L69">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L74">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -78,7 +83,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Character&gt; charList(char @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L81">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L86">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -90,7 +95,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Integer&gt; intList(int @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L93">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L98">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -102,7 +107,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Long&gt; longList(long @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L105">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L110">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -114,7 +119,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Float&gt; floatList(float @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L117">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L122">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -126,7 +131,7 @@ public class ListKit {
      * @return an immutable list backed by the given array
      */
     public static @Nonnull @Immutable List&lt;@Nonnull Double&gt; doubleList(double @Nonnull @RetainedParam ... array) {
-<span class="fc" id="L129">        return ListBack.immutableList(array);</span>
+<span class="fc" id="L134">        return ListBack.immutableList(array);</span>
     }
 
     /**
@@ -138,7 +143,7 @@ public class ListKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull ArrayList&lt;T&gt; arrayList(T @Nonnull ... array) {
-<span class="fc" id="L141">        return new ArrayList&lt;&gt;(Arrays.asList(array));</span>
+<span class="fc" id="L146">        return new ArrayList&lt;&gt;(Arrays.asList(array));</span>
     }
 
     /**
@@ -150,7 +155,7 @@ public class ListKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull LinkedList&lt;T&gt; linkedList(T @Nonnull ... array) {
-<span class="fc" id="L153">        return new LinkedList&lt;&gt;(Arrays.asList(array));</span>
+<span class="fc" id="L158">        return new LinkedList&lt;&gt;(Arrays.asList(array));</span>
     }
 
     /**
@@ -162,9 +167,9 @@ public class ListKit {
      * @return a new immutable list of which content is added from the given iterable
      */
     public static &lt;T&gt; @Nonnull @Immutable List&lt;T&gt; toList(@Nonnull Iterable&lt;? extends T&gt; it) {
-<span class="fc" id="L165">        Object[] array = CollectKit.toArray(it);</span>
-<span class="fc" id="L166">        List&lt;Object&gt; list = list(array);</span>
-<span class="fc" id="L167">        return Fs.as(list);</span>
+<span class="fc" id="L170">        Object[] array = CollectKit.toArray(it);</span>
+<span class="fc" id="L171">        List&lt;Object&gt; list = list(array);</span>
+<span class="fc" id="L172">        return Fs.as(list);</span>
     }
 
     /**
@@ -175,10 +180,10 @@ public class ListKit {
      * @return a new {@link ArrayList} initialing with the given iterable
      */
     public static &lt;T&gt; @Nonnull ArrayList&lt;T&gt; toArrayList(@Nonnull Iterable&lt;T&gt; it) {
-<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L179">            return new ArrayList&lt;&gt;((Collection&lt;T&gt;) it);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
+<span class="fc" id="L184">            return new ArrayList&lt;&gt;((Collection&lt;T&gt;) it);</span>
         }
-<span class="fc" id="L181">        return CollectKit.addAll(new ArrayList&lt;&gt;(), it);</span>
+<span class="fc" id="L186">        return CollectKit.addAll(new ArrayList&lt;&gt;(), it);</span>
     }
 
     /**
@@ -189,10 +194,10 @@ public class ListKit {
      * @return a new {@link LinkedList} initialing with the given iterable
      */
     public static &lt;T&gt; @Nonnull LinkedList&lt;T&gt; toLinkedList(@Nonnull Iterable&lt;T&gt; it) {
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L193">            return new LinkedList&lt;&gt;((Collection&lt;T&gt;) it);</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
+<span class="fc" id="L198">            return new LinkedList&lt;&gt;((Collection&lt;T&gt;) it);</span>
         }
-<span class="fc" id="L195">        return CollectKit.addAll(new LinkedList&lt;&gt;(), it);</span>
+<span class="fc" id="L200">        return CollectKit.addAll(new LinkedList&lt;&gt;(), it);</span>
     }
 
     /**
@@ -209,7 +214,46 @@ public class ListKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull List&lt;T&gt; compositeView(@Nonnull List&lt;T&gt; @Nonnull ... lists) {
-<span class="fc" id="L212">        return ListBack.compositeList(lists);</span>
+<span class="fc" id="L217">        return ListBack.compositeList(lists);</span>
+    }
+
+    /**
+     * Returns a new list instance with the given list type and initial capacity. If the given list type is unsupported,
+     * returns {@code null}. The supported list types follow the {@link #newFunction(Type)}.
+     *
+     * @param listType        the given list type
+     * @param initialCapacity the initial capacity
+     * @param &lt;T&gt;             the type of the list elements
+     * @return a new list instance, or {@code null} if the given list type is unsupported
+     */
+    public static &lt;T&gt; @Nullable List&lt;T&gt; newList(@Nonnull Type listType, int initialCapacity) {
+<span class="fc" id="L230">        IntFunction&lt;@Nonnull List&lt;T&gt;&gt; function = newFunction(listType);</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (function == null) {</span>
+<span class="fc" id="L232">            return null;</span>
+        }
+<span class="fc" id="L234">        return function.apply(initialCapacity);</span>
+    }
+
+    /**
+     * Returns a new instance of {@link IntFunction} that creates a new list instance with the given list type. If the
+     * given list type is unsupported, returns {@code null}. The supported list types are:
+     * &lt;ul&gt;
+     *     &lt;li&gt;{@link Iterable}&lt;/li&gt;
+     *     &lt;li&gt;{@link Collection}&lt;/li&gt;
+     *     &lt;li&gt;{@link List}&lt;/li&gt;
+     *     &lt;li&gt;{@link AbstractList}&lt;/li&gt;
+     *     &lt;li&gt;{@link ArrayList}&lt;/li&gt;
+     *     &lt;li&gt;{@link LinkedList}&lt;/li&gt;
+     *     &lt;li&gt;{@link CopyOnWriteArrayList}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param listType the given list type
+     * @param &lt;T&gt;      the type of the list elements
+     * @return a new instance of {@link IntFunction} that creates a new list instance with the given list type, or
+     * {@code null} if the given list type is unsupported
+     */
+    public static &lt;T&gt; @Nullable IntFunction&lt;@Nonnull List&lt;T&gt;&gt; newFunction(@Nonnull Type listType) {
+<span class="fc" id="L256">        return Fs.as(CollectBack.listFunction(listType));</span>
     }
 
     private ListKit() {

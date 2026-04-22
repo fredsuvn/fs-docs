@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">SqlQuery.java</span></div><h1>SqlQuery.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.string.NameMapper;
+import space.sunqian.fs.object.convert.ObjectConverter;
+
+import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * This interface represents the query operation of a SQL statement.
+ *
+ * @param &lt;T&gt; the type mapped to the data row of the query result set
+ * @author sunqian
+ */
+public interface SqlQuery&lt;T&gt; extends SqlOperation {
+
+    /**
+     * Executes this query and returns the result set.
+     *
+     * @return the result set of this query
+     */
+    @SuppressWarnings(&quot;resource&quot;)
+    default @Nonnull ResultSet execute() {
+<span class="fc" id="L31">        return Fs.uncheck(() -&gt; preparedStatement().executeQuery(), SqlRuntimeException::new);</span>
+    }
+
+    /**
+     * Returns the type mapped to the data row of the query result set.
+     *
+     * @return the type mapped to the data row of the query result set
+     */
+    @Nonnull
+    Type type();
+
+    /**
+     * Executes this query and returns the result set of this query as a list of type {@link T}, using
+     * {@link JdbcKit#defaultNameMapper()} and {@link ObjectConverter#defaultConverter()} to convert the object of the
+     * JDBC type to the java type. If the result set is empty, returns {@code null}.
+     *
+     * @return the first row of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nullable T first() throws SqlRuntimeException {
+<span class="fc" id="L51">        return list().stream().findFirst().orElse(null);</span>
+    }
+
+    /**
+     * Executes this query and returns the first row of the result set of this query as a list of type {@link T}, using
+     * {@link ObjectConverter#defaultConverter()} to convert the object of the JDBC type to the java type. If the result
+     * set is empty, returns {@code null}.
+     *
+     * @param nameMapper the mapper to map the column name to the field name of the element type
+     * @return the first row of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nullable T first(@Nonnull NameMapper nameMapper) throws SqlRuntimeException {
+<span class="fc" id="L64">        return list(nameMapper).stream().findFirst().orElse(null);</span>
+    }
+
+    /**
+     * Executes this query and returns the first row of the result set of this query as a list of type {@link T}. If the
+     * result set is empty, returns {@code null}.
+     *
+     * @param nameMapper the mapper to map the column name to the field name of the element type
+     * @param converter  the converter to convert the JDBC type to the java type
+     * @param options    the options for converting
+     * @return the first row of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nullable T first(
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SqlRuntimeException {
+<span class="fc" id="L82">        return list(nameMapper, converter, options).stream().findFirst().orElse(null);</span>
+    }
+
+    /**
+     * Executes this query and returns the result set of this query as a list of type {@link T}, using
+     * {@link JdbcKit#defaultNameMapper()} and {@link ObjectConverter#defaultConverter()} to convert the object of the
+     * JDBC type to the java type.
+     *
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nonnull List&lt;@Nonnull T&gt; list() throws SqlRuntimeException {
+<span class="fc" id="L94">        return Fs.as(JdbcKit.toObject(execute(), type()));</span>
+    }
+
+    /**
+     * Executes this query and returns the result set of this query as a list of type {@link T}, using
+     * {@link ObjectConverter#defaultConverter()} to convert the object of the JDBC type to the java type.
+     *
+     * @param nameMapper the mapper to map the column name to the field name of the element type
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nonnull List&lt;@Nonnull T&gt; list(@Nonnull NameMapper nameMapper) throws SqlRuntimeException {
+<span class="fc" id="L106">        return Fs.as(JdbcKit.toObject(</span>
+<span class="fc" id="L107">            execute(),</span>
+<span class="fc" id="L108">            type(),</span>
+            nameMapper
+        ));
+    }
+
+    /**
+     * Executes this query and returns the result set of this query as a list of type {@link T}.
+     *
+     * @param nameMapper the mapper to map the column name to the field name of the element type
+     * @param converter  the converter to convert the JDBC type to the java type
+     * @param options    the options for converting
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nonnull List&lt;@Nonnull T&gt; list(
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SqlRuntimeException {
+<span class="fc" id="L127">        return Fs.as(JdbcKit.toObject(</span>
+<span class="fc" id="L128">            execute(),</span>
+<span class="fc" id="L129">            type(),</span>
+            nameMapper,
+            converter,
+            options
+        ));
+    }
+
+    @Override
+    @SuppressWarnings(&quot;resource&quot;)
+    default void close() throws SqlRuntimeException {
+<span class="fc" id="L139">        Statement statement = statement();</span>
+<span class="fc" id="L140">        ResultSet resultSet = execute();</span>
+<span class="fc" id="L141">        Fs.uncheck(Arrays.asList(</span>
+                resultSet::close,
+                statement::close
+            ),
+            SqlRuntimeException::new
+        );
+<span class="fc" id="L147">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

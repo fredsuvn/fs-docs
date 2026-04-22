@@ -45,13 +45,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -82,6 +82,28 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></code></div>
+<div class="col-second even-row-color"><code><a href="#INET_ADDR_0_0_0_0" class="member-name-link">INET_ADDR_0_0_0_0</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The IP address: <code>0.0.0.0</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#INET_ADDR_255_255_255_255" class="member-name-link">INET_ADDR_255_255_255_255</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The IP address: <code>255.255.255.255</code>.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -93,9 +115,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBroadcastAddress()" class="member-name-link">getBroadcastAddress</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../annotation/Immutable.html" title="annotation interface in space.sunqian.annotation">@Immutable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#allBroadcastAddresses()" class="member-name-link">allBroadcastAddresses</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns all broadcast IP address, if the local broadcast IP is not found, returns an empty list.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBroadcastAddress()" class="member-name-link">getBroadcastAddress</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a broadcast IP address, if the local broadcast IP is not found, returns <code>255.255.255.255</code>.</div>
 </div>
 </div>
@@ -110,6 +137,30 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="INET_ADDR_255_255_255_255">
+<h3>INET_ADDR_255_255_255_255</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></span>&nbsp;<span class="element-name">INET_ADDR_255_255_255_255</span></div>
+<div class="block">The IP address: <code>255.255.255.255</code>. This is the default broadcast IP.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="INET_ADDR_0_0_0_0">
+<h3>INET_ADDR_0_0_0_0</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a></span>&nbsp;<span class="element-name">INET_ADDR_0_0_0_0</span></div>
+<div class="block">The IP address: <code>0.0.0.0</code>.</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">
@@ -125,6 +176,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a broadcast IP address, if the local broadcast IP is not found, returns <code>255.255.255.255</code></dd>
+<dt>Throws:</dt>
+<dd><code><a href="NetException.html" title="class in space.sunqian.fs.net">NetException</a></code> - if an error occurs</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="allBroadcastAddresses()">
+<h3>allBroadcastAddresses</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+<a href="../../annotation/Immutable.html" title="annotation interface in space.sunqian.annotation">@Immutable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../annotation/Immutable.html" title="annotation interface in space.sunqian.annotation">@Immutable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetAddress.html" title="class or interface in java.net" class="external-link">InetAddress</a>&gt;</span>&nbsp;<span class="element-name">allBroadcastAddresses</span>()
+                                                                            throws <span class="exceptions"><a href="NetException.html" title="class in space.sunqian.fs.net">NetException</a></span></div>
+<div class="block">Returns all broadcast IP address, if the local broadcast IP is not found, returns an empty list.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>all broadcast IP address, if the local broadcast IP is not found, returns an empty list</dd>
 <dt>Throws:</dt>
 <dd><code><a href="NetException.html" title="class in space.sunqian.fs.net">NetException</a></code> - if an error occurs</dd>
 </dl>

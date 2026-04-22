@@ -2,14 +2,21 @@
 
 import space.sunqian.annotation.Immutable;
 import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
 import space.sunqian.fs.Fs;
 
+import java.lang.reflect.Type;
+import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.IntFunction;
 
 /**
  * Utilities for {@link Set}.
@@ -31,7 +38,7 @@ public class SetKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull @Immutable Set&lt;T&gt; set(T @Nonnull ... array) {
-<span class="fc" id="L34">        return Collections.unmodifiableSet(linkedHashSet(array));</span>
+<span class="fc" id="L41">        return Collections.unmodifiableSet(linkedHashSet(array));</span>
     }
 
     /**
@@ -43,7 +50,7 @@ public class SetKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull HashSet&lt;T&gt; hashSet(T @Nonnull ... array) {
-<span class="fc" id="L46">        return new HashSet&lt;&gt;(Arrays.asList(array));</span>
+<span class="fc" id="L53">        return new HashSet&lt;&gt;(Arrays.asList(array));</span>
     }
 
     /**
@@ -55,7 +62,7 @@ public class SetKit {
      */
     @SafeVarargs
     public static &lt;T&gt; @Nonnull LinkedHashSet&lt;T&gt; linkedHashSet(T @Nonnull ... array) {
-<span class="fc" id="L58">        return new LinkedHashSet&lt;&gt;(Arrays.asList(array));</span>
+<span class="fc" id="L65">        return new LinkedHashSet&lt;&gt;(Arrays.asList(array));</span>
     }
 
     /**
@@ -68,9 +75,9 @@ public class SetKit {
      * @return a new immutable set of which content is added from the given iterable
      */
     public static &lt;T&gt; @Nonnull @Immutable Set&lt;T&gt; toSet(@Nonnull Iterable&lt;? extends T&gt; it) {
-<span class="fc" id="L71">        Object[] array = CollectKit.toArray(it);</span>
-<span class="fc" id="L72">        Set&lt;Object&gt; set = set(array);</span>
-<span class="fc" id="L73">        return Fs.as(set);</span>
+<span class="fc" id="L78">        Object[] array = CollectKit.toArray(it);</span>
+<span class="fc" id="L79">        Set&lt;Object&gt; set = set(array);</span>
+<span class="fc" id="L80">        return Fs.as(set);</span>
     }
 
     /**
@@ -81,10 +88,10 @@ public class SetKit {
      * @return a new {@link HashSet} initialing with the given iterable
      */
     public static &lt;T&gt; @Nonnull HashSet&lt;T&gt; toHashSet(@Nonnull Iterable&lt;T&gt; it) {
-<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L85">            return new HashSet&lt;&gt;((Collection&lt;T&gt;) it);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
+<span class="fc" id="L92">            return new HashSet&lt;&gt;((Collection&lt;T&gt;) it);</span>
         }
-<span class="fc" id="L87">        return CollectKit.addAll(new HashSet&lt;&gt;(), it);</span>
+<span class="fc" id="L94">        return CollectKit.addAll(new HashSet&lt;&gt;(), it);</span>
     }
 
     /**
@@ -95,10 +102,51 @@ public class SetKit {
      * @return a new {@link LinkedHashSet} initialing with the given iterable
      */
     public static &lt;T&gt; @Nonnull LinkedHashSet&lt;T&gt; toLinkedHashSet(@Nonnull Iterable&lt;T&gt; it) {
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L99">            return new LinkedHashSet&lt;&gt;((Collection&lt;T&gt;) it);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
+<span class="fc" id="L106">            return new LinkedHashSet&lt;&gt;((Collection&lt;T&gt;) it);</span>
         }
-<span class="fc" id="L101">        return CollectKit.addAll(new LinkedHashSet&lt;&gt;(), it);</span>
+<span class="fc" id="L108">        return CollectKit.addAll(new LinkedHashSet&lt;&gt;(), it);</span>
+    }
+
+    /**
+     * Returns a new set instance with the given set type and initial capacity. If the given set type is unsupported,
+     * returns {@code null}. The supported set types follow the {@link #newFunction(Type)}.
+     *
+     * @param setType         the given set type
+     * @param initialCapacity the initial capacity
+     * @param &lt;T&gt;             the type of the set elements
+     * @return a new set instance, or {@code null} if the given set type is unsupported
+     */
+    public static &lt;T&gt; @Nullable Set&lt;T&gt; newSet(@Nonnull Type setType, int initialCapacity) {
+<span class="fc" id="L121">        IntFunction&lt;@Nonnull Set&lt;T&gt;&gt; function = newFunction(setType);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (function == null) {</span>
+<span class="fc" id="L123">            return null;</span>
+        }
+<span class="fc" id="L125">        return function.apply(initialCapacity);</span>
+    }
+
+    /**
+     * Returns a new instance of {@link IntFunction} that creates a new set instance with the given set type. If the
+     * given set type is unsupported, returns {@code null}. The supported set types are:
+     * &lt;ul&gt;
+     *     &lt;li&gt;{@link Iterable}&lt;/li&gt;
+     *     &lt;li&gt;{@link Collection}&lt;/li&gt;
+     *     &lt;li&gt;{@link Set}&lt;/li&gt;
+     *     &lt;li&gt;{@link AbstractSet}&lt;/li&gt;
+     *     &lt;li&gt;{@link HashSet}&lt;/li&gt;
+     *     &lt;li&gt;{@link LinkedHashSet}&lt;/li&gt;
+     *     &lt;li&gt;{@link TreeSet}&lt;/li&gt;
+     *     &lt;li&gt;{@link CopyOnWriteArraySet}&lt;/li&gt;
+     *     &lt;li&gt;{@link ConcurrentSkipListSet}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param setType the given set type
+     * @param &lt;T&gt;     the type of the set elements
+     * @return a new instance of {@link IntFunction} that creates a new set instance with the given set type, or
+     * {@code null} if the given set type is unsupported
+     */
+    public static &lt;T&gt; @Nullable IntFunction&lt;@Nonnull Set&lt;T&gt;&gt; newFunction(@Nonnull Type setType) {
+<span class="fc" id="L149">        return Fs.as(CollectBack.setFunction(setType));</span>
     }
 
     private SetKit() {

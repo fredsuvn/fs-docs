@@ -6,6 +6,7 @@ import space.sunqian.annotation.RetainedParam;
 import space.sunqian.fs.base.option.Option;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  * This exception is thrown when an object conversion is unsupported.
@@ -15,10 +16,18 @@ import java.lang.reflect.Type;
 public class UnsupportedObjectConvertException extends ObjectConvertException {
 
     private static @Nonnull String toMessage(
+        @Nullable Object src,
         @Nonnull Type srcType,
-        @Nonnull Type target
+        @Nonnull Type target,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull @RetainedParam [] options
     ) {
-<span class="fc" id="L21">        return &quot;Unsupported object conversion from &quot; + srcType + &quot; to &quot; + target + &quot;.&quot;;</span>
+<span class="fc" id="L25">        return &quot;Unsupported object conversion: [&quot; +</span>
+            &quot;srcType: &quot; + srcType +
+            &quot;, targetType: &quot; + target +
+            &quot;, src: &quot; + src +
+<span class="fc" id="L29">            &quot;, options: &quot; + Arrays.toString(options) +</span>
+            &quot;].&quot;;
     }
 
     private final @Nullable Object src;
@@ -43,13 +52,13 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
         @Nonnull ObjectConverter converter,
         @Nonnull Option&lt;?, ?&gt; @Nonnull @RetainedParam [] options
     ) {
-<span class="fc" id="L46">        super(toMessage(srcType, target));</span>
-<span class="fc" id="L47">        this.src = src;</span>
-<span class="fc" id="L48">        this.srcType = srcType;</span>
-<span class="fc" id="L49">        this.target = target;</span>
-<span class="fc" id="L50">        this.converter = converter;</span>
-<span class="fc" id="L51">        this.options = options;</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L55">        super(toMessage(src, srcType, target, converter, options));</span>
+<span class="fc" id="L56">        this.src = src;</span>
+<span class="fc" id="L57">        this.srcType = srcType;</span>
+<span class="fc" id="L58">        this.target = target;</span>
+<span class="fc" id="L59">        this.converter = converter;</span>
+<span class="fc" id="L60">        this.options = options;</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * Returns the source object to be converted.
@@ -57,7 +66,7 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
      * @return the source object to be converted
      */
     public @Nullable Object sourceObject() {
-<span class="fc" id="L60">        return src;</span>
+<span class="fc" id="L69">        return src;</span>
     }
 
     /**
@@ -66,7 +75,7 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
      * @return the specified type of the source object
      */
     public @Nonnull Type sourceObjectType() {
-<span class="fc" id="L69">        return srcType;</span>
+<span class="fc" id="L78">        return srcType;</span>
     }
 
     /**
@@ -75,7 +84,7 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
      * @return the target type to convert to
      */
     public @Nonnull Type targetType() {
-<span class="fc" id="L78">        return target;</span>
+<span class="fc" id="L87">        return target;</span>
     }
 
     /**
@@ -84,7 +93,7 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
      * @return the converter object where this exception throws from
      */
     public @Nonnull ObjectConverter converter() {
-<span class="fc" id="L87">        return converter;</span>
+<span class="fc" id="L96">        return converter;</span>
     }
 
     /**
@@ -93,7 +102,7 @@ public class UnsupportedObjectConvertException extends ObjectConvertException {
      * @return the options used in the conversion
      */
     public @Nonnull Option&lt;?, ?&gt; @Nonnull [] options() {
-<span class="fc" id="L96">        return options;</span>
+<span class="fc" id="L105">        return options;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

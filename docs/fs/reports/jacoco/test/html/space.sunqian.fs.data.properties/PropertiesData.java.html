@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.properties</a> &gt; <span class="el_source">PropertiesData.java</span></div><h1>PropertiesData.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.properties;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.base.string.StringKit;
+import space.sunqian.fs.data.ByteData;
+import space.sunqian.fs.data.CharData;
+import space.sunqian.fs.data.DataMap;
+import space.sunqian.fs.data.DataParsingException;
+import space.sunqian.fs.io.IOKit;
+import space.sunqian.fs.io.IORuntimeException;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * The interface represents properties data.
+ *
+ * @author sunqian
+ */
+public interface PropertiesData extends ByteData, CharData {
+
+    /**
+     * Loads properties from the given input stream, using {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * This method uses {@link PropertiesParser#defaultParser()} to parse the properties.
+     *
+     * @param in the input stream to read from
+     * @return a new {@link PropertiesData} wraps the loaded properties
+     * @throws DataParsingException if an I/O error occurs while loading the properties
+     */
+    static @Nonnull PropertiesData load(@Nonnull InputStream in) throws DataParsingException {
+<span class="fc" id="L42">        return PropertiesParser.defaultParser().parse(in);</span>
+    }
+
+    /**
+     * Loads properties from the given readable byte channel, using {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * This method uses {@link PropertiesParser#defaultParser()} to parse the properties.
+     *
+     * @param channel the readable byte channel to read from
+     * @return a new {@link PropertiesData} wraps the loaded properties
+     * @throws DataParsingException if an I/O error occurs while loading the properties
+     */
+    static @Nonnull PropertiesData load(@Nonnull ReadableByteChannel channel) throws DataParsingException {
+<span class="fc" id="L55">        return PropertiesParser.defaultParser().parse(channel);</span>
+    }
+
+    /**
+     * Loads properties from the given reader, using {@link CharsKit#defaultCharset()}.
+     * &lt;p&gt;
+     * This method uses {@link PropertiesParser#defaultParser()} to parse the properties.
+     *
+     * @param reader the reader to read from
+     * @return a new {@link PropertiesData} wraps the loaded properties
+     * @throws DataParsingException if an I/O error occurs while loading the properties
+     */
+    static @Nonnull PropertiesData load(@Nonnull Reader reader) throws DataParsingException {
+<span class="fc" id="L68">        return PropertiesParser.defaultParser().parse(reader);</span>
+    }
+
+    /**
+     * Gets the string value of the property, or {@code null} if not found.
+     *
+     * @param name the name of the property
+     * @return the string value of the property, or {@code null} if not found
+     */
+    default @Nullable String getString(@Nonnull String name) {
+<span class="fc" id="L78">        Object value = asMap().get(name);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        return value == null ? null : value.toString();</span>
+    }
+
+    /**
+     * Gets the string value of the property, or {@code defaultValue} if not found.
+     *
+     * @param name         the name of the property
+     * @param defaultValue the default value
+     * @return the string value of the property, or {@code defaultValue} if not found
+     */
+    default String getString(@Nonnull String name, String defaultValue) {
+<span class="fc" id="L90">        String value = getString(name);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        return value == null ? defaultValue : value;</span>
+    }
+
+    /**
+     * Gets the int value of the property, or {@code 0} if not found.
+     *
+     * @param name the name of the property
+     * @return the int value of the property, or {@code 0} if not found
+     */
+    default int getInt(@Nonnull String name) {
+<span class="fc" id="L101">        return getInt(name, 0);</span>
+    }
+
+    /**
+     * Gets the int value of the property, or {@code defaultValue} if not found.
+     *
+     * @param name         the name of the property
+     * @param defaultValue the default value
+     * @return the int value of the property, or {@code defaultValue} if not found
+     */
+    default int getInt(@Nonnull String name, int defaultValue) {
+<span class="fc" id="L112">        String value = getString(name);</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        return value == null ? defaultValue : Integer.parseInt(value);</span>
+    }
+
+    /**
+     * Gets the long value of the property, or {@code 0} if not found.
+     *
+     * @param name the name of the property
+     * @return the long value of the property, or {@code 0} if not found
+     */
+    default long getLong(@Nonnull String name) {
+<span class="fc" id="L123">        return getLong(name, 0);</span>
+    }
+
+    /**
+     * Gets the long value of the property, or {@code defaultValue} if not found.
+     *
+     * @param name         the name of the property
+     * @param defaultValue the default value
+     * @return the long value of the property, or {@code defaultValue} if not found
+     */
+    default long getLong(@Nonnull String name, long defaultValue) {
+<span class="fc" id="L134">        String value = getString(name);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        return value == null ? defaultValue : Long.parseLong(value);</span>
+    }
+
+    /**
+     * Gets the float value of the property, or {@code 0.0f} if not found.
+     *
+     * @param name the name of the property
+     * @return the float value of the property, or {@code 0.0f} if not found
+     */
+    default float getFloat(@Nonnull String name) {
+<span class="fc" id="L145">        return getFloat(name, 0.0f);</span>
+    }
+
+    /**
+     * Gets the float value of the property, or {@code defaultValue} if not found.
+     *
+     * @param name         the name of the property
+     * @param defaultValue the default value
+     * @return the float value of the property, or {@code defaultValue} if not found
+     */
+    default float getFloat(@Nonnull String name, float defaultValue) {
+<span class="fc" id="L156">        String value = getString(name);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        return value == null ? defaultValue : Float.parseFloat(value);</span>
+    }
+
+    /**
+     * Gets the double value of the property, or {@code 0.0} if not found.
+     *
+     * @param name the name of the property
+     * @return the double value of the property, or {@code 0.0} if not found
+     */
+    default double getDouble(@Nonnull String name) {
+<span class="fc" id="L167">        return getDouble(name, 0.0);</span>
+    }
+
+    /**
+     * Gets the double value of the property, or {@code defaultValue} if not found.
+     *
+     * @param name         the name of the property
+     * @param defaultValue the default value
+     * @return the double value of the property, or {@code defaultValue} if not found
+     */
+    default double getDouble(@Nonnull String name, double defaultValue) {
+<span class="fc" id="L178">        String value = getString(name);</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        return value == null ? defaultValue : Double.parseDouble(value);</span>
+    }
+
+    /**
+     * Returns {@code true} if the property value is enabled checked by {@link StringKit#isEnabled(CharSequence)},
+     * otherwise {@code false}.
+     *
+     * @param name the name of the property
+     * @return {@code true} if the property value is enabled checked by {@link StringKit#isEnabled(CharSequence)},
+     * otherwise {@code false}.
+     */
+    default boolean getBoolean(@Nonnull String name) {
+<span class="fc" id="L191">        String value = getString(name);</span>
+<span class="fc bfc" id="L192" title="All 4 branches covered.">        return value != null &amp;&amp; StringKit.isEnabled(value);</span>
+    }
+
+    /**
+     * Sets the value of the property.
+     *
+     * @param name  the name of the property
+     * @param value the value to set
+     */
+    default void set(@Nonnull String name, @Nonnull Object value) {
+<span class="fc" id="L202">        asMap().put(name, value);</span>
+<span class="fc" id="L203">    }</span>
+
+    /**
+     * Removes the property.
+     *
+     * @param name the name of the property
+     */
+    default void remove(@Nonnull String name) {
+<span class="fc" id="L211">        asMap().remove(name);</span>
+<span class="fc" id="L212">    }</span>
+
+    /**
+     * Returns a properties view of the properties, any changes to the properties will be reflected in the map, and vice
+     * versa.
+     *
+     * @return a properties view of the properties
+     */
+    @Nonnull
+    Properties asProperties();
+
+    /**
+     * Returns a map view of the properties, any changes to the map will be reflected in the properties, and vice
+     * versa.
+     *
+     * @return a map view of the properties
+     */
+    default @Nonnull Map&lt;@Nonnull String, @Nonnull Object&gt; asMap() {
+<span class="fc" id="L230">        return Fs.as(asProperties());</span>
+    }
+
+    /**
+     * Returns a {@link DataMap} view of the properties, any changes to the map will be reflected in the properties, and
+     * vice versa.
+     *
+     * @return a {@link DataMap} view of the properties
+     */
+    default @Nonnull DataMap asDataMap() {
+<span class="fc" id="L240">        return DataMap.wrap(asMap());</span>
+    }
+
+    /**
+     * Writes the properties to the given output stream with the {@link CharsKit#defaultCharset()}.
+     *
+     * @param out the output stream to write to
+     * @throws IORuntimeException if an I/O error occurs
+     */
+    @Override
+    default void writeTo(@Nonnull OutputStream out) throws IORuntimeException {
+<span class="fc" id="L251">        Writer writer = IOKit.newWriter(out, CharsKit.defaultCharset());</span>
+<span class="fc" id="L252">        writeTo(writer);</span>
+<span class="fc" id="L253">    }</span>
+
+    /**
+     * Writes the properties to the given writable byte channel with the {@link CharsKit#defaultCharset()}.
+     *
+     * @param channel the writable byte channel to write to
+     * @throws IORuntimeException if an I/O error occurs
+     */
+    @Override
+    default void writeTo(@Nonnull WritableByteChannel channel) throws IORuntimeException {
+        // compatible with JDK8
+        @SuppressWarnings(&quot;CharsetObjectCanBeUsed&quot;)
+<span class="fc" id="L265">        Writer writer = Channels.newWriter(channel, CharsKit.defaultCharset().name());</span>
+<span class="fc" id="L266">        writeTo(writer);</span>
+<span class="fc" id="L267">    }</span>
+
+    @Override
+    default void writeTo(@Nonnull Appendable appender) throws IORuntimeException {
+<span class="fc" id="L271">        Fs.uncheck(() -&gt; asProperties().store(IOKit.wrapWriter(appender), null), IORuntimeException::new);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Returns a string representation of the current properties.
+     *
+     * @return a string representation of the current properties
+     */
+    @Nonnull
+    String toString();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

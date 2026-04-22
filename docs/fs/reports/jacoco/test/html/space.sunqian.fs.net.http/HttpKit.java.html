@@ -122,11 +122,12 @@ public class HttpKit {
      * @return the translated {@code String}
      * @throws HttpNetException if an error occurs
      */
+    @SuppressWarnings(&quot;CharsetObjectCanBeUsed&quot;)
     public static @Nonnull String encodeUrl(@Nonnull String str, @Nonnull Charset charset) throws HttpNetException {
         try {
-<span class="fc" id="L127">            return URLEncoder.encode(str, charset.name()).replace(&quot;+&quot;, &quot;%20&quot;);</span>
-<span class="fc" id="L128">        } catch (Exception e) {</span>
-<span class="fc" id="L129">            throw new HttpNetException(e);</span>
+<span class="fc" id="L128">            return URLEncoder.encode(str, charset.name()).replace(&quot;+&quot;, &quot;%20&quot;);</span>
+<span class="fc" id="L129">        } catch (Exception e) {</span>
+<span class="fc" id="L130">            throw new HttpNetException(e);</span>
         }
     }
 

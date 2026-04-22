@@ -70,10 +70,15 @@ loadScripts(document, 'script');</script>
  SimpleCache soft = SimpleCache.ofSoft();
  SimpleCache weak = SimpleCache.ofWeak();
  </code></pre>
+ And cache function:
+ <pre><code>
+ CacheFunction.ofMap(new HashMap&lt;&gt;());
+ </code></pre>
  <p>
  Cache interfaces:
  <ul>
      <li><a href="SimpleCache.html" title="interface in space.sunqian.fs.cache"><code>SimpleCache</code></a></li>
+     <li><a href="CacheFunction.html" title="interface in space.sunqian.fs.cache"><code>CacheFunction</code></a></li>
  </ul></div>
 </section>
 <section class="summary">
@@ -106,8 +111,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">This interface represents the cache value, which is used to wrap the actual value to be cached.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CacheFunction.html" title="interface in space.sunqian.fs.cache">CacheFunction</a>&lt;K,<wbr>V&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">A functional interface which is used to get and cache the value associated with the key.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="SimpleCache.html" title="interface in space.sunqian.fs.cache">SimpleCache</a>&lt;K,<wbr>V&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">This interface is a simplified key-value pair cache interface (implementations must be thread-safe).</div>
 </div>
 </div>

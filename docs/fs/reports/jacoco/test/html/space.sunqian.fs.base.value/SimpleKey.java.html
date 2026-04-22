@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.base.value</a> &gt; <span class="el_source">SimpleKey.java</span></div><h1>SimpleKey.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.base.value;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+
+import java.util.Arrays;
+import java.util.Objects;
+
+/**
+ * A {@link SimpleKey} represents a key consists of a group of elements. For example, for a cache of method results, its
+ * key is the parameter of the method, and this class can be used to be that key.
+ *
+ * @author sunqian
+ */
+public final class SimpleKey {
+
+    /**
+     * Returns a new {@link SimpleKey} with the given elements.
+     *
+     * @param elements the given elements
+     * @return a new {@link SimpleKey} with the given elements
+     */
+    public static @Nonnull SimpleKey of(Object @Nonnull ... elements) {
+<span class="fc" id="L24">        return new SimpleKey(elements);</span>
+    }
+
+    private final Object @Nonnull [] elements;
+
+<span class="fc" id="L29">    private SimpleKey(Object @Nonnull [] elements) {</span>
+<span class="fc" id="L30">        this.elements = elements;</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Returns the element at the specified position in this key, and casts it to the type {@code T}.
+     *
+     * @param index the index of the element to return
+     * @param &lt;T&gt;   the type of the element
+     * @return the element at the specified position in this key, and casts it to the type {@code T}
+     * @throws IndexOutOfBoundsException if the index is out of range
+     * @throws ClassCastException        if the element at the specified position cannot be cast to the specified type
+     */
+    public &lt;T&gt; T getAs(int index) throws IndexOutOfBoundsException, ClassCastException {
+<span class="fc" id="L43">        return Fs.as(get(index));</span>
+    }
+
+    /**
+     * Returns the element at the specified position in this key.
+     *
+     * @param index the index of the element to return
+     * @return the element at the specified position in this key
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public Object get(int index) throws IndexOutOfBoundsException {
+<span class="fc" id="L54">        return elements[index];</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!(o instanceof SimpleKey)) {</span>
+<span class="fc" id="L60">            return false;</span>
+        }
+<span class="fc" id="L62">        SimpleKey osk = (SimpleKey) o;</span>
+<span class="fc" id="L63">        return Objects.deepEquals(elements, osk.elements);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L68">        return Arrays.hashCode(elements);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L73">        return &quot;SimpleKey&quot; + Arrays.toString(elements);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -7,6 +7,7 @@ import space.sunqian.fs.collect.CollectKit;
 import space.sunqian.fs.collect.SetKit;
 import space.sunqian.fs.io.IORuntimeException;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Set;
@@ -26,8 +27,8 @@ public class ResKit {
      * @return the resource url of the given resource path, or {@code null} if not found
      */
     public static @Nullable URL findResource(@Nonnull String path) {
-<span class="fc" id="L29">        ClassLoader classLoader = ClassLoader.getSystemClassLoader();</span>
-<span class="fc" id="L30">        return classLoader.getResource(path);</span>
+<span class="fc" id="L30">        ClassLoader classLoader = ClassLoader.getSystemClassLoader();</span>
+<span class="fc" id="L31">        return classLoader.getResource(path);</span>
     }
 
     /**
@@ -38,9 +39,21 @@ public class ResKit {
      * @return all resource urls of the given resource path, may be empty if not found
      */
     public static @Nonnull Set&lt;@Nonnull URL&gt; findResources(@Nonnull String path) throws IORuntimeException {
-<span class="fc" id="L41">        ClassLoader classLoader = ClassLoader.getSystemClassLoader();</span>
-<span class="fc" id="L42">        Enumeration&lt;URL&gt; urls = Fs.uncheck(() -&gt; classLoader.getResources(path), IORuntimeException::new);</span>
-<span class="fc" id="L43">        return SetKit.toSet(() -&gt; CollectKit.asIterator(urls));</span>
+<span class="fc" id="L42">        ClassLoader classLoader = ClassLoader.getSystemClassLoader();</span>
+<span class="fc" id="L43">        Enumeration&lt;URL&gt; urls = Fs.uncheck(() -&gt; classLoader.getResources(path), IORuntimeException::new);</span>
+<span class="fc" id="L44">        return SetKit.toSet(() -&gt; CollectKit.asIterator(urls));</span>
+    }
+
+    /**
+     * Returns the resource stream of the given resource path. This method searches the resource in the classpath, and
+     * doesn't expect the given path to start with &quot;/&quot;.
+     *
+     * @param path the given resource path
+     * @return the resource stream of the given resource path, or {@code null} if not found
+     */
+    public static @Nullable InputStream findStream(@Nonnull String path) {
+<span class="fc" id="L55">        ClassLoader classLoader = ClassLoader.getSystemClassLoader();</span>
+<span class="fc" id="L56">        return classLoader.getResourceAsStream(path);</span>
     }
 
     private ResKit() {

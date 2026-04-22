@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Materials.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">internal.utils</a> &gt; <span class="el_source">Materials.java</span></div><h1>Materials.java</h1><pre class="source lang-java linenums">package internal.utils;
+
+import space.sunqian.annotation.Nonnull;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.CharBuffer;
+import java.nio.file.Path;
+
+/**
+ * This class provides methods for generating material data.
+ *
+ * @author sunqian
+ */
+public class Materials {
+
+    private Materials() {
+    }
+
+    /**
+     * Returns a buffer backed by the middle of an extended array. The extended array is longer than and copied from the
+     * given array, with the copied data positioned in the middle (not occupying the start or end of the extended
+     * array). The returned buffer contains the portion of the extended array that holds the copied data. The buffer's
+     * position is 0, and its limit and capacity is length of the given array.
+     *
+     * @param array the given array
+     * @return a buffer backed by the middle of an extended array
+     */
+    public static @Nonnull ByteBuffer copyPadding(byte @Nonnull [] array) {
+<span class="fc" id="L33">        byte[] back = new byte[array.length + 20];</span>
+<span class="fc" id="L34">        System.arraycopy(array, 0, back, 10, array.length);</span>
+<span class="fc" id="L35">        return ByteBuffer.wrap(back, 10, array.length).slice();</span>
+    }
+
+    /**
+     * Returns a direct buffer whose content are copied from the given array.
+     *
+     * @param array the given array
+     * @return a direct buffer whose content are copied from the given array
+     */
+    public static @Nonnull ByteBuffer copyDirect(byte @Nonnull [] array) {
+<span class="fc" id="L45">        ByteBuffer buffer = ByteBuffer.allocateDirect(array.length);</span>
+<span class="fc" id="L46">        buffer.put(array);</span>
+<span class="fc" id="L47">        buffer.flip();</span>
+<span class="fc" id="L48">        return buffer;</span>
+    }
+
+    /**
+     * Returns a heap buffer whose content are copied from the given array.
+     *
+     * @param array the given array
+     * @return a heap buffer whose content are copied from the given array
+     */
+    public static @Nonnull ByteBuffer copyHeap(byte @Nonnull [] array) {
+<span class="fc" id="L58">        ByteBuffer buffer = ByteBuffer.allocate(array.length);</span>
+<span class="fc" id="L59">        buffer.put(array);</span>
+<span class="fc" id="L60">        buffer.flip();</span>
+<span class="fc" id="L61">        return buffer;</span>
+    }
+
+    /**
+     * Returns a direct buffer whose content are copied from the given buffer.
+     *
+     * @param buffer the given buffer
+     * @return a direct buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull ByteBuffer copyDirect(@Nonnull ByteBuffer buffer) {
+<span class="fc" id="L71">        return copyBuffer(buffer, true);</span>
+    }
+
+    /**
+     * Returns a heap buffer whose content are copied from the given buffer.
+     *
+     * @param buffer the given buffer
+     * @return a heap buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull ByteBuffer copyHeap(@Nonnull ByteBuffer buffer) {
+<span class="fc" id="L81">        return copyBuffer(buffer, false);</span>
+    }
+
+    /**
+     * Returns a buffer whose content are copied from the given buffer. The returned buffer is direct if, and only if
+     * the given buffer is direct. The position of the given buffer will not be changed.
+     *
+     * @param buffer the given buffer
+     * @return a buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull ByteBuffer copyBuffer(@Nonnull ByteBuffer buffer) {
+<span class="fc" id="L92">        return copyBuffer(buffer, buffer.isDirect());</span>
+    }
+
+    private static @Nonnull ByteBuffer copyBuffer(@Nonnull ByteBuffer buffer, boolean direct) {
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        ByteBuffer ret = direct ? ByteBuffer.allocateDirect(buffer.remaining())</span>
+<span class="fc" id="L97">            : ByteBuffer.allocate(buffer.remaining());</span>
+<span class="fc" id="L98">        int pos = buffer.position();</span>
+<span class="fc" id="L99">        ret.put(buffer);</span>
+<span class="fc" id="L100">        buffer.position(pos);</span>
+<span class="fc" id="L101">        ret.flip();</span>
+<span class="fc" id="L102">        return ret;</span>
+    }
+
+    /**
+     * Returns a new array whose content are copied from the given buffer. The position of the given buffer will not be
+     * changed.
+     *
+     * @param buffer the given buffer
+     * @return a new array whose content are copied from the given buffer
+     */
+    public static byte @Nonnull [] copyBytes(@Nonnull ByteBuffer buffer) {
+<span class="fc" id="L113">        byte[] array = new byte[buffer.remaining()];</span>
+<span class="fc" id="L114">        int pos = buffer.position();</span>
+<span class="fc" id="L115">        buffer.get(array);</span>
+<span class="fc" id="L116">        buffer.position(pos);</span>
+<span class="fc" id="L117">        return array;</span>
+    }
+
+    /**
+     * Returns a buffer backed by the middle of an extended array. The extended array is longer than and copied from the
+     * given array, with the copied data positioned in the middle (not occupying the start or end of the extended
+     * array). The returned buffer contains the portion of the extended array that holds the copied data. The buffer's
+     * position is 0, and its limit and capacity is length of the given array.
+     *
+     * @param array the given array
+     * @return a buffer backed by the middle of an extended array
+     */
+    public static @Nonnull CharBuffer copyPadding(char @Nonnull [] array) {
+<span class="fc" id="L130">        char[] back = new char[array.length + 20];</span>
+<span class="fc" id="L131">        System.arraycopy(array, 0, back, 10, array.length);</span>
+<span class="fc" id="L132">        return CharBuffer.wrap(back, 10, array.length).slice();</span>
+    }
+
+    /**
+     * Returns a direct buffer whose content are copied from the given array.
+     *
+     * @param array the given array
+     * @return a direct buffer whose content are copied from the given array
+     */
+    public static @Nonnull CharBuffer copyDirect(char @Nonnull [] array) {
+<span class="fc" id="L142">        CharBuffer buffer =</span>
+<span class="fc" id="L143">            ByteBuffer.allocateDirect(array.length * 2).order(ByteOrder.BIG_ENDIAN).asCharBuffer();</span>
+<span class="fc" id="L144">        buffer.put(array);</span>
+<span class="fc" id="L145">        buffer.flip();</span>
+<span class="fc" id="L146">        return buffer;</span>
+    }
+
+    /**
+     * Returns a heap buffer whose content are copied from the given array.
+     *
+     * @param array the given array
+     * @return a heap buffer whose content are copied from the given array
+     */
+    public static @Nonnull CharBuffer copyHeap(char @Nonnull [] array) {
+<span class="fc" id="L156">        CharBuffer buffer = CharBuffer.allocate(array.length);</span>
+<span class="fc" id="L157">        buffer.put(array);</span>
+<span class="fc" id="L158">        buffer.flip();</span>
+<span class="fc" id="L159">        return buffer;</span>
+    }
+
+    /**
+     * Returns a direct buffer whose content are copied from the given buffer.
+     *
+     * @param buffer the given buffer
+     * @return a direct buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull CharBuffer copyDirect(@Nonnull CharBuffer buffer) {
+<span class="fc" id="L169">        return copyBuffer(buffer, true);</span>
+    }
+
+    /**
+     * Returns a heap buffer whose content are copied from the given buffer.
+     *
+     * @param buffer the given buffer
+     * @return a heap buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull CharBuffer copyHeap(@Nonnull CharBuffer buffer) {
+<span class="fc" id="L179">        return copyBuffer(buffer, false);</span>
+    }
+
+    /**
+     * Returns a buffer whose content are copied from the given buffer. The returned buffer is direct if, and only if
+     * the given buffer is direct. The position of the given buffer will not be changed.
+     *
+     * @param buffer the given buffer
+     * @return a buffer whose content are copied from the given buffer
+     */
+    public static @Nonnull CharBuffer copyBuffer(@Nonnull CharBuffer buffer) {
+<span class="fc" id="L190">        return copyBuffer(buffer, buffer.isDirect());</span>
+    }
+
+    private static @Nonnull CharBuffer copyBuffer(@Nonnull CharBuffer buffer, boolean direct) {
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (direct) {</span>
+<span class="fc" id="L195">            char[] chars = copyChars(buffer);</span>
+<span class="fc" id="L196">            ByteBuffer bb = ByteBuffer.allocateDirect(chars.length * 2);</span>
+<span class="fc" id="L197">            CharBuffer ret = bb.asCharBuffer();</span>
+<span class="fc" id="L198">            ret.put(chars);</span>
+<span class="fc" id="L199">            ret.flip();</span>
+<span class="fc" id="L200">            return ret;</span>
+        }
+<span class="fc" id="L202">        CharBuffer ret = CharBuffer.allocate(buffer.remaining());</span>
+<span class="fc" id="L203">        int pos = buffer.position();</span>
+<span class="fc" id="L204">        ret.put(buffer);</span>
+<span class="fc" id="L205">        buffer.position(pos);</span>
+<span class="fc" id="L206">        ret.flip();</span>
+<span class="fc" id="L207">        return ret;</span>
+    }
+
+    /**
+     * Returns a new array whose content are copied from the given buffer. The position of the given buffer will not be
+     * changed.
+     *
+     * @param buffer the given buffer
+     * @return a new array whose content are copied from the given buffer
+     */
+    public static char @Nonnull [] copyChars(@Nonnull CharBuffer buffer) {
+<span class="fc" id="L218">        char[] array = new char[buffer.remaining()];</span>
+<span class="fc" id="L219">        int pos = buffer.position();</span>
+<span class="fc" id="L220">        buffer.get(array);</span>
+<span class="fc" id="L221">        buffer.position(pos);</span>
+<span class="fc" id="L222">        return array;</span>
+    }
+
+    /**
+     * Creates a new file with the specified path and data.
+     *
+     * @param path the specified path
+     * @param data the specified data
+     */
+    public static void newFile(@Nonnull Path path, byte @Nonnull [] data) {
+        try {
+<span class="fc" id="L233">            File file = path.toFile();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            if (file.createNewFile()) {</span>
+<span class="fc" id="L235">                FileOutputStream outputStream = new FileOutputStream(file);</span>
+<span class="fc" id="L236">                outputStream.write(data);</span>
+<span class="fc" id="L237">                outputStream.close();</span>
+<span class="fc" id="L238">            } else {</span>
+<span class="fc" id="L239">                throw new IOException(&quot;File is existed.&quot;);</span>
+            }
+<span class="fc" id="L241">        } catch (Exception e) {</span>
+<span class="fc" id="L242">            throw new IllegalStateException(e);</span>
+<span class="fc" id="L243">        }</span>
+<span class="fc" id="L244">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

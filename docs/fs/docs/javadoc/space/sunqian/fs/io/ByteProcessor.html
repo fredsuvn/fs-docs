@@ -562,9 +562,9 @@ loadScripts(document, 'script');</script>
                               throws <span class="exceptions"><a href="IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
 <div class="block">Starts the processing, and returns the result as a new array. This method is equivalent to:
  <pre><code>
-     BytesBuilder builder = new BytesBuilder();
-     processeTo(builder);
-     return builder.toByteArray();
+ BytesBuilder builder = new BytesBuilder();
+ processeTo(builder);
+ return builder.toByteArray();
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.
@@ -592,9 +592,9 @@ loadScripts(document, 'script');</script>
                                   throws <span class="exceptions"><a href="IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></span></div>
 <div class="block">Starts the processing, and returns the result as a new buffer. This method is equivalent to:
  <pre><code>
-     BytesBuilder builder = new BytesBuilder();
-     processeTo(builder);
-     return builder.toByteBuffer();
+ BytesBuilder builder = new BytesBuilder();
+ processeTo(builder);
+ return builder.toByteBuffer();
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.
@@ -623,7 +623,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Starts the processing, and returns the result as a new string with <a href="../base/chars/CharsKit.html#defaultCharset()"><code>CharsKit.defaultCharset()</code></a>. This method
  is equivalent to:
  <pre><code>
-     return new String(toByteArray(), CharsKit.defaultCharset());
+ return new String(toByteArray(), CharsKit.defaultCharset());
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.
@@ -656,7 +656,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Starts the processing, and returns the result as a new string with the specified charset. This method is
  equivalent to:
  <pre><code>
-     return new String(toByteArray(), charset);
+ return new String(toByteArray(), charset);
  </code></pre>
  <p>
  The position of the data source, if any, will be incremented by the actual read number.

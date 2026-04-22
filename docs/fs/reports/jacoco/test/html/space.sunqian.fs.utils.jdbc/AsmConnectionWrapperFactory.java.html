@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsmConnectionWrapperFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">AsmConnectionWrapperFactory.java</span></div><h1>AsmConnectionWrapperFactory.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.asm.ClassWriter;
+import space.sunqian.fs.asm.FieldVisitor;
+import space.sunqian.fs.asm.Label;
+import space.sunqian.fs.asm.MethodVisitor;
+import space.sunqian.fs.asm.Opcodes;
+import space.sunqian.fs.base.system.JvmKit;
+import space.sunqian.fs.dynamic.DynamicClassLoader;
+import space.sunqian.fs.object.pool.SimplePool;
+import space.sunqian.fs.reflect.TypeRef;
+import space.sunqian.fs.third.asm.AsmKit;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.sql.Connection;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
+import java.util.Arrays;
+
+final class AsmConnectionWrapperFactory {
+
+<span class="fc" id="L26">    static final @Nonnull SimpleJdbcPool.ConnectionWrapperFactory INST = AsmGenerator.newWrapperFactory();</span>
+
+    private AsmConnectionWrapperFactory() {
+    }
+
+    private static final class AsmGenerator {
+
+<span class="fc" id="L33">        private static final @Nonnull String POOLED_NAME = buildClassName(&quot;PooledConnection&quot;);</span>
+<span class="fc" id="L34">        private static final @Nonnull String PROVIDER_NAME = buildClassName(&quot;PooledConnectionWrapperFactory&quot;);</span>
+        // Connection
+<span class="fc" id="L36">        private static final @Nonnull String CONNECTION_INTERNAL_NAME = JvmKit.toInternalName(Connection.class);</span>
+<span class="fc" id="L37">        private static final @Nonnull String CONNECTION_DESCRIPTOR = JvmKit.toDescriptor(Connection.class);</span>
+        // SimplePool
+<span class="fc" id="L39">        private static final @Nonnull String POOL_INTERNAL_NAME = JvmKit.toInternalName(SimplePool.class);</span>
+<span class="fc" id="L40">        private static final @Nonnull String POOL_DESCRIPTOR = JvmKit.toDescriptor(SimplePool.class);</span>
+<span class="fc" id="L41">        private static final @Nullable String POOL_SIGNATURE = JvmKit.toSignature(new TypeRef&lt;SimplePool&lt;Connection&gt;&gt;() {}.type());</span>
+        // Exceptions
+<span class="fc" id="L43">        private static final @Nonnull String SQL_EXCEPTION_INTERNAL_NAME = JvmKit.toInternalName(SQLException.class);</span>
+<span class="fc" id="L44">        private static final @Nonnull String SQL_CLIENT_EXCEPTION_INTERNAL_NAME = JvmKit.toInternalName(SQLClientInfoException.class);</span>
+<span class="fc" id="L45">        private static final @Nonnull String @Nonnull [] SQL_EXCEPTIONS = {SQL_EXCEPTION_INTERNAL_NAME};</span>
+<span class="fc" id="L46">        private static final @Nonnull String @Nonnull [] SQL_CLIENT_EXCEPTIONS = {SQL_CLIENT_EXCEPTION_INTERNAL_NAME};</span>
+        // Provider
+<span class="fc" id="L48">        private static final @Nonnull String PROVIDER_INTERNAL_NAME = JvmKit.toInternalName(SimpleJdbcPool.ConnectionWrapperFactory.class);</span>
+<span class="fc" id="L49">        private static final @Nonnull String PROVIDER_DESCRIPTOR = JvmKit.toDescriptor(SimpleJdbcPool.ConnectionWrapperFactory.class);</span>
+        // Others
+<span class="fc" id="L51">        private static final @Nonnull String STRING_DESCRIPTOR = JvmKit.toDescriptor(String.class);</span>
+        // fields
+        private static final @Nonnull String FIELD_DELEGATE = &quot;delegate&quot;;
+        private static final @Nonnull String FIELD_POOL = &quot;pool&quot;;
+
+        static SimpleJdbcPool.ConnectionWrapperFactory newWrapperFactory() throws SqlRuntimeException {
+<span class="fc" id="L57">            byte[] pooledBytes = PooledAsm.bytecode();</span>
+<span class="fc" id="L58">            byte[] providerBytes = ProviderAsm.bytecode();</span>
+<span class="fc" id="L59">            DynamicClassLoader classLoader = new DynamicClassLoader();</span>
+<span class="fc" id="L60">            classLoader.loadClass(null, pooledBytes);</span>
+<span class="fc" id="L61">            Class&lt;?&gt; providerClass = classLoader.loadClass(null, providerBytes);</span>
+<span class="fc" id="L62">            Object inst = Fs.uncheck(() -&gt;</span>
+<span class="fc" id="L63">                    providerClass.getMethod(&quot;getInstance&quot;).invoke(null),</span>
+                SqlRuntimeException::new);
+<span class="fc" id="L65">            return (SimpleJdbcPool.ConnectionWrapperFactory) inst;</span>
+        }
+
+        private static class ProviderAsm {
+
+            static byte @Nonnull [] bytecode() {
+
+<span class="fc" id="L72">                ClassWriter classWriter = new ClassWriter(0);</span>
+                MethodVisitor methodVisitor;
+
+<span class="fc" id="L75">                classWriter.visit(</span>
+                    Opcodes.V1_8,
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+<span class="fc" id="L78">                    PROVIDER_NAME,</span>
+                    null,
+                    AsmKit.OBJECT_NAME,
+<span class="fc" id="L81">                    new String[]{PROVIDER_INTERNAL_NAME}</span>
+                );
+
+                {
+<span class="fc" id="L85">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PUBLIC,
+                        AsmKit.CONSTRUCTOR_NAME,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        null,
+                        null
+                    );
+<span class="fc" id="L92">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L93">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESPECIAL,
+                        AsmKit.OBJECT_NAME,
+                        AsmKit.CONSTRUCTOR_NAME,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        false
+                    );
+<span class="fc" id="L100">                    methodVisitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L101">                    methodVisitor.visitMaxs(1, 1);</span>
+<span class="fc" id="L102">                    methodVisitor.visitEnd();</span>
+                }
+                {
+<span class="fc" id="L105">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
+                        &quot;getInstance&quot;,
+<span class="fc" id="L108">                        &quot;()&quot; + PROVIDER_DESCRIPTOR,</span>
+                        null,
+                        null
+                    );
+<span class="fc" id="L112">                    methodVisitor.visitTypeInsn(Opcodes.NEW, PROVIDER_NAME);</span>
+<span class="fc" id="L113">                    methodVisitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L114">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESPECIAL,
+<span class="fc" id="L116">                        PROVIDER_NAME,</span>
+                        AsmKit.CONSTRUCTOR_NAME,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        false
+                    );
+<span class="fc" id="L121">                    methodVisitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L122">                    methodVisitor.visitMaxs(2, 0);</span>
+<span class="fc" id="L123">                    methodVisitor.visitEnd();</span>
+                }
+                {
+<span class="fc" id="L126">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PUBLIC,
+                        &quot;wrap&quot;,
+<span class="fc" id="L129">                        &quot;(&quot; + CONNECTION_DESCRIPTOR + POOL_DESCRIPTOR + &quot;)&quot; + CONNECTION_DESCRIPTOR,</span>
+<span class="fc" id="L130">                        &quot;(&quot; + CONNECTION_DESCRIPTOR + POOL_SIGNATURE + &quot;)&quot; + CONNECTION_DESCRIPTOR,</span>
+<span class="fc" id="L131">                        new String[]{JvmKit.toInternalName(SqlRuntimeException.class)}</span>
+                    );
+<span class="fc" id="L133">                    methodVisitor.visitCode();</span>
+<span class="fc" id="L134">                    methodVisitor.visitTypeInsn(Opcodes.NEW, POOLED_NAME);</span>
+<span class="fc" id="L135">                    methodVisitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L136">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L137">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L138">                    methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL,</span>
+<span class="fc" id="L139">                        POOLED_NAME,</span>
+                        AsmKit.CONSTRUCTOR_NAME,
+<span class="fc" id="L141">                        &quot;(&quot; + CONNECTION_DESCRIPTOR + POOL_DESCRIPTOR + &quot;)V&quot;,</span>
+                        false
+                    );
+<span class="fc" id="L144">                    methodVisitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L145">                    methodVisitor.visitMaxs(4, 3);</span>
+<span class="fc" id="L146">                    methodVisitor.visitEnd();</span>
+                }
+<span class="fc" id="L148">                classWriter.visitEnd();</span>
+
+<span class="fc" id="L150">                return classWriter.toByteArray();</span>
+            }
+        }
+
+        private static class PooledAsm {
+
+            static byte @Nonnull [] bytecode() {
+<span class="fc" id="L157">                ClassWriter classWriter = initClassWriter();</span>
+<span class="fc" id="L158">                initFields(classWriter);</span>
+<span class="fc" id="L159">                initMethods(classWriter);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">                for (Method method : Connection.class.getMethods()) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">                    if (method.getParameterCount() == 0) {</span>
+<span class="fc" id="L162">                        String methodName = method.getName();</span>
+<span class="fc bfc" id="L163" title="All 4 branches covered.">                        if (&quot;close&quot;.equals(methodName) || &quot;isClosed&quot;.equals(methodName)) {</span>
+<span class="fc" id="L164">                            continue;</span>
+                        }
+                    }
+<span class="fc" id="L167">                    initDelegateMethods(method, classWriter);</span>
+                }
+<span class="fc" id="L169">                classWriter.visitEnd();</span>
+<span class="fc" id="L170">                return classWriter.toByteArray();</span>
+            }
+
+            private static @Nonnull ClassWriter initClassWriter() {
+<span class="fc" id="L174">                ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);</span>
+<span class="fc" id="L175">                classWriter.visit(</span>
+                    Opcodes.V1_8,
+                    Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+<span class="fc" id="L178">                    POOLED_NAME,</span>
+                    null,
+                    AsmKit.OBJECT_NAME,
+<span class="fc" id="L181">                    new String[]{CONNECTION_INTERNAL_NAME}</span>
+                );
+<span class="fc" id="L183">                return classWriter;</span>
+            }
+
+            private static void initFields(@Nonnull ClassWriter classWriter) {
+                FieldVisitor fieldVisitor;
+                {
+                    // private static final String CONNECTION_CLOSED = &quot;Connection has closed.&quot;;
+<span class="fc" id="L190">                    fieldVisitor = classWriter.visitField(</span>
+                        Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL | Opcodes.ACC_STATIC,
+                        &quot;CONNECTION_CLOSED&quot;,
+<span class="fc" id="L193">                        STRING_DESCRIPTOR,</span>
+                        null,
+                        &quot;Connection has closed.&quot;
+                    );
+<span class="fc" id="L197">                    fieldVisitor.visitEnd();</span>
+                }
+                {
+                    // private final Connection delegate;
+<span class="fc" id="L201">                    fieldVisitor = classWriter.visitField(</span>
+                        Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                        FIELD_DELEGATE,
+<span class="fc" id="L204">                        CONNECTION_DESCRIPTOR,</span>
+                        null,
+                        null
+                    );
+<span class="fc" id="L208">                    fieldVisitor.visitEnd();</span>
+                }
+                {
+                    // private final @Nonnull SimplePool&lt;Connection&gt; pool;
+<span class="fc" id="L212">                    fieldVisitor = classWriter.visitField(</span>
+                        Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
+                        FIELD_POOL,
+<span class="fc" id="L215">                        POOL_DESCRIPTOR,</span>
+<span class="fc" id="L216">                        POOL_SIGNATURE,</span>
+                        null
+                    );
+<span class="fc" id="L219">                    fieldVisitor.visitEnd();</span>
+                }
+                {
+                    // private volatile boolean closed;
+<span class="fc" id="L223">                    fieldVisitor = classWriter.visitField(</span>
+                        Opcodes.ACC_PRIVATE | Opcodes.ACC_VOLATILE,
+                        &quot;closed&quot;,
+                        &quot;Z&quot;,
+                        null,
+                        null
+                    );
+<span class="fc" id="L230">                    fieldVisitor.visitEnd();</span>
+                }
+<span class="fc" id="L232">            }</span>
+
+            private static void initMethods(@Nonnull ClassWriter classWriter) {
+                MethodVisitor methodVisitor;
+                {
+                    /*
+                     * PooledConnection(@Nonnull Connection delegate, @Nonnull SimplePool&lt;Connection&gt; pool) {
+                     *     this.delegate = delegate;
+                     *     this.pool = pool;
+                     * }
+                     */
+<span class="fc" id="L243">                    methodVisitor = classWriter.visitMethod(</span>
+                        0,
+                        AsmKit.CONSTRUCTOR_NAME,
+<span class="fc" id="L246">                        &quot;(&quot; + CONNECTION_DESCRIPTOR + POOL_DESCRIPTOR + &quot;)V&quot;,</span>
+<span class="fc" id="L247">                        &quot;(&quot; + CONNECTION_DESCRIPTOR + POOL_SIGNATURE + &quot;)V&quot;,</span>
+                        null
+                    );
+<span class="fc" id="L250">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L251">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESPECIAL,
+                        AsmKit.OBJECT_NAME,
+                        AsmKit.CONSTRUCTOR_NAME,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        false
+                    );
+<span class="fc" id="L258">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L259">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);</span>
+<span class="fc" id="L260">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.PUTFIELD,
+<span class="fc" id="L262">                        POOLED_NAME,</span>
+                        FIELD_DELEGATE,
+<span class="fc" id="L264">                        CONNECTION_DESCRIPTOR</span>
+                    );
+<span class="fc" id="L266">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L267">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 2);</span>
+<span class="fc" id="L268">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.PUTFIELD,
+<span class="fc" id="L270">                        POOLED_NAME,</span>
+                        FIELD_POOL,
+<span class="fc" id="L272">                        POOL_DESCRIPTOR</span>
+                    );
+<span class="fc" id="L274">                    methodVisitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L275">                    methodVisitor.visitMaxs(2, 3);</span>
+<span class="fc" id="L276">                    methodVisitor.visitEnd();</span>
+                }
+                {
+                    /*
+                     * @Override
+                     * public synchronized void close() throws SQLException {
+                     *     closed = true;
+                     *     pool.release(delegate);
+                     * }
+                     */
+<span class="fc" id="L286">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PUBLIC | Opcodes.ACC_SYNCHRONIZED,
+                        &quot;close&quot;,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        null,
+<span class="fc" id="L291">                        SQL_EXCEPTIONS</span>
+                    );
+<span class="fc" id="L293">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L294">                    methodVisitor.visitInsn(Opcodes.ICONST_1);</span>
+<span class="fc" id="L295">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.PUTFIELD,
+<span class="fc" id="L297">                        POOLED_NAME,</span>
+                        &quot;closed&quot;,
+                        &quot;Z&quot;
+                    );
+<span class="fc" id="L301">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L302">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.GETFIELD,
+<span class="fc" id="L304">                        POOLED_NAME,</span>
+                        FIELD_POOL,
+<span class="fc" id="L306">                        POOL_DESCRIPTOR</span>
+                    );
+<span class="fc" id="L308">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L309">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.GETFIELD,
+<span class="fc" id="L311">                        POOLED_NAME,</span>
+                        FIELD_DELEGATE,
+<span class="fc" id="L313">                        CONNECTION_DESCRIPTOR</span>
+                    );
+<span class="fc" id="L315">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKEINTERFACE,
+<span class="fc" id="L317">                        POOL_INTERNAL_NAME,</span>
+                        &quot;release&quot;,
+                        &quot;(Ljava/lang/Object;)Z&quot;,
+                        true
+                    );
+<span class="fc" id="L322">                    methodVisitor.visitInsn(Opcodes.POP);</span>
+<span class="fc" id="L323">                    methodVisitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L324">                    methodVisitor.visitMaxs(2, 1);</span>
+<span class="fc" id="L325">                    methodVisitor.visitEnd();</span>
+                }
+                {
+                    /*
+                     * @Override
+                     * public synchronized boolean isClosed() throws SQLException {
+                     *     return closed;
+                     * }
+                     */
+<span class="fc" id="L334">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PUBLIC | Opcodes.ACC_SYNCHRONIZED,
+                        &quot;isClosed&quot;,
+                        &quot;()Z&quot;,
+                        null,
+<span class="fc" id="L339">                        SQL_EXCEPTIONS</span>
+                    );
+<span class="fc" id="L341">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L342">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.GETFIELD,
+<span class="fc" id="L344">                        POOLED_NAME,</span>
+                        &quot;closed&quot;,
+                        &quot;Z&quot;
+                    );
+<span class="fc" id="L348">                    methodVisitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L349">                    methodVisitor.visitMaxs(1, 1);</span>
+<span class="fc" id="L350">                    methodVisitor.visitEnd();</span>
+                }
+                {
+                    /*
+                     * private void checkClosed() throws SQLException {
+                     *     if (closed) {
+                     *         throw new SQLException(CONNECTION_CLOSED);
+                     *     }
+                     * }
+                     */
+<span class="fc" id="L360">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PRIVATE,
+                        &quot;checkClosed&quot;,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        null,
+<span class="fc" id="L365">                        SQL_EXCEPTIONS</span>
+                    );
+<span class="fc" id="L367">                    methodVisitor.visitCode();</span>
+<span class="fc" id="L368">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L369">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.GETFIELD,
+<span class="fc" id="L371">                        POOLED_NAME,</span>
+                        &quot;closed&quot;,
+                        &quot;Z&quot;
+                    );
+<span class="fc" id="L375">                    Label ifLabel = new Label();</span>
+<span class="fc" id="L376">                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, ifLabel);</span>
+<span class="fc" id="L377">                    methodVisitor.visitTypeInsn(Opcodes.NEW, SQL_EXCEPTION_INTERNAL_NAME);</span>
+<span class="fc" id="L378">                    methodVisitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L379">                    methodVisitor.visitLdcInsn(&quot;Connection has closed.&quot;);</span>
+<span class="fc" id="L380">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESPECIAL,
+<span class="fc" id="L382">                        SQL_EXCEPTION_INTERNAL_NAME,</span>
+                        AsmKit.CONSTRUCTOR_NAME,
+                        &quot;(Ljava/lang/String;)V&quot;,
+                        false
+                    );
+<span class="fc" id="L387">                    methodVisitor.visitInsn(Opcodes.ATHROW);</span>
+<span class="fc" id="L388">                    methodVisitor.visitLabel(ifLabel);</span>
+<span class="fc" id="L389">                    methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+<span class="fc" id="L390">                    methodVisitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L391">                    methodVisitor.visitMaxs(3, 1);</span>
+<span class="fc" id="L392">                    methodVisitor.visitEnd();</span>
+                }
+                {
+                    /*
+                     * private void checkClosedForClientInfo() throws SQLClientInfoException {
+                     *     if (closed) {
+                     *         throw new SQLClientInfoException(CONNECTION_CLOSED, Collections.emptyMap());
+                     *     }
+                     * }
+                     */
+<span class="fc" id="L402">                    methodVisitor = classWriter.visitMethod(</span>
+                        Opcodes.ACC_PRIVATE,
+                        &quot;checkClosedForClientInfo&quot;,
+                        AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                        null,
+<span class="fc" id="L407">                        SQL_CLIENT_EXCEPTIONS</span>
+                    );
+<span class="fc" id="L409">                    methodVisitor.visitCode();</span>
+<span class="fc" id="L410">                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L411">                    methodVisitor.visitFieldInsn(</span>
+                        Opcodes.GETFIELD,
+<span class="fc" id="L413">                        POOLED_NAME,</span>
+                        &quot;closed&quot;, &quot;Z&quot;
+                    );
+<span class="fc" id="L416">                    Label ifLabel = new Label();</span>
+<span class="fc" id="L417">                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, ifLabel);</span>
+<span class="fc" id="L418">                    methodVisitor.visitTypeInsn(Opcodes.NEW, SQL_CLIENT_EXCEPTION_INTERNAL_NAME);</span>
+<span class="fc" id="L419">                    methodVisitor.visitInsn(Opcodes.DUP);</span>
+<span class="fc" id="L420">                    methodVisitor.visitLdcInsn(&quot;Connection has closed.&quot;);</span>
+<span class="fc" id="L421">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESTATIC,
+                        &quot;java/util/Collections&quot;,
+                        &quot;emptyMap&quot;,
+                        &quot;()Ljava/util/Map;&quot;,
+                        false
+                    );
+<span class="fc" id="L428">                    methodVisitor.visitMethodInsn(</span>
+                        Opcodes.INVOKESPECIAL,
+<span class="fc" id="L430">                        SQL_CLIENT_EXCEPTION_INTERNAL_NAME,</span>
+                        AsmKit.CONSTRUCTOR_NAME,
+                        &quot;(Ljava/lang/String;Ljava/util/Map;)V&quot;,
+                        false
+                    );
+<span class="fc" id="L435">                    methodVisitor.visitInsn(Opcodes.ATHROW);</span>
+<span class="fc" id="L436">                    methodVisitor.visitLabel(ifLabel);</span>
+<span class="fc" id="L437">                    methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);</span>
+<span class="fc" id="L438">                    methodVisitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L439">                    methodVisitor.visitMaxs(4, 1);</span>
+<span class="fc" id="L440">                    methodVisitor.visitEnd();</span>
+                }
+<span class="fc" id="L442">            }</span>
+
+            private static void initDelegateMethods(@Nonnull Method method, @Nonnull ClassWriter classWriter) {
+                /*
+                 * @Override
+                 * public PreparedStatement prepareStatement(String sql) throws SQLException {
+                 *     checkClosed();
+                 *     return delegate.prepareStatement(sql);
+                 * }
+                 */
+<span class="fc" id="L452">                int modifiers = method.getModifiers() &amp; ~java.lang.reflect.Modifier.ABSTRACT;</span>
+                MethodVisitor methodVisitor;
+<span class="fc" id="L454">                String methodDescriptor = JvmKit.toDescriptor(method);</span>
+<span class="fc" id="L455">                String[] exceptions = JvmKit.toExceptions(method);</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">                String checkClosedMethod = Arrays.equals(SQL_CLIENT_EXCEPTIONS, exceptions) ?</span>
+                    &quot;checkClosedForClientInfo&quot; : &quot;checkClosed&quot;;
+<span class="fc" id="L458">                methodVisitor = classWriter.visitMethod(</span>
+                    modifiers,
+<span class="fc" id="L460">                    method.getName(),</span>
+                    methodDescriptor,
+<span class="fc" id="L462">                    JvmKit.toSignature(method),</span>
+                    exceptions
+                );
+<span class="fc" id="L465">                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L466">                methodVisitor.visitMethodInsn(</span>
+                    Opcodes.INVOKESPECIAL,
+<span class="fc" id="L468">                    POOLED_NAME,</span>
+                    checkClosedMethod,
+                    AsmKit.EMPTY_METHOD_DESCRIPTOR,
+                    false
+                );
+<span class="fc" id="L473">                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);</span>
+<span class="fc" id="L474">                methodVisitor.visitFieldInsn(</span>
+                    Opcodes.GETFIELD,
+<span class="fc" id="L476">                    POOLED_NAME,</span>
+                    FIELD_DELEGATE,
+<span class="fc" id="L478">                    CONNECTION_DESCRIPTOR</span>
+                );
+<span class="fc" id="L480">                Parameter[] parameters = method.getParameters();</span>
+<span class="fc" id="L481">                int pIndex = 1;</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">                for (Parameter parameter : parameters) {</span>
+<span class="fc" id="L483">                    AsmKit.visitLoad(methodVisitor, parameter.getType(), pIndex);</span>
+<span class="fc" id="L484">                    pIndex += AsmKit.varSize(parameter.getType());</span>
+                }
+<span class="fc" id="L486">                methodVisitor.visitMethodInsn(</span>
+                    Opcodes.INVOKEINTERFACE,
+<span class="fc" id="L488">                    CONNECTION_INTERNAL_NAME,</span>
+<span class="fc" id="L489">                    method.getName(),</span>
+                    methodDescriptor,
+                    true
+                );
+<span class="fc" id="L493">                AsmKit.visitReturn(methodVisitor, method.getReturnType(), false, false);</span>
+<span class="fc" id="L494">                methodVisitor.visitMaxs(0, 0);</span>
+<span class="fc" id="L495">                methodVisitor.visitEnd();</span>
+<span class="fc" id="L496">            }</span>
+        }
+
+        private static String buildClassName(@Nonnull String name) {
+<span class="fc" id="L500">            Package pkg = AsmGenerator.class.getPackage();</span>
+<span class="fc" id="L501">            return AsmKit.newClassInternalName(pkg, name);</span>
+        }
+
+        private AsmGenerator() {
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

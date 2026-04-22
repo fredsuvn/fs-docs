@@ -74,8 +74,8 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">NameFormatter</span></div>
-<div class="block">Name formatter, used to parse or format a given name. A name formatter represents a formatting scheme, such as
- <code>Camel Case</code>, <code>Snake Case</code>, <code>File Naming</code>, etc.</div>
+<div class="block">Name formatter, which is used to parse or format a given name. A name formatter represents a formatting scheme, such
+ as <code>Camel Case</code>, <code>Snake Case</code>, <code>File Naming</code>, etc.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -108,74 +108,81 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#delimiterCase(java.lang.CharSequence)" class="member-name-link">delimiterCase</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#delimiter(java.lang.CharSequence)" class="member-name-link">delimiter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, and keeps the original case of the word
+ (e.g.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#delimiter(java.lang.CharSequence,boolean)" class="member-name-link">delimiter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ boolean&nbsp;lower)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
+<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, and specifies the case of the word (e.g.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#delimiter(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter.Appender)" class="member-name-link">delimiter</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string">NameFormatter.Appender</a>&nbsp;appender)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#delimiterCase(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter.Appender)" class="member-name-link">delimiterCase</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
- <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string">NameFormatter.Appender</a>&nbsp;appender)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#fileNaming()" class="member-name-link">fileNaming</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#fileNaming()" class="member-name-link">fileNaming</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> used to separate file base name and file extension (e.g.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence...)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;words)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Joins the given words into a name by rules of this name formatter.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(java.lang.CharSequence%5B%5D,java.lang.Appendable)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;words,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a>&nbsp;dst)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Joins the given words into a name by rules of this name formatter.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a>&nbsp;otherFormatter)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Converts the given name from this name formatter to the other specified name formatter.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.value.Span%5B%5D)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;originalName,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;wordSpans)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence...)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;words)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Joins the words into a name by rules of this name formatter.</div>
+<div class="block">Joins the given words into a name by rules of this name formatter.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.value.Span%5B%5D,java.lang.Appendable)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;originalName,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;wordSpans,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(java.lang.CharSequence%5B%5D,java.lang.Appendable)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;words,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a>&nbsp;dst)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Joins the given words into a name by rules of this name formatter.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;origin,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a>&nbsp;toFormatter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Converts the given original name from this name formatter to the specified name formatter.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.value.Span%5B%5D)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;originalName,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;wordSpans)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Joins the words into a name by rules of this name formatter.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#lowerCamel()" class="member-name-link">lowerCamel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(java.lang.CharSequence,space.sunqian.fs.base.value.Span%5B%5D,java.lang.Appendable)" class="member-name-link">format</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;origin,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;wordSpans,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a>&nbsp;dst)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Joins the words into a name by rules of this name formatter.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#lowerCamel()" class="member-name-link">lowerCamel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> for lower camel case (e.g.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#parse(java.lang.CharSequence)" class="member-name-link">parse</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#parse(java.lang.CharSequence)" class="member-name-link">parse</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Parses the given name, splits it into an array of words by scheme of this formatter.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string">NameFormatter.Appender</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#simpleAppender()" class="member-name-link">simpleAppender</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string">NameFormatter.Appender</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#simpleAppender()" class="member-name-link">simpleAppender</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns an instance of <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter.Appender</code></a> which simply adds the word without any modifications.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tokenize(java.lang.CharSequence)" class="member-name-link">tokenize</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tokenize(java.lang.CharSequence)" class="member-name-link">tokenize</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Parses the given name, splits it into an array of words by scheme of this formatter.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#upperCamel()" class="member-name-link">upperCamel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#upperCamel()" class="member-name-link">upperCamel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> for upper camel case (e.g.</div>
 </div>
 </div>
@@ -221,32 +228,54 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="delimiterCase(java.lang.CharSequence)">
-<h3>delimiterCase</h3>
+<section class="detail" id="delimiter(java.lang.CharSequence)">
+<h3>delimiter</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></span>&nbsp;<span class="element-name">delimiterCase</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></span>&nbsp;<span class="element-name">delimiter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter)</span>
-                                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
-<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g. <code>some-name</code>, <code>some_name</code>).</div>
+                                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
+<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, and keeps the original case of the word
+ (e.g. <code>some-Name</code>, <code>some_Name</code>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>delimiter</code> - the specified delimiter</dd>
 <dt>Returns:</dt>
-<dd>a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g. <code>some-name</code>, <code>some_name</code>)</dd>
+<dd>a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, the original case is kept</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the delimiter is empty</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="delimiterCase(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter.Appender)">
-<h3>delimiterCase</h3>
+<section class="detail" id="delimiter(java.lang.CharSequence,boolean)">
+<h3>delimiter</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></span>&nbsp;<span class="element-name">delimiterCase</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></span>&nbsp;<span class="element-name">delimiter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
+ boolean&nbsp;lower)</span>
+                                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
+<div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, and specifies the case of the word (e.g.
+ <code>some-name</code>, <code>SOME_NAME</code>).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>delimiter</code> - the specified delimiter</dd>
+<dd><code>lower</code> - specifies the case of the word, <code>true</code> for lower, <code>false</code> for upper</dd>
+<dt>Returns:</dt>
+<dd>a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter, the case is specified</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the delimiter is empty</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="delimiter(java.lang.CharSequence,space.sunqian.fs.base.string.NameFormatter.Appender)">
+<h3>delimiter</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a></span>&nbsp;<span class="element-name">delimiter</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;delimiter,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="NameFormatter.Appender.html" title="interface in space.sunqian.fs.base.string">NameFormatter.Appender</a>&nbsp;appender)</span>
-                                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
+                                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
 <div class="block">Returns a new <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string"><code>NameFormatter</code></a> base on the specified delimiter (e.g. <code>some-name</code>, <code>some_name</code>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -385,7 +414,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="format(java.lang.CharSequence,space.sunqian.fs.base.value.Span[],java.lang.Appendable)">
 <h3>format</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">format</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;originalName,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;origin,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../value/Span.html" title="class in space.sunqian.fs.base.value">Span</a> <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> []&nbsp;wordSpans,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -396,7 +425,7 @@ loadScripts(document, 'script');</script>
  specified destination appendable.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>originalName</code> - the given original name where the word spans are derived</dd>
+<dd><code>origin</code> - the given original name where the word spans are derived</dd>
 <dd><code>wordSpans</code> - the array of <a href="../value/Span.html" title="class in space.sunqian.fs.base.value"><code>Span</code></a> that define the range of each word within the given original name</dd>
 <dd><code>dst</code> - the specified destination appendable</dd>
 <dt>Throws:</dt>
@@ -409,16 +438,16 @@ loadScripts(document, 'script');</script>
 <h3>format</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
 </span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">format</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;name,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;origin,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a>&nbsp;otherFormatter)</span>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="NameFormatter.html" title="interface in space.sunqian.fs.base.string">NameFormatter</a>&nbsp;toFormatter)</span>
                         throws <span class="exceptions"><a href="NameFormatException.html" title="class in space.sunqian.fs.base.string">NameFormatException</a></span></div>
-<div class="block">Converts the given name from this name formatter to the other specified name formatter. This method is equivalent
- to: <code>otherFormatter.format(name, tokenize(name))</code>.</div>
+<div class="block">Converts the given original name from this name formatter to the specified name formatter. This method is
+ equivalent to: <code>toFormatter.format(origin, tokenize(name))</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>name</code> - the given name</dd>
-<dd><code>otherFormatter</code> - the other specified name formatter</dd>
+<dd><code>origin</code> - the given name</dd>
+<dd><code>toFormatter</code> - the specified name formatter to convert to</dd>
 <dt>Returns:</dt>
 <dd>the converted name</dd>
 <dt>Throws:</dt>

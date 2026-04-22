@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">SqlBack.java</span></div><h1>SqlBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.collect.ListKit;
+
+import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+final class SqlBack {
+
+    static @Nonnull PreparedStatement createPreparedStatement(
+        @Nonnull PreparedSql preparedSql, @Nonnull Connection connection
+    ) throws SQLException {
+<span class="fc" id="L24">        PreparedStatement statement =</span>
+<span class="fc" id="L25">            connection.prepareStatement(preparedSql.preparedSql(), Statement.RETURN_GENERATED_KEYS);</span>
+<span class="fc" id="L26">        List&lt;Object&gt; parameters = preparedSql.parameters();</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        for (int i = 0; i &lt; parameters.size(); i++) {</span>
+<span class="fc" id="L28">            statement.setObject(i + 1, parameters.get(i));</span>
+        }
+<span class="fc" id="L30">        return statement;</span>
+    }
+
+    static @Nonnull PreparedStatement createPreparedStatement(
+        @Nonnull PreparedBatchSql preparedBatchSql, @Nonnull Connection connection
+    ) throws SQLException {
+<span class="fc" id="L36">        PreparedStatement statement =</span>
+<span class="fc" id="L37">            connection.prepareStatement(preparedBatchSql.preparedSql(), Statement.RETURN_GENERATED_KEYS);</span>
+<span class="fc" id="L38">        statement.clearBatch();</span>
+<span class="fc" id="L39">        List&lt;List&lt;Object&gt;&gt; batchParameters = preparedBatchSql.batchParameters();</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (List&lt;Object&gt; batchParameter : batchParameters) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            for (int i = 0; i &lt; batchParameter.size(); i++) {</span>
+<span class="fc" id="L42">                statement.setObject(i + 1, batchParameter.get(i));</span>
+            }
+<span class="fc" id="L44">            statement.addBatch();</span>
+<span class="fc" id="L45">        }</span>
+<span class="fc" id="L46">        return statement;</span>
+    }
+
+    static @Nonnull SqlBuilder newBuilder() {
+<span class="fc" id="L50">        return new SqlBuilderImpl();</span>
+    }
+
+    static &lt;T&gt; @Nonnull SqlQuery&lt;T&gt; newQuery(
+        @Nonnull Statement statement,
+        @Nonnull Type type
+    ) {
+<span class="fc" id="L57">        return new SqlQueryImpl&lt;&gt;(statement, type);</span>
+    }
+
+    static @Nonnull SqlUpdate newUpdate(@Nonnull Statement statement) {
+<span class="fc" id="L61">        return new SqlUpdateImpl(statement);</span>
+    }
+
+    static @Nonnull SqlInsert newInsert(
+        @Nonnull Statement statement
+    ) {
+<span class="fc" id="L67">        return new SqlInsertImpl(statement);</span>
+    }
+
+    static @Nonnull SqlBatch newBatchResult(
+        @Nonnull Statement statement
+    ) {
+<span class="fc" id="L73">        return new SqlBatchImpl(statement);</span>
+    }
+
+<span class="fc" id="L76">    private static final class SqlBuilderImpl implements SqlBuilder {</span>
+
+<span class="fc" id="L78">        private final @Nonnull StringBuilder sqlBuilder = new StringBuilder();</span>
+        private @Nullable List&lt;Object&gt; parameters;
+
+        @Override
+        public @Nonnull SqlBuilder append(@Nonnull String sql) {
+<span class="fc" id="L83">            sqlBuilder.append(sql);</span>
+<span class="fc" id="L84">            return this;</span>
+        }
+
+        @Override
+        public @Nonnull SqlBuilder append(@Nonnull String sql, @Nullable Object param) {
+<span class="fc" id="L89">            sqlBuilder.append(sql);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            if (param instanceof Collection&lt;?&gt;) {</span>
+                @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L92">                Collection&lt;?&gt; collection = (Collection&lt;?&gt;) param;</span>
+<span class="fc" id="L93">                parameters().addAll(collection);</span>
+<span class="fc" id="L94">                sqlBuilder.append(join(collection));</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            } else if (param instanceof Iterable&lt;?&gt;) {</span>
+                @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L97">                Iterable&lt;?&gt; iterable = (Iterable&lt;?&gt;) param;</span>
+<span class="fc" id="L98">                Collection&lt;?&gt; collection = ListKit.toList(iterable);</span>
+<span class="fc" id="L99">                parameters().addAll(collection);</span>
+<span class="fc" id="L100">                sqlBuilder.append(join(collection));</span>
+<span class="fc" id="L101">            } else {</span>
+                // Handle single parameter
+<span class="fc" id="L103">                sqlBuilder.append(&quot;?&quot;);</span>
+<span class="fc" id="L104">                parameters().add(param);</span>
+            }
+<span class="fc" id="L106">            return this;</span>
+        }
+
+        private @Nonnull List&lt;Object&gt; parameters() {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">            if (parameters == null) {</span>
+<span class="fc" id="L111">                parameters = new ArrayList&lt;&gt;();</span>
+            }
+<span class="fc" id="L113">            return parameters;</span>
+        }
+
+        private @Nonnull String join(Collection&lt;?&gt; collection) {
+<span class="fc bfc" id="L117" title="All 2 branches covered.">            if (collection.isEmpty()) {</span>
+<span class="fc" id="L118">                return &quot;&quot;;</span>
+            }
+<span class="fc" id="L120">            int size = collection.size();</span>
+<span class="fc" id="L121">            char[] chars = new char[size * 2 - 1];</span>
+<span class="fc" id="L122">            chars[0] = '?';</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            for (int i = 1; i &lt; chars.length; i += 2) {</span>
+<span class="fc" id="L124">                chars[i] = ',';</span>
+<span class="fc" id="L125">                chars[i + 1] = '?';</span>
+            }
+<span class="fc" id="L127">            return new String(chars);</span>
+        }
+
+        @Override
+        public @Nonnull PreparedSql build() {
+<span class="fc" id="L132">            return new PreparedSqlImpl(</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">                sqlBuilder.toString(),</span>
+<span class="fc" id="L134">                parameters == null ? Collections.emptyList() : parameters</span>
+            );
+        }
+
+        @Override
+        public @Nonnull PreparedBatchSql buildBatch() {
+<span class="fc" id="L140">            return new PreparedBatchSqlImpl(sqlBuilder.toString());</span>
+        }
+    }
+
+    private static final class PreparedSqlImpl implements PreparedSql {
+
+        private final @Nonnull String preparedSql;
+        private final @Nonnull List&lt;Object&gt; parameters;
+
+<span class="fc" id="L149">        private PreparedSqlImpl(@Nonnull String preparedSql, @Nonnull @RetainedParam List&lt;Object&gt; parameters) {</span>
+<span class="fc" id="L150">            this.preparedSql = preparedSql;</span>
+<span class="fc" id="L151">            this.parameters = parameters;</span>
+<span class="fc" id="L152">        }</span>
+
+        @Override
+        public @Nonnull String preparedSql() {
+<span class="fc" id="L156">            return preparedSql;</span>
+        }
+
+        @Override
+        public @Nonnull @Immutable List&lt;Object&gt; parameters() {
+<span class="fc" id="L161">            return parameters;</span>
+        }
+    }
+
+    private static final class PreparedBatchSqlImpl implements PreparedBatchSql {
+
+        private final @Nonnull String preparedSql;
+<span class="fc" id="L168">        private final @Nonnull List&lt;List&lt;Object&gt;&gt; batchedParameters = new ArrayList&lt;&gt;();</span>
+
+        private @Nullable Connection connection;
+
+<span class="fc" id="L172">        private PreparedBatchSqlImpl(@Nonnull String preparedSql) {</span>
+<span class="fc" id="L173">            this.preparedSql = preparedSql;</span>
+<span class="fc" id="L174">        }</span>
+
+        @Override
+        public @Nonnull String preparedSql() {
+<span class="fc" id="L178">            return preparedSql;</span>
+        }
+
+        @Override
+        public @Nonnull @Immutable List&lt;@Nonnull List&lt;Object&gt;&gt; batchParameters() {
+<span class="fc" id="L183">            return Collections.unmodifiableList(batchedParameters);</span>
+        }
+
+        @Override
+        public @Nonnull PreparedBatchSql batchParameters(@Nonnull List&lt;@Nonnull List&lt;Object&gt;&gt; batchParameters) {
+<span class="fc" id="L188">            batchedParameters.addAll(batchParameters);</span>
+<span class="fc" id="L189">            return this;</span>
+        }
+
+        @Override
+        public @Nonnull PreparedBatchSql parameters(@Nonnull List&lt;Object&gt; parameters) {
+<span class="fc" id="L194">            batchedParameters.add(parameters);</span>
+<span class="fc" id="L195">            return this;</span>
+        }
+    }
+
+    private static final class SqlQueryImpl&lt;T&gt; implements SqlQuery&lt;T&gt; {
+
+        private final @Nonnull Statement statement;
+        private final @Nonnull Type type;
+
+        private SqlQueryImpl(
+            @Nonnull Statement statement,
+            @Nonnull Type type
+<span class="fc" id="L207">        ) {</span>
+<span class="fc" id="L208">            this.statement = statement;</span>
+<span class="fc" id="L209">            this.type = type;</span>
+<span class="fc" id="L210">        }</span>
+
+        @Override
+        public @Nonnull Type type() {
+<span class="fc" id="L214">            return type;</span>
+        }
+
+        @Override
+        public @Nonnull Statement statement() {
+<span class="fc" id="L219">            return statement;</span>
+        }
+    }
+
+    private static final class SqlUpdateImpl implements SqlUpdate {
+
+        private final @Nonnull Statement statement;
+
+<span class="fc" id="L227">        private SqlUpdateImpl(@Nonnull Statement statement) {</span>
+<span class="fc" id="L228">            this.statement = statement;</span>
+<span class="fc" id="L229">        }</span>
+
+        @Override
+        public @Nonnull Statement statement() {
+<span class="fc" id="L233">            return statement;</span>
+        }
+    }
+
+    private static final class SqlInsertImpl implements SqlInsert {
+
+        private final @Nonnull Statement statement;
+        private volatile @Nullable List&lt;@Nonnull Object&gt; autoGeneratedKeys;
+
+<span class="fc" id="L242">        private SqlInsertImpl(@Nonnull Statement statement) {</span>
+<span class="fc" id="L243">            this.statement = statement;</span>
+<span class="fc" id="L244">        }</span>
+
+        @Override
+        public @Nonnull Statement statement() {
+<span class="fc" id="L248">            return statement;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Object&gt; autoGeneratedKeys() throws SqlRuntimeException {
+<span class="fc" id="L253">            List&lt;@Nonnull Object&gt; keys = autoGeneratedKeys;</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">            if (keys == null) {</span>
+<span class="fc" id="L255">                keys = SqlInsert.super.autoGeneratedKeys();</span>
+<span class="fc" id="L256">                autoGeneratedKeys = keys;</span>
+            }
+<span class="fc" id="L258">            return keys;</span>
+        }
+    }
+
+    private static final class SqlBatchImpl implements SqlBatch {
+
+        private final @Nonnull Statement statement;
+
+<span class="fc" id="L266">        private SqlBatchImpl(@Nonnull Statement statement) {</span>
+<span class="fc" id="L267">            this.statement = statement;</span>
+<span class="fc" id="L268">        }</span>
+
+        @Override
+        public @Nonnull Statement statement() {
+<span class="fc" id="L272">            return statement;</span>
+        }
+    }
+
+    private SqlBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

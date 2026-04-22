@@ -77,21 +77,22 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../object/data/ObjectBuilderProvider.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider.Handler</a></code></dd>
+<dd><code><a href="../../object/builder/BuilderOperatorProvider.Handler.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider.Handler</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProtobufBuilderHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../object/data/ObjectBuilderProvider.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider.Handler</a></span></div>
-<div class="block"><a href="../../object/data/ObjectBuilderProvider.Handler.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider.Handler</code></a> implementation for
+implements <a href="../../object/builder/BuilderOperatorProvider.Handler.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider.Handler</a></span></div>
+<div class="block"><a href="../../object/builder/BuilderOperatorProvider.Handler.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperatorProvider.Handler</code></a> implementation for
  <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffers</a>, can be quickly used through similar
  codes:
  <pre><code>
- ObjectBuilderProvider provider = ObjectBuilderProvider
-     .defaultProvider()
-     .withFirstHandler(new ProtobufBuilderHandler());
+ BuilderOperatorProvider provider = ...;
+ BuilderOperatorProvider protoProvider = provider
+     .withFirstHandler(ProtobufBuilderHandler.getInstance());
  </code></pre>
- To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment.</div>
+ To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment. And in this
+ environment, the <a href="../../object/builder/BuilderOperatorProvider.html#defaultProvider()"><code>BuilderOperatorProvider.defaultProvider()</code></a> will automatically load this handler.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -115,16 +116,22 @@ implements <a href="../../object/data/ObjectBuilderProvider.Handler.html" title=
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../../object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data">ObjectBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBuilder(java.lang.reflect.Type)" class="member-name-link">newBuilder</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Creates and returns a new <a href="../../object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilder</code></a>, or <code>null</code> if the target type is unsupported.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufBuilderHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufBuilderHandler</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a same one instance of this handler.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../../object/builder/BuilderOperator.html" title="interface in space.sunqian.fs.object.builder">BuilderOperator</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newOperator(java.lang.reflect.Type)" class="member-name-link">newOperator</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates and returns a new <a href="../../object/builder/BuilderOperator.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperator</code></a> for the target type, or <code>null</code> if the target type is
+ unsupported.</div>
 </div>
 </div>
 </div>
@@ -165,21 +172,30 @@ implements <a href="../../object/data/ObjectBuilderProvider.Handler.html" title=
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="newBuilder(java.lang.reflect.Type)">
-<h3>newBuilder</h3>
+<section class="detail" id="getInstance()">
+<h3>getInstance</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufBuilderHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufBuilderHandler</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Returns a same one instance of this handler.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="newOperator(java.lang.reflect.Type)">
+<h3>newOperator</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../../object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data">ObjectBuilder</a></span>&nbsp;<span class="element-name">newBuilder</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="../../object/builder/BuilderOperator.html" title="interface in space.sunqian.fs.object.builder">BuilderOperator</a></span>&nbsp;<span class="element-name">newOperator</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target)</span>
-                                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../object/data/ObjectBuilderProvider.Handler.html#newBuilder(java.lang.reflect.Type)">ObjectBuilderProvider.Handler</a></code></span></div>
-<div class="block">Creates and returns a new <a href="../../object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilder</code></a>, or <code>null</code> if the target type is unsupported.</div>
+                                      throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../object/builder/BuilderOperatorProvider.Handler.html#newOperator(java.lang.reflect.Type)">BuilderOperatorProvider.Handler</a></code></span></div>
+<div class="block">Creates and returns a new <a href="../../object/builder/BuilderOperator.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperator</code></a> for the target type, or <code>null</code> if the target type is
+ unsupported.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../object/data/ObjectBuilderProvider.Handler.html#newBuilder(java.lang.reflect.Type)">newBuilder</a></code>&nbsp;in interface&nbsp;<code><a href="../../object/data/ObjectBuilderProvider.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectBuilderProvider.Handler</a></code></dd>
+<dd><code><a href="../../object/builder/BuilderOperatorProvider.Handler.html#newOperator(java.lang.reflect.Type)">newOperator</a></code>&nbsp;in interface&nbsp;<code><a href="../../object/builder/BuilderOperatorProvider.Handler.html" title="interface in space.sunqian.fs.object.builder">BuilderOperatorProvider.Handler</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>target</code> - the target type</dd>
 <dt>Returns:</dt>
-<dd>a new <a href="../../object/data/ObjectBuilder.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilder</code></a>, or <code>null</code> if the target type is unsupported</dd>
+<dd>a new <a href="../../object/builder/BuilderOperator.html" title="interface in space.sunqian.fs.object.builder"><code>BuilderOperator</code></a>, or <code>null</code> if the target type is unsupported</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code> - if an error occurs</dd>
 </dl>

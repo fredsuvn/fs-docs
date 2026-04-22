@@ -3,8 +3,12 @@
 import space.sunqian.annotation.Nonnull;
 import space.sunqian.annotation.Nullable;
 import space.sunqian.fs.base.exception.UnknownArrayTypeException;
+import space.sunqian.fs.object.schema.ObjectProperty;
+import space.sunqian.fs.object.schema.ObjectSchema;
+import space.sunqian.fs.object.schema.ObjectSchemaParser;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -26,7 +30,7 @@ public class ObjectKit {
      * @return whether the given objects are equal
      */
     public static boolean equals(@Nullable Object a, @Nullable Object b) {
-<span class="fc" id="L29">        return equalsWith(a, b, true, true);</span>
+<span class="fc" id="L33">        return equalsWith(a, b, true, true);</span>
     }
 
     /**
@@ -36,12 +40,12 @@ public class ObjectKit {
      * @return whether the given objects are equal
      */
     public static boolean equalsAll(@Nullable Object @Nonnull ... objects) {
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (int i = 0; i &lt; objects.length - 1; i++) {</span>
-<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (!equals(objects[i], objects[i + 1])) {</span>
-<span class="fc" id="L41">                return false;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (int i = 0; i &lt; objects.length - 1; i++) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (!equals(objects[i], objects[i + 1])) {</span>
+<span class="fc" id="L45">                return false;</span>
             }
         }
-<span class="fc" id="L44">        return true;</span>
+<span class="fc" id="L48">        return true;</span>
     }
 
     /**
@@ -71,44 +75,44 @@ public class ObjectKit {
      * @return whether the given objects are equal
      */
     public static boolean equalsWith(@Nullable Object a, @Nullable Object b, boolean arrayEquals, boolean deep) {
-<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (a == b) {</span>
-<span class="fc" id="L75">            return true;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (a == b) {</span>
+<span class="fc" id="L79">            return true;</span>
         }
-<span class="fc bfc" id="L77" title="All 4 branches covered.">        if (a == null || b == null) {</span>
-<span class="fc" id="L78">            return false;</span>
+<span class="fc bfc" id="L81" title="All 4 branches covered.">        if (a == null || b == null) {</span>
+<span class="fc" id="L82">            return false;</span>
         }
-<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (!arrayEquals) {</span>
-<span class="fc" id="L81">            return Objects.equals(a, b);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (!arrayEquals) {</span>
+<span class="fc" id="L85">            return Objects.equals(a, b);</span>
         }
-<span class="fc" id="L83">        Class&lt;?&gt; typeA = a.getClass();</span>
-<span class="fc" id="L84">        Class&lt;?&gt; typeB = b.getClass();</span>
-<span class="fc bfc" id="L85" title="All 4 branches covered.">        if (typeA.isArray() &amp;&amp; Objects.equals(typeA, typeB)) {</span>
-<span class="fc" id="L86">            return equalsArray(a, b, deep);</span>
+<span class="fc" id="L87">        Class&lt;?&gt; typeA = a.getClass();</span>
+<span class="fc" id="L88">        Class&lt;?&gt; typeB = b.getClass();</span>
+<span class="fc bfc" id="L89" title="All 4 branches covered.">        if (typeA.isArray() &amp;&amp; Objects.equals(typeA, typeB)) {</span>
+<span class="fc" id="L90">            return equalsArray(a, b, deep);</span>
         }
-<span class="fc" id="L88">        return Objects.equals(a, b);</span>
+<span class="fc" id="L92">        return Objects.equals(a, b);</span>
     }
 
     private static boolean equalsArray(@Nonnull Object a, @Nonnull Object b, boolean deep) {
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (a instanceof Object[]) {</span>
-<span class="fc bfc" id="L93" title="All 2 branches covered.">            return deep ? Arrays.deepEquals((Object[]) a, (Object[]) b) : Arrays.equals((Object[]) a, (Object[]) b);</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        } else if (a instanceof boolean[]) {</span>
-<span class="fc" id="L95">            return Arrays.equals((boolean[]) a, (boolean[]) b);</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        } else if (a instanceof byte[]) {</span>
-<span class="fc" id="L97">            return Arrays.equals((byte[]) a, (byte[]) b);</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        } else if (a instanceof short[]) {</span>
-<span class="fc" id="L99">            return Arrays.equals((short[]) a, (short[]) b);</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        } else if (a instanceof char[]) {</span>
-<span class="fc" id="L101">            return Arrays.equals((char[]) a, (char[]) b);</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        } else if (a instanceof int[]) {</span>
-<span class="fc" id="L103">            return Arrays.equals((int[]) a, (int[]) b);</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">        } else if (a instanceof long[]) {</span>
-<span class="fc" id="L105">            return Arrays.equals((long[]) a, (long[]) b);</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        } else if (a instanceof float[]) {</span>
-<span class="fc" id="L107">            return Arrays.equals((float[]) a, (float[]) b);</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        } else if (a instanceof double[]) {</span>
-<span class="fc" id="L109">            return Arrays.equals((double[]) a, (double[]) b);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (a instanceof Object[]) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            return deep ? Arrays.deepEquals((Object[]) a, (Object[]) b) : Arrays.equals((Object[]) a, (Object[]) b);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        } else if (a instanceof boolean[]) {</span>
+<span class="fc" id="L99">            return Arrays.equals((boolean[]) a, (boolean[]) b);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        } else if (a instanceof byte[]) {</span>
+<span class="fc" id="L101">            return Arrays.equals((byte[]) a, (byte[]) b);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        } else if (a instanceof short[]) {</span>
+<span class="fc" id="L103">            return Arrays.equals((short[]) a, (short[]) b);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        } else if (a instanceof char[]) {</span>
+<span class="fc" id="L105">            return Arrays.equals((char[]) a, (char[]) b);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        } else if (a instanceof int[]) {</span>
+<span class="fc" id="L107">            return Arrays.equals((int[]) a, (int[]) b);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        } else if (a instanceof long[]) {</span>
+<span class="fc" id="L109">            return Arrays.equals((long[]) a, (long[]) b);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        } else if (a instanceof float[]) {</span>
+<span class="fc" id="L111">            return Arrays.equals((float[]) a, (float[]) b);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        } else if (a instanceof double[]) {</span>
+<span class="fc" id="L113">            return Arrays.equals((double[]) a, (double[]) b);</span>
         }
-<span class="fc" id="L111">        throw new UnknownArrayTypeException(a.getClass());</span>
+<span class="fc" id="L115">        throw new UnknownArrayTypeException(a.getClass());</span>
     }
 
     /**
@@ -121,7 +125,7 @@ public class ObjectKit {
      * @return the hashcode of the given object
      */
     public static int hashCode(@Nullable Object obj) {
-<span class="fc" id="L124">        return hashWith(obj, true, true);</span>
+<span class="fc" id="L128">        return hashWith(obj, true, true);</span>
     }
 
     /**
@@ -131,7 +135,7 @@ public class ObjectKit {
      * @return the hashcode of the given objects via {@link Arrays#deepHashCode(Object[])}
      */
     public static int hashAll(@Nullable Object @Nonnull ... objs) {
-<span class="fc" id="L134">        return Arrays.deepHashCode(objs);</span>
+<span class="fc" id="L138">        return Arrays.deepHashCode(objs);</span>
     }
 
     /**
@@ -160,45 +164,45 @@ public class ObjectKit {
      * @return the hashcode of the given object
      */
     public static int hashWith(@Nullable Object obj, boolean arrayHash, boolean deep) {
-<span class="fc bfc" id="L163" title="All 4 branches covered.">        if (obj == null || !arrayHash) {</span>
-<span class="fc" id="L164">            return Objects.hashCode(obj);</span>
+<span class="fc bfc" id="L167" title="All 4 branches covered.">        if (obj == null || !arrayHash) {</span>
+<span class="fc" id="L168">            return Objects.hashCode(obj);</span>
         }
-<span class="fc" id="L166">        Class&lt;?&gt; cls = obj.getClass();</span>
-<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (cls.isArray()) {</span>
-<span class="fc" id="L168">            return hashArray(obj, deep);</span>
+<span class="fc" id="L170">        Class&lt;?&gt; cls = obj.getClass();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (cls.isArray()) {</span>
+<span class="fc" id="L172">            return hashArray(obj, deep);</span>
         }
-<span class="fc" id="L170">        return obj.hashCode();</span>
+<span class="fc" id="L174">        return obj.hashCode();</span>
     }
 
     private static int hashArray(@Nonnull Object obj, boolean deep) {
-<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (obj instanceof Object[]) {</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">            return deep ? Arrays.deepHashCode((Object[]) obj) : Arrays.hashCode((Object[]) obj);</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (obj instanceof Object[]) {</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">            return deep ? Arrays.deepHashCode((Object[]) obj) : Arrays.hashCode((Object[]) obj);</span>
         }
-<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (obj instanceof boolean[]) {</span>
-<span class="fc" id="L178">            return Arrays.hashCode((boolean[]) obj);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (obj instanceof boolean[]) {</span>
+<span class="fc" id="L182">            return Arrays.hashCode((boolean[]) obj);</span>
         }
-<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (obj instanceof byte[]) {</span>
-<span class="fc" id="L181">            return Arrays.hashCode((byte[]) obj);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (obj instanceof byte[]) {</span>
+<span class="fc" id="L185">            return Arrays.hashCode((byte[]) obj);</span>
         }
-<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (obj instanceof short[]) {</span>
-<span class="fc" id="L184">            return Arrays.hashCode((short[]) obj);</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        if (obj instanceof short[]) {</span>
+<span class="fc" id="L188">            return Arrays.hashCode((short[]) obj);</span>
         }
-<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (obj instanceof char[]) {</span>
-<span class="fc" id="L187">            return Arrays.hashCode((char[]) obj);</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (obj instanceof char[]) {</span>
+<span class="fc" id="L191">            return Arrays.hashCode((char[]) obj);</span>
         }
-<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (obj instanceof int[]) {</span>
-<span class="fc" id="L190">            return Arrays.hashCode((int[]) obj);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (obj instanceof int[]) {</span>
+<span class="fc" id="L194">            return Arrays.hashCode((int[]) obj);</span>
         }
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (obj instanceof long[]) {</span>
-<span class="fc" id="L193">            return Arrays.hashCode((long[]) obj);</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (obj instanceof long[]) {</span>
+<span class="fc" id="L197">            return Arrays.hashCode((long[]) obj);</span>
         }
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (obj instanceof float[]) {</span>
-<span class="fc" id="L196">            return Arrays.hashCode((float[]) obj);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (obj instanceof float[]) {</span>
+<span class="fc" id="L200">            return Arrays.hashCode((float[]) obj);</span>
         }
-<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (obj instanceof double[]) {</span>
-<span class="fc" id="L199">            return Arrays.hashCode((double[]) obj);</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (obj instanceof double[]) {</span>
+<span class="fc" id="L203">            return Arrays.hashCode((double[]) obj);</span>
         }
-<span class="fc" id="L201">        throw new UnknownArrayTypeException(obj.getClass());</span>
+<span class="fc" id="L205">        throw new UnknownArrayTypeException(obj.getClass());</span>
     }
 
     /**
@@ -209,7 +213,81 @@ public class ObjectKit {
      * @return the identity hashcode of the given object
      */
     public static int id(@Nullable Object obj) {
-<span class="fc" id="L212">        return System.identityHashCode(obj);</span>
+<span class="fc" id="L216">        return System.identityHashCode(obj);</span>
+    }
+
+    /**
+     * Returns the value of the specified property from the given object.
+     * &lt;p&gt;
+     * This method supports nested property access using dot notation (e.g., &quot;parent.child.property&quot;). If any part of
+     * the property path is not found or is {@code null}, this method returns {@code null}.
+     * &lt;p&gt;
+     * Note this method use {@link ObjectSchemaParser#defaultCachedParser()} to parse object schemas, it is equivalent
+     * to:
+     * &lt;pre&gt;{@code
+     * ObjectKit.getPropertyValue(object, propertyName, ObjectSchemaParser.defaultCachedParser());
+     * }&lt;/pre&gt;
+     *
+     * @param object       the given object from which to retrieve the property value
+     * @param propertyName the name of the property to retrieve, supporting dot notation for nested properties
+     * @return the value of the specified property, or {@code null} if the property path is not found or is {@code null}
+     */
+    public static @Nullable Object getPropertyValue(
+        @Nullable Object object,
+        @Nonnull String propertyName
+    ) {
+<span class="fc" id="L239">        return getPropertyValue(object, propertyName, ObjectSchemaParser.defaultCachedParser());</span>
+    }
+
+    /**
+     * Returns the value of the specified property from the given object.
+     * &lt;p&gt;
+     * This method supports nested property access using dot notation (e.g., &quot;parent.child.property&quot;). If any part of
+     * the property path is not found or is {@code null}, this method returns {@code null}.
+     *
+     * @param object       the given object from which to retrieve the property value
+     * @param propertyName the name of the property to retrieve, supporting dot notation for nested properties
+     * @param objectParser the parser used to resolve object schemas
+     * @return the value of the specified property, or {@code null} if the property path is not found or is {@code null}
+     */
+    public static @Nullable Object getPropertyValue(
+        @Nullable Object object,
+        @Nonnull String propertyName,
+        @Nonnull ObjectSchemaParser objectParser
+    ) {
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (object == null) {</span>
+<span class="fc" id="L259">            return null;</span>
+        }
+<span class="fc" id="L261">        int start = 0;</span>
+<span class="fc" id="L262">        Object cur = object;</span>
+        while (true) {
+<span class="fc" id="L264">            int nextDotIndex = propertyName.indexOf('.', start);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">            if (nextDotIndex == -1) {</span>
+<span class="fc" id="L266">                return getPropertyValue0(cur, propertyName.substring(start), objectParser);</span>
+            } else {
+<span class="fc" id="L268">                cur = getPropertyValue0(cur, propertyName.substring(start, nextDotIndex), objectParser);</span>
+<span class="fc" id="L269">                start = nextDotIndex + 1;</span>
+            }
+<span class="fc" id="L271">        }</span>
+    }
+
+    private static @Nullable Object getPropertyValue0(
+        @Nullable Object object,
+        @Nonnull String propertyName,
+        @Nonnull ObjectSchemaParser objectParser
+    ) {
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (object == null) {</span>
+<span class="fc" id="L280">            return null;</span>
+        }
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (object instanceof Map&lt;?, ?&gt;) {</span>
+<span class="fc" id="L283">            return ((Map&lt;?, ?&gt;) object).get(propertyName);</span>
+        }
+<span class="fc" id="L285">        ObjectSchema schema = objectParser.parse(object.getClass());</span>
+<span class="fc" id="L286">        ObjectProperty property = schema.getProperty(propertyName);</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (property == null) {</span>
+<span class="fc" id="L288">            return null;</span>
+        }
+<span class="fc" id="L290">        return property.getValue(object);</span>
     }
 
     private ObjectKit() {

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonDataBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.json</a> &gt; <span class="el_source">JsonDataBack.java</span></div><h1>JsonDataBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.json;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.collect.ArrayKit;
+import space.sunqian.fs.io.IOKit;
+import space.sunqian.fs.io.IORuntimeException;
+
+import java.io.OutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.util.List;
+import java.util.Map;
+
+final class JsonDataBack {
+
+    private interface DefaultData extends JsonData {
+
+        @Override
+        default @Nonnull String asString() throws JsonDataException {
+<span class="fc" id="L22">            throw new JsonDataException(&quot;Current JSON data is not a JSON string.&quot;);</span>
+        }
+
+        @Override
+        default @Nonnull Map&lt;String, Object&gt; asMap() throws JsonDataException {
+<span class="fc" id="L27">            throw new JsonDataException(&quot;Current JSON data is not a JSON object.&quot;);</span>
+        }
+
+        @Override
+        default @Nonnull List&lt;Object&gt; asList() throws JsonDataException {
+<span class="fc" id="L32">            throw new JsonDataException(&quot;Current JSON data is not a JSON array.&quot;);</span>
+        }
+
+        @Override
+        default @Nonnull Number asNumber() throws JsonDataException {
+<span class="fc" id="L37">            throw new JsonDataException(&quot;Current JSON data is not a JSON number.&quot;);</span>
+        }
+
+        @Override
+        default boolean asBoolean() throws JsonDataException {
+<span class="fc" id="L42">            throw new JsonDataException(&quot;Current JSON data is not a JSON boolean.&quot;);</span>
+        }
+
+        @Override
+        default void writeTo(@Nonnull OutputStream out) throws IORuntimeException {
+<span class="fc" id="L47">            writeTo(IOKit.newWriter(out));</span>
+<span class="fc" id="L48">        }</span>
+
+        @Override
+        default void writeTo(@Nonnull WritableByteChannel channel) throws IORuntimeException {
+<span class="fc" id="L52">            writeTo(Channels.newOutputStream(channel));</span>
+<span class="fc" id="L53">        }</span>
+    }
+
+<span class="fc" id="L56">    abstract static class AbsData implements DefaultData {</span>
+
+        @Override
+        public void writeTo(@Nonnull Appendable appender) throws IORuntimeException {
+            try {
+<span class="fc" id="L61">                doWrite(appender);</span>
+<span class="fc" id="L62">            } catch (Exception e) {</span>
+<span class="fc" id="L63">                throw new IORuntimeException(e);</span>
+<span class="fc" id="L64">            }</span>
+<span class="fc" id="L65">        }</span>
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L69">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L70">            writeTo(sb);</span>
+<span class="fc" id="L71">            return sb.toString();</span>
+        }
+
+        protected abstract void doWrite(@Nonnull Appendable appender) throws Exception;
+    }
+
+<span class="fc" id="L77">    enum JsonNull implements DefaultData {</span>
+<span class="fc" id="L78">        INST;</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L82">            return JsonType.NULL;</span>
+        }
+
+        @Override
+        public void writeTo(@Nonnull Appendable appender) throws IORuntimeException {
+<span class="fc" id="L87">            JsonKit.toJsonString(null, appender);</span>
+<span class="fc" id="L88">        }</span>
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L92">            return Fs.NULL_STRING;</span>
+        }
+    }
+
+<span class="fc" id="L96">    enum JsonBoolean implements DefaultData {</span>
+<span class="fc" id="L97">        TRUE(true), FALSE(false);</span>
+
+        private final boolean bool;
+
+<span class="fc" id="L101">        JsonBoolean(boolean bool) {</span>
+<span class="fc" id="L102">            this.bool = bool;</span>
+<span class="fc" id="L103">        }</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L107">            return JsonType.BOOLEAN;</span>
+        }
+
+        @Override
+        public boolean asBoolean() throws JsonDataException {
+<span class="fc" id="L112">            return bool;</span>
+        }
+
+        @Override
+        public void writeTo(@Nonnull Appendable appender) throws IORuntimeException {
+<span class="fc" id="L117">            JsonKit.toJsonString(bool, appender);</span>
+<span class="fc" id="L118">        }</span>
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L122">            return Boolean.toString(bool);</span>
+        }
+    }
+
+    static final class JsonString extends AbsData {
+
+        private final @Nonnull String string;
+
+<span class="fc" id="L130">        JsonString(@Nonnull String string) {</span>
+<span class="fc" id="L131">            this.string = string;</span>
+<span class="fc" id="L132">        }</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L136">            return JsonType.STRING;</span>
+        }
+
+        @Override
+        public @Nonnull String asString() throws JsonDataException {
+<span class="fc" id="L141">            return string;</span>
+        }
+
+        @Override
+        public void doWrite(@Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L146">            appender.append(&quot;\&quot;&quot;);</span>
+<span class="fc" id="L147">            appender.append(string);</span>
+<span class="fc" id="L148">            appender.append(&quot;\&quot;&quot;);</span>
+<span class="fc" id="L149">        }</span>
+    }
+
+    static final class JsonNumber extends AbsData {
+
+        private final @Nonnull Number number;
+
+<span class="fc" id="L156">        JsonNumber(@Nonnull Number number) {</span>
+<span class="fc" id="L157">            this.number = number;</span>
+<span class="fc" id="L158">        }</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L162">            return JsonType.NUMBER;</span>
+        }
+
+        @Override
+        public @Nonnull Number asNumber() throws JsonDataException {
+<span class="fc" id="L167">            return number;</span>
+        }
+
+        @Override
+        public void doWrite(@Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L172">            appender.append(number.toString());</span>
+<span class="fc" id="L173">        }</span>
+    }
+
+    static final class JsonObject extends AbsData {
+
+        private final @Nonnull Map&lt;@Nonnull String, @Nullable Object&gt; dataMap;
+
+<span class="fc" id="L180">        JsonObject(@Nonnull Map&lt;@Nonnull String, @Nullable Object&gt; dataMap) {</span>
+<span class="fc" id="L181">            this.dataMap = dataMap;</span>
+<span class="fc" id="L182">        }</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L186">            return JsonType.OBJECT;</span>
+        }
+
+        @Override
+        public @Nonnull Map&lt;String, Object&gt; asMap() throws JsonDataException {
+<span class="fc" id="L191">            return dataMap;</span>
+        }
+
+        @Override
+        public void doWrite(@Nonnull Appendable appender) {
+<span class="fc" id="L196">            JsonKit.toJsonString(dataMap, appender);</span>
+<span class="fc" id="L197">        }</span>
+    }
+
+    static final class JsonArray extends AbsData {
+
+        private final @Nonnull List&lt;@Nullable Object&gt; dataList;
+
+<span class="fc" id="L204">        JsonArray(@Nonnull List&lt;@Nullable Object&gt; dataList) {</span>
+<span class="fc" id="L205">            this.dataList = dataList;</span>
+<span class="fc" id="L206">        }</span>
+
+<span class="fc" id="L208">        JsonArray(@Nullable Object @Nonnull [] dataList) {</span>
+<span class="fc" id="L209">            this.dataList = ArrayKit.asList(dataList);</span>
+<span class="fc" id="L210">        }</span>
+
+        @Override
+        public @Nonnull JsonType type() {
+<span class="fc" id="L214">            return JsonType.ARRAY;</span>
+        }
+
+        @Override
+        public @Nonnull List&lt;@Nullable Object&gt; asList() throws JsonDataException {
+<span class="fc" id="L219">            return dataList;</span>
+        }
+
+        @Override
+        public void doWrite(@Nonnull Appendable appender) {
+<span class="fc" id="L224">            JsonKit.toJsonString(dataList, appender);</span>
+<span class="fc" id="L225">        }</span>
+    }
+
+    private JsonDataBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

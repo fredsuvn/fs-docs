@@ -68,13 +68,14 @@ public class CollectKit {
      */
     public static &lt;T&gt; T @Nonnull [] toArray(@Nonnull Iterable&lt;?&gt; it, @Nonnull Class&lt;?&gt; componentType) {
 <span class="fc bfc" id="L70" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L71">            Collection&lt;?&gt; collection = (Collection&lt;?&gt;) it;</span>
-<span class="fc" id="L72">            T[] array = ArrayKit.newArray(componentType, collection.size());</span>
-<span class="fc" id="L73">            collection.toArray(array);</span>
-<span class="fc" id="L74">            return array;</span>
+            @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L72">            Collection&lt;?&gt; collection = (Collection&lt;?&gt;) it;</span>
+<span class="fc" id="L73">            T[] array = ArrayKit.newArray(componentType, collection.size());</span>
+<span class="fc" id="L74">            collection.toArray(array);</span>
+<span class="fc" id="L75">            return array;</span>
         }
-<span class="fc" id="L76">        List&lt;?&gt; list = addAll(new ArrayList&lt;&gt;(), it);</span>
-<span class="fc" id="L77">        return toArray(list, componentType);</span>
+<span class="fc" id="L77">        List&lt;?&gt; list = addAll(new ArrayList&lt;&gt;(), it);</span>
+<span class="fc" id="L78">        return toArray(list, componentType);</span>
     }
 
     /**
@@ -91,8 +92,8 @@ public class CollectKit {
         @Nonnull @OutParam C collection,
         T @Nonnull ... array
     ) {
-<span class="fc" id="L94">        collection.addAll(Arrays.asList(array));</span>
-<span class="fc" id="L95">        return collection;</span>
+<span class="fc" id="L95">        collection.addAll(Arrays.asList(array));</span>
+<span class="fc" id="L96">        return collection;</span>
     }
 
     /**
@@ -108,14 +109,14 @@ public class CollectKit {
         @Nonnull @OutParam C collection,
         @Nonnull Iterable&lt;? extends T&gt; it
     ) {
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
-<span class="fc" id="L112">            collection.addAll((Collection&lt;? extends T&gt;) it);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (it instanceof Collection) {</span>
+<span class="fc" id="L113">            collection.addAll((Collection&lt;? extends T&gt;) it);</span>
         } else {
-<span class="fc bfc" id="L114" title="All 2 branches covered.">            for (T e : it) {</span>
-<span class="fc" id="L115">                collection.add(e);</span>
-<span class="fc" id="L116">            }</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            for (T e : it) {</span>
+<span class="fc" id="L116">                collection.add(e);</span>
+<span class="fc" id="L117">            }</span>
         }
-<span class="fc" id="L118">        return collection;</span>
+<span class="fc" id="L119">        return collection;</span>
     }
 
     /**
@@ -126,15 +127,15 @@ public class CollectKit {
      * @return the given enumeration as an {@link Iterator}
      */
     public static &lt;T&gt; @Nonnull Iterator&lt;T&gt; asIterator(@Nonnull Enumeration&lt;? extends T&gt; enumeration) {
-<span class="fc" id="L129">        return new Iterator&lt;T&gt;() {</span>
+<span class="fc" id="L130">        return new Iterator&lt;T&gt;() {</span>
             @Override
             public boolean hasNext() {
-<span class="fc" id="L132">                return enumeration.hasMoreElements();</span>
+<span class="fc" id="L133">                return enumeration.hasMoreElements();</span>
             }
 
             @Override
             public T next() {
-<span class="fc" id="L137">                return enumeration.nextElement();</span>
+<span class="fc" id="L138">                return enumeration.nextElement();</span>
             }
         };
     }
@@ -147,15 +148,15 @@ public class CollectKit {
      * @return the given iterator as an {@link Enumeration}
      */
     public static &lt;T&gt; @Nonnull Enumeration&lt;T&gt; asEnumeration(@Nonnull Iterator&lt;? extends T&gt; iterator) {
-<span class="fc" id="L150">        return new Enumeration&lt;T&gt;() {</span>
+<span class="fc" id="L151">        return new Enumeration&lt;T&gt;() {</span>
             @Override
             public boolean hasMoreElements() {
-<span class="fc" id="L153">                return iterator.hasNext();</span>
+<span class="fc" id="L154">                return iterator.hasNext();</span>
             }
 
             @Override
             public T nextElement() {
-<span class="fc" id="L158">                return iterator.next();</span>
+<span class="fc" id="L159">                return iterator.next();</span>
 
             }
         };

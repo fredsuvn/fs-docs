@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConvertKit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.convert</a> &gt; <span class="el_source">ConvertKit.java</span></div><h1>ConvertKit.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.convert;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.base.date.DateFormatter;
+import space.sunqian.fs.base.number.NumFormatter;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.option.OptionKit;
+import space.sunqian.fs.base.value.SimpleKey;
+import space.sunqian.fs.cache.SimpleCache;
+import space.sunqian.fs.object.annotation.DatePattern;
+import space.sunqian.fs.object.annotation.NumPattern;
+import space.sunqian.fs.object.schema.ObjectProperty;
+
+import java.lang.annotation.Annotation;
+import java.time.ZoneId;
+
+/**
+ * Utilities for object conversion.
+ *
+ * @author sunqian
+ */
+public class ConvertKit {
+
+    /**
+     * Returns a {@link Option} of {@link DateFormatter} for the given {@link DatePattern}. This method is based on a
+     * soft-reference cache (from {@link SimpleCache#ofSoft()}), so the same {@link Option} instance could be returned
+     * for the same pattern and zone id.
+     *
+     * @param datePattern the pattern of the date formatter
+     * @return the {@link Option} of {@link DateFormatter} for the given {@link DatePattern}
+     */
+    public static @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull DateFormatter&gt; getDateFormatterOption(
+        @Nonnull DatePattern datePattern) {
+        ZoneId zoneId;
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (&quot;&quot;.equals(datePattern.zoneId())) {</span>
+<span class="fc" id="L38">            zoneId = ZoneId.systemDefault();</span>
+        } else {
+<span class="fc" id="L40">            zoneId = ZoneId.of(datePattern.zoneId());</span>
+        }
+<span class="fc" id="L42">        return getDateFormatterOption(datePattern.value(), zoneId);</span>
+    }
+
+    /**
+     * Returns a {@link Option} of {@link DateFormatter} for the given pattern and zone id. This method is based on a
+     * soft-reference cache (from {@link SimpleCache#ofSoft()}), so the same {@link Option} instance could be returned
+     * for the same pattern and zone id.
+     *
+     * @param pattern the pattern of the date formatter
+     * @param zoneId  the zone id of the date formatter
+     * @return the {@link Option} of {@link DateFormatter} for the given pattern and zone id
+     */
+    public static @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull DateFormatter&gt; getDateFormatterOption(
+        @Nonnull String pattern, @Nonnull ZoneId zoneId) {
+<span class="fc" id="L56">        return DateFormatterCache.INST.get(pattern, zoneId);</span>
+    }
+
+    /**
+     * Returns a {@link Option} of {@link NumFormatter} for the given {@link NumPattern}. This method is based on a
+     * soft-reference cache (from {@link SimpleCache#ofSoft()}), so the same {@link Option} instance could be returned
+     * for the same pattern.
+     *
+     * @param numPattern the pattern of the number formatter
+     * @return the {@link Option} of {@link NumFormatter} for the given {@link NumPattern}
+     */
+    public static @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull NumFormatter&gt; getNumFormatterOption(
+        @Nonnull NumPattern numPattern) {
+<span class="fc" id="L69">        return getNumFormatterOption(numPattern.value());</span>
+    }
+
+    /**
+     * Returns a {@link Option} of {@link NumFormatter} for the given pattern. This method is based on a soft-reference
+     * cache (from {@link SimpleCache#ofSoft()}), so the same {@link Option} instance could be returned for the same
+     * pattern.
+     *
+     * @param pattern the pattern of the number formatter
+     * @return the {@link Option} of {@link NumFormatter} for the given pattern
+     */
+    public static @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull NumFormatter&gt; getNumFormatterOption(
+        @Nonnull String pattern) {
+<span class="fc" id="L82">        return NumFormatterCache.INST.get(pattern);</span>
+    }
+
+    /**
+     * Merges the default options with the date formatter and number formatter if they are not null.
+     * &lt;p&gt;
+     * If both date pattern and number pattern are {@code null}, the default options are returned. If the date pattern
+     * is {@code null}, the number formatter is merged with the default options in a new array. If the number pattern is
+     * {@code null}, the date formatter is merged with the default options in a new array. If both date pattern and
+     * number pattern are not {@code null}, the date formatter and number formatter are merged with the default options
+     * in a new array.
+     *
+     * @param defaultOptions the default options
+     * @param datePattern    the date pattern
+     * @param numPattern     the number pattern
+     * @return the merged options
+     */
+    public static @Nonnull Option&lt;?, ?&gt; @Nonnull [] mergeOptions(
+        @Nonnull Option&lt;?, ?&gt; @Nonnull @RetainedParam [] defaultOptions,
+        @Nullable DatePattern datePattern,
+        @Nullable NumPattern numPattern
+    ) {
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (datePattern == null) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (numPattern == null) {</span>
+<span class="fc" id="L106">                return defaultOptions;</span>
+            } else {
+<span class="fc" id="L108">                Option&lt;ConvertOption, NumFormatter&gt; numFormatter = ConvertKit.getNumFormatterOption(numPattern);</span>
+<span class="fc" id="L109">                return OptionKit.mergeOption(defaultOptions, numFormatter);</span>
+            }
+        } else {
+<span class="fc" id="L112">            Option&lt;ConvertOption, DateFormatter&gt; dateFormatter = ConvertKit.getDateFormatterOption(datePattern);</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">            if (numPattern == null) {</span>
+<span class="fc" id="L114">                return OptionKit.mergeOption(defaultOptions, dateFormatter);</span>
+            } else {
+<span class="fc" id="L116">                Option&lt;ConvertOption, NumFormatter&gt; numFormatter = ConvertKit.getNumFormatterOption(numPattern);</span>
+<span class="fc" id="L117">                return OptionKit.mergeOptions(defaultOptions, dateFormatter, numFormatter);</span>
+            }
+        }
+    }
+
+    /**
+     * Returns the annotation for the given type from the source property if it exists, otherwise from the destination
+     * property.
+     *
+     * @param annotationType the type of the annotation
+     * @param srcProperty    the source property
+     * @param dstProperty    the destination property
+     * @param &lt;A&gt;            the type of the annotation
+     * @return the annotation for the given type from the source property if it exists, otherwise from the destination
+     * property
+     */
+    public static &lt;A extends Annotation&gt; @Nullable A getAnnotation(
+        @Nonnull Class&lt;A&gt; annotationType,
+        @Nonnull ObjectProperty srcProperty,
+        @Nonnull ObjectProperty dstProperty
+    ) {
+<span class="fc" id="L138">        A srcAnnotation = srcProperty.getAnnotation(annotationType);</span>
+<span class="fc" id="L139">        A dstAnnotation = dstProperty.getAnnotation(annotationType);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (dstAnnotation == null) {</span>
+<span class="fc" id="L141">            return srcAnnotation;</span>
+        } else {
+<span class="fc" id="L143">            return dstAnnotation;</span>
+        }
+    }
+
+<span class="fc" id="L147">    private enum DateFormatterCache {</span>
+<span class="fc" id="L148">        INST;</span>
+
+<span class="fc" id="L150">        private final @Nonnull SimpleCache&lt;</span>
+            @Nonnull SimpleKey,
+            @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull DateFormatter&gt;
+<span class="fc" id="L153">            &gt; cache = SimpleCache.ofSoft();</span>
+
+        public @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull DateFormatter&gt; get(
+            @Nonnull String pattern, @Nonnull ZoneId zoneId
+        ) {
+<span class="fc" id="L158">            return cache.get(</span>
+<span class="fc" id="L159">                SimpleKey.of(pattern, zoneId),</span>
+<span class="fc" id="L160">                k -&gt; ConvertOption.dateFormatter(DateFormatter.ofPattern(k.getAs(0), k.getAs(1))</span>
+                )
+            );
+        }
+    }
+
+<span class="fc" id="L166">    private enum NumFormatterCache {</span>
+<span class="fc" id="L167">        INST;</span>
+
+<span class="fc" id="L169">        private final @Nonnull SimpleCache&lt;</span>
+            @Nonnull String,
+            @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull NumFormatter&gt;
+<span class="fc" id="L172">            &gt; cache = SimpleCache.ofSoft();</span>
+
+        public @Nonnull Option&lt;@Nonnull ConvertOption, @Nonnull NumFormatter&gt; get(@Nonnull String pattern) {
+<span class="fc" id="L175">            return cache.get(</span>
+                pattern,
+<span class="fc" id="L177">                p -&gt; ConvertOption.numFormatter(NumFormatter.ofPattern(p))</span>
+            );
+        }
+    }
+
+    private ConvertKit() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

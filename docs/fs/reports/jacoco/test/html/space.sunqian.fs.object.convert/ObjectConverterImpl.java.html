@@ -3,54 +3,95 @@
 import space.sunqian.annotation.Nonnull;
 import space.sunqian.annotation.Nullable;
 import space.sunqian.annotation.RetainedParam;
-import space.sunqian.fs.FsLoader;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.FsLoader;
 import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.option.OptionKit;
 import space.sunqian.fs.object.convert.handlers.AssignableConvertHandler;
 import space.sunqian.fs.object.convert.handlers.CommonConvertHandler;
 import space.sunqian.fs.third.ThirdKit;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 final class ObjectConverterImpl implements ObjectConverter, ObjectConverter.Handler {
 
-<span class="fc" id="L17">    static final @Nonnull ObjectConverterImpl DEFAULT = new ObjectConverterImpl(FsLoader.loadInstances(</span>
-<span class="fc" id="L18">        FsLoader.loadClassByDependent(</span>
-<span class="fc" id="L19">            ThirdKit.thirdClassName(&quot;protobuf&quot;, &quot;ProtobufConvertHandler&quot;),</span>
+<span class="fc" id="L20">    static final @Nonnull ObjectConverterImpl DEFAULT = new ObjectConverterImpl(FsLoader.loadInstances(</span>
+<span class="fc" id="L21">        FsLoader.loadClassByDependent(</span>
+<span class="fc" id="L22">            ThirdKit.thirdClassName(&quot;protobuf&quot;, &quot;ProtobufConvertHandler&quot;),</span>
             &quot;com.google.protobuf.Message&quot;
         ),
-        new AssignableConvertHandler(),
-        new CommonConvertHandler()
-    ));
+<span class="fc" id="L25">        AssignableConvertHandler.getInstance(),</span>
+<span class="fc" id="L26">        CommonConvertHandler.getInstance()</span>
+<span class="fc" id="L27">    ), Collections.emptyList());</span>
 
     private final @Nonnull List&lt;ObjectConverter.@Nonnull Handler&gt; handlers;
+    private final @Nonnull List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions;
+    private final @Nonnull Option&lt;?, ?&gt; @Nonnull [] defaultOptionsArray;
 
-<span class="fc" id="L28">    ObjectConverterImpl(@RetainedParam List&lt;ObjectConverter.@Nonnull Handler&gt; handlers) {</span>
-<span class="fc" id="L29">        this.handlers = handlers;</span>
-<span class="fc" id="L30">    }</span>
+    ObjectConverterImpl(
+        @Nonnull @RetainedParam List&lt;ObjectConverter.@Nonnull Handler&gt; handlers,
+        @Nonnull @RetainedParam List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions
+<span class="fc" id="L36">    ) {</span>
+<span class="fc" id="L37">        this.handlers = Collections.unmodifiableList(handlers);</span>
+<span class="fc" id="L38">        this.defaultOptions = Collections.unmodifiableList(defaultOptions);</span>
+<span class="fc" id="L39">        this.defaultOptionsArray = defaultOptions.toArray(new Option[0]);</span>
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    public Object convert(
+        @Nullable Object src,
+        @Nonnull Type srcType,
+        @Nonnull Type targetType,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectConvertException {
+<span class="fc" id="L49">        @Nonnull Option&lt;?, ?&gt; @Nonnull [] actualOptions = OptionKit.mergeOptions(defaultOptionsArray, options);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (Handler handler : handlers()) {</span>
+            Object ret;
+            try {
+<span class="fc" id="L53">                ret = handler.convert(src, srcType, targetType, this, actualOptions);</span>
+<span class="fc" id="L54">            } catch (Exception e) {</span>
+<span class="fc" id="L55">                throw new ObjectConvertException(e);</span>
+<span class="fc" id="L56">            }</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (ret == Status.HANDLER_CONTINUE) {</span>
+<span class="fc" id="L58">                continue;</span>
+            }
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (ret == Status.HANDLER_BREAK) {</span>
+<span class="fc" id="L61">                throw new UnsupportedObjectConvertException(src, srcType, targetType, this, actualOptions);</span>
+            }
+<span class="fc" id="L63">            return Fs.as(ret);</span>
+        }
+<span class="fc" id="L65">        throw new UnsupportedObjectConvertException(src, srcType, targetType, this, actualOptions);</span>
+    }
 
     @Override
     public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
-<span class="fc" id="L34">        return handlers;</span>
+<span class="fc" id="L70">        return handlers;</span>
+    }
+
+    @Override
+    public @Nonnull List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions() {
+<span class="fc" id="L75">        return defaultOptions;</span>
     }
 
     @Override
     public @Nonnull Handler asHandler() {
-<span class="fc" id="L39">        return this;</span>
+<span class="fc" id="L80">        return this;</span>
     }
 
     @Override
     public Object convert(
         @Nullable Object src,
         @Nonnull Type srcType,
-        @Nonnull Type target,
+        @Nonnull Type targetType,
         @Nonnull ObjectConverter converter,
         @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
     ) throws Exception {
         try {
-<span class="fc" id="L51">            return convert(src, srcType, target, options);</span>
-<span class="fc" id="L52">        } catch (UnsupportedObjectConvertException e) {</span>
-<span class="fc" id="L53">            return Status.HANDLER_CONTINUE;</span>
+<span class="fc" id="L92">            return convert(src, srcType, targetType, options);</span>
+<span class="fc" id="L93">        } catch (UnsupportedObjectConvertException e) {</span>
+<span class="fc" id="L94">            return Status.HANDLER_CONTINUE;</span>
         }
     }
 }

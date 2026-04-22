@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PreparedBatchSql.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">PreparedBatchSql.java</span></div><h1>PreparedBatchSql.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+
+import java.sql.Connection;
+import java.util.List;
+
+/**
+ * This interface represents a prepared SQL string for batch execution with the specified batch parameters to be bound.
+ * It can be built from {@link SqlBuilder}.
+ *
+ * @author sunqian
+ */
+public interface PreparedBatchSql {
+
+    /**
+     * Adds the given batch parameters to be bound to this prepared SQL for batch execution, then returns this prepared
+     * SQL for batch execution itself.
+     *
+     * @param batchParameters the batch parameters to be bound to this prepared SQL for batch execution
+     * @return this prepared SQL for batch execution itself
+     */
+    @Nonnull
+    PreparedBatchSql batchParameters(@Nonnull List&lt;@Nonnull List&lt;Object&gt;&gt; batchParameters);
+
+    /**
+     * Adds the given parameters to be bound to this prepared SQL for batch execution, then returns this prepared SQL
+     * for batch execution itself.
+     *
+     * @param parameters the parameters to be bound to this prepared SQL for batch execution
+     * @return this prepared SQL for batch execution itself
+     */
+    @Nonnull
+    PreparedBatchSql parameters(@Nonnull List&lt;Object&gt; parameters);
+
+    /**
+     * Returns the prepared SQL string for batch execution.
+     *
+     * @return the prepared SQL string for batch execution
+     */
+    @Nonnull
+    String preparedSql();
+
+    /**
+     * Returns the batch parameters to be bound to this prepared SQL for batch execution.
+     *
+     * @return the batch parameters to be bound to this prepared SQL for batch execution
+     */
+    @Nonnull
+    @Immutable
+    List&lt;@Nonnull List&lt;Object&gt;&gt; batchParameters();
+
+    /**
+     * Executes this prepared SQL for batch execution and returns the batch result as a {@link SqlBatch}.
+     *
+     * @param connection the connection to create the statement to execute this batch execution
+     * @return the batch result as a {@link SqlBatch}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    default @Nonnull SqlBatch execute(@Nonnull Connection connection) throws SqlRuntimeException {
+<span class="fc" id="L63">        return Fs.uncheck(() -&gt;</span>
+<span class="fc" id="L64">                SqlBack.newBatchResult(SqlBack.createPreparedStatement(this, connection)),</span>
+            SqlRuntimeException::new
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

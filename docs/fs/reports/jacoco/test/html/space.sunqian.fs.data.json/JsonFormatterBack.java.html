@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonFormatterBack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.json</a> &gt; <span class="el_source">JsonFormatterBack.java</span></div><h1>JsonFormatterBack.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.json;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.data.DataFormattingException;
+import space.sunqian.fs.io.IOKit;
+import space.sunqian.fs.object.annotation.DatePattern;
+import space.sunqian.fs.object.annotation.NumPattern;
+import space.sunqian.fs.object.convert.ConvertKit;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.object.schema.ObjectProperty;
+import space.sunqian.fs.object.schema.ObjectSchema;
+import space.sunqian.fs.object.schema.ObjectSchemaParser;
+import space.sunqian.fs.utils.codec.Base64Kit;
+
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+final class JsonFormatterBack {
+
+    static @Nonnull JsonFormatterImpl defaultFormatter() {
+<span class="fc" id="L32">        return JsonFormatterImpl.DEFAULT;</span>
+    }
+
+    static @Nonnull JsonFormatterImpl newFormatter(boolean ignoreNullValue) {
+<span class="fc" id="L36">        return newFormatter(</span>
+<span class="fc" id="L37">            ObjectSchemaParser.defaultCachedParser(),</span>
+<span class="fc" id="L38">            ObjectConverter.defaultConverter(),</span>
+            ignoreNullValue
+        );
+    }
+
+    static @Nonnull JsonFormatterImpl newFormatter(
+        @Nonnull ObjectSchemaParser objectParser,
+        @Nonnull ObjectConverter objectConverter,
+        boolean ignoreNullValue
+    ) {
+<span class="fc" id="L48">        return new JsonFormatterImpl(objectParser, objectConverter, ignoreNullValue);</span>
+    }
+
+    private static final class JsonFormatterImpl implements JsonFormatter {
+
+<span class="fc" id="L53">        private static final @Nonnull JsonFormatterImpl DEFAULT = newFormatter(</span>
+            false
+        );
+
+        private interface Formatter {
+
+            void formatTo(
+                @Nonnull JsonFormatterImpl impl,
+                @Nonnull Object data,
+                @Nonnull Appendable appender
+            ) throws Exception;
+        }
+
+        private static final @Nonnull Map&lt;@Nonnull Type, @Nonnull Formatter&gt; FORMAT_MAP;
+
+        static {
+<span class="fc" id="L69">            FORMAT_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L70">            FORMAT_MAP.put(String.class, (impl, obj, appender) -&gt; impl.writeString((String) obj, appender));</span>
+            // FORMAT_MAP.put(boolean.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L72">            FORMAT_MAP.put(Boolean.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+<span class="fc" id="L73">            FORMAT_MAP.put(Byte.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+            // FORMAT_MAP.put(short.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L75">            FORMAT_MAP.put(Short.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+            // FORMAT_MAP.put(char.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+            // FORMAT_MAP.put(int.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L78">            FORMAT_MAP.put(Integer.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+            // FORMAT_MAP.put(long.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L80">            FORMAT_MAP.put(Long.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+            // FORMAT_MAP.put(float.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L82">            FORMAT_MAP.put(Float.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+            // FORMAT_MAP.put(double.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));
+<span class="fc" id="L84">            FORMAT_MAP.put(Double.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+<span class="fc" id="L85">            FORMAT_MAP.put(BigInteger.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+<span class="fc" id="L86">            FORMAT_MAP.put(BigDecimal.class, (impl, obj, appender) -&gt; appender.append(obj.toString()));</span>
+<span class="fc" id="L87">            FORMAT_MAP.put(boolean[].class, (impl, data, appender) -&gt; impl.writeArray((boolean[]) data, appender));</span>
+<span class="fc" id="L88">            FORMAT_MAP.put(short[].class, (impl, data, appender) -&gt; impl.writeArray((short[]) data, appender));</span>
+<span class="fc" id="L89">            FORMAT_MAP.put(int[].class, (impl, data, appender) -&gt; impl.writeArray((int[]) data, appender));</span>
+<span class="fc" id="L90">            FORMAT_MAP.put(long[].class, (impl, data, appender) -&gt; impl.writeArray((long[]) data, appender));</span>
+<span class="fc" id="L91">            FORMAT_MAP.put(float[].class, (impl, data, appender) -&gt; impl.writeArray((float[]) data, appender));</span>
+<span class="fc" id="L92">            FORMAT_MAP.put(double[].class, (impl, data, appender) -&gt; impl.writeArray((double[]) data, appender));</span>
+            // as base64
+            // FORMAT_MAP.put(byte[].class, (impl, data, appender) -&gt;
+            //     impl.writeString(Base64Kit.encoder().encodeToString((byte[]) data), appender));
+            // as string
+<span class="fc" id="L97">            FORMAT_MAP.put(char[].class, (impl, data, appender) -&gt;</span>
+<span class="fc" id="L98">                impl.writeString(new String((char[]) data), appender));</span>
+            // as char
+<span class="fc" id="L100">            FORMAT_MAP.put(Character.class, (impl, obj, appender) -&gt; {</span>
+<span class="fc" id="L101">                char c = (char) obj;</span>
+<span class="fc" id="L102">                appender.append('\&quot;');</span>
+<span class="fc" id="L103">                String escaped = ControlTables.toUnicodeEscape(c);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                if (escaped != null) {</span>
+<span class="fc" id="L105">                    appender.append(escaped);</span>
+                } else {
+<span class="fc" id="L107">                    appender.append(c);</span>
+                }
+<span class="fc" id="L109">                appender.append('\&quot;');</span>
+<span class="fc" id="L110">            });</span>
+<span class="fc" id="L111">        }</span>
+
+        private final @Nonnull ObjectSchemaParser objectParser;
+        private final @Nonnull ObjectConverter objectConverter;
+        private final boolean ignoreNullValue;
+
+        JsonFormatterImpl(
+            @Nonnull ObjectSchemaParser objectParser,
+            @Nonnull ObjectConverter objectConverter,
+            boolean ignoreNullValue
+<span class="fc" id="L121">        ) {</span>
+<span class="fc" id="L122">            this.objectParser = objectParser;</span>
+<span class="fc" id="L123">            this.objectConverter = objectConverter;</span>
+<span class="fc" id="L124">            this.ignoreNullValue = ignoreNullValue;</span>
+<span class="fc" id="L125">        }</span>
+
+        @Override
+        public void formatTo(@Nullable Object data, @Nonnull Appendable appender) throws DataFormattingException {
+            try {
+<span class="fc" id="L130">                writeAny(data, appender);</span>
+<span class="fc" id="L131">            } catch (Exception e) {</span>
+<span class="fc" id="L132">                throw new DataFormattingException(e);</span>
+<span class="fc" id="L133">            }</span>
+<span class="fc" id="L134">        }</span>
+
+        private void writeAny(@Nullable Object any, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L137">            Object actualValue = preProcess(any);</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (actualValue == null) {</span>
+<span class="fc" id="L139">                appender.append(Fs.NULL_STRING);</span>
+<span class="fc" id="L140">                return;</span>
+            }
+            // if (any instanceof JsonData) {
+            //     ((JsonData) any).writeTo(appender);
+            //     return;
+            // }
+<span class="fc" id="L146">            Formatter formatter = FORMAT_MAP.get(actualValue.getClass());</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (formatter != null) {</span>
+<span class="fc" id="L148">                formatter.formatTo(this, actualValue, appender);</span>
+<span class="fc" id="L149">                return;</span>
+            }
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (actualValue instanceof CharSequence) {</span>
+<span class="fc" id="L152">                writeString(actualValue.toString(), appender);</span>
+<span class="fc" id="L153">                return;</span>
+            }
+<span class="fc bfc" id="L155" title="All 2 branches covered.">            if (actualValue instanceof Date) {</span>
+<span class="fc" id="L156">                writeString(actualValue.toString(), appender);</span>
+<span class="fc" id="L157">                return;</span>
+            }
+<span class="fc bfc" id="L159" title="All 2 branches covered.">            if (actualValue instanceof TemporalAccessor) {</span>
+<span class="fc" id="L160">                writeString(actualValue.toString(), appender);</span>
+<span class="fc" id="L161">                return;</span>
+            }
+<span class="fc bfc" id="L163" title="All 2 branches covered.">            if (actualValue instanceof Enum) {</span>
+<span class="fc" id="L164">                writeString(actualValue.toString(), appender);</span>
+<span class="fc" id="L165">                return;</span>
+            }
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            if (actualValue instanceof Map&lt;?, ?&gt;) {</span>
+<span class="fc" id="L168">                writeMap((Map&lt;?, ?&gt;) actualValue, appender);</span>
+<span class="fc" id="L169">                return;</span>
+            }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            if (actualValue instanceof Iterable&lt;?&gt;) {</span>
+<span class="fc" id="L172">                writeArray((Iterable&lt;?&gt;) actualValue, appender);</span>
+<span class="fc" id="L173">                return;</span>
+            }
+<span class="fc bfc" id="L175" title="All 2 branches covered.">            if (actualValue instanceof Object[]) {</span>
+<span class="fc" id="L176">                writeArray((Object[]) actualValue, appender);</span>
+<span class="fc" id="L177">                return;</span>
+            }
+<span class="fc" id="L179">            writeObject(actualValue, appender);</span>
+<span class="fc" id="L180">        }</span>
+
+        private void writeString(@Nonnull String string, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L183">            appender.append('\&quot;');</span>
+<span class="fc" id="L184">            int s = 0;</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            for (int i = 0; i &lt; string.length(); i++) {</span>
+<span class="fc" id="L186">                char c = string.charAt(i);</span>
+<span class="fc bfc" id="L187" title="All 3 branches covered.">                switch (c) {</span>
+                    case '&quot;':
+<span class="fc" id="L189">                        appender.append(string, s, i);</span>
+<span class="fc" id="L190">                        s = i + 1;</span>
+<span class="fc" id="L191">                        appender.append(&quot;\\\&quot;&quot;);</span>
+<span class="fc" id="L192">                        continue;</span>
+                    case '\\':
+<span class="fc" id="L194">                        appender.append(string, s, i);</span>
+<span class="fc" id="L195">                        s = i + 1;</span>
+<span class="fc" id="L196">                        appender.append(&quot;\\\\&quot;);</span>
+<span class="fc" id="L197">                        continue;</span>
+                    default:
+<span class="fc" id="L199">                        String escaped = ControlTables.toUnicodeEscape(c);</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">                        if (escaped != null) {</span>
+<span class="fc" id="L201">                            appender.append(string, s, i);</span>
+<span class="fc" id="L202">                            s = i + 1;</span>
+<span class="fc" id="L203">                            appender.append(escaped);</span>
+                        }
+                }
+            }
+<span class="fc" id="L207">            appender.append(string, s, string.length());</span>
+<span class="fc" id="L208">            appender.append('\&quot;');</span>
+<span class="fc" id="L209">        }</span>
+
+        private void writeMap(@Nonnull Map&lt;?, ?&gt; map, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L212">            appender.append('{');</span>
+<span class="fc" id="L213">            boolean[] isFirst = {true};</span>
+<span class="fc" id="L214">            map.forEach((key, value) -&gt; {</span>
+<span class="fc" id="L215">                Object actualValue = preProcess(value);</span>
+<span class="fc bfc" id="L216" title="All 4 branches covered.">                if (ignoreNullValue &amp;&amp; actualValue == null) {</span>
+<span class="fc" id="L217">                    return;</span>
+                }
+                try {
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                    if (isFirst[0]) {</span>
+<span class="fc" id="L221">                        isFirst[0] = false;</span>
+                    } else {
+<span class="fc" id="L223">                        appender.append(',');</span>
+                    }
+<span class="fc" id="L225">                    writeString(String.valueOf(key), appender);</span>
+<span class="fc" id="L226">                    appender.append(':');</span>
+<span class="fc" id="L227">                    writeAny(actualValue, appender);</span>
+<span class="fc" id="L228">                } catch (Exception e) {</span>
+<span class="fc" id="L229">                    throw new JsonDataException(e);</span>
+<span class="fc" id="L230">                }</span>
+<span class="fc" id="L231">            });</span>
+<span class="fc" id="L232">            appender.append('}');</span>
+<span class="fc" id="L233">        }</span>
+
+        private void writeObject(@Nonnull Object object, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L236">            ObjectSchema schema = objectParser.parse(object.getClass());</span>
+<span class="fc" id="L237">            appender.append('{');</span>
+<span class="fc" id="L238">            boolean[] isFirst = {true};</span>
+<span class="fc" id="L239">            schema.properties().forEach((key, property) -&gt; {</span>
+                try {
+                    // ignore class
+<span class="fc bfc" id="L242" title="All 2 branches covered.">                    if (&quot;class&quot;.equals(property.name())) {</span>
+<span class="fc" id="L243">                        return;</span>
+                    }
+<span class="fc" id="L245">                    Object value = property.getValue(object);</span>
+<span class="fc" id="L246">                    Object actualValue = preProcess(value);</span>
+<span class="fc bfc" id="L247" title="All 4 branches covered.">                    if (ignoreNullValue &amp;&amp; actualValue == null) {</span>
+<span class="fc" id="L248">                        return;</span>
+                    }
+<span class="fc bfc" id="L250" title="All 2 branches covered.">                    if (isFirst[0]) {</span>
+<span class="fc" id="L251">                        isFirst[0] = false;</span>
+                    } else {
+<span class="fc" id="L253">                        appender.append(',');</span>
+                    }
+<span class="fc" id="L255">                    writeProperty(property, actualValue, appender);</span>
+<span class="fc" id="L256">                } catch (Exception e) {</span>
+<span class="fc" id="L257">                    throw new JsonDataException(e);</span>
+<span class="fc" id="L258">                }</span>
+<span class="fc" id="L259">            });</span>
+<span class="fc" id="L260">            appender.append('}');</span>
+<span class="fc" id="L261">        }</span>
+
+        private @Nullable Object preProcess(@Nullable Object any) {
+<span class="fc bfc" id="L264" title="All 2 branches covered.">            if (any instanceof byte[]) {</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                if (((byte[]) any).length != 0) {</span>
+<span class="fc" id="L266">                    return Base64Kit.encoder().encodeToString((byte[]) any);</span>
+                }
+<span class="fc" id="L268">                return &quot;&quot;;</span>
+            }
+<span class="fc bfc" id="L270" title="All 2 branches covered.">            if (any instanceof ByteBuffer) {</span>
+                // as base64
+<span class="fc bfc" id="L272" title="All 2 branches covered.">                if (((ByteBuffer) any).hasRemaining()) {</span>
+<span class="fc" id="L273">                    return Base64Kit.encoder().encodeToString((ByteBuffer) any);</span>
+                }
+<span class="fc" id="L275">                return &quot;&quot;;</span>
+            }
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (any instanceof InputStream) {</span>
+                // as base64
+<span class="fc" id="L279">                byte[] bytes = IOKit.read((InputStream) any);</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">                if (bytes != null) {</span>
+<span class="fc" id="L281">                    return Base64Kit.encoder().encodeToString(bytes);</span>
+                }
+<span class="fc" id="L283">                return &quot;&quot;;</span>
+            }
+<span class="fc bfc" id="L285" title="All 2 branches covered.">            if (any instanceof ReadableByteChannel) {</span>
+                // as base64
+<span class="fc" id="L287">                byte[] bytes = IOKit.readBytes((ReadableByteChannel) any);</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">                if (bytes != null) {</span>
+<span class="fc" id="L289">                    return Base64Kit.encoder().encodeToString(bytes);</span>
+                }
+<span class="fc" id="L291">                return &quot;&quot;;</span>
+            }
+<span class="fc" id="L293">            return any;</span>
+        }
+
+        private void writeProperty(
+            @Nonnull ObjectProperty property, @Nullable Object value, @Nonnull Appendable appender
+        ) throws Exception {
+<span class="fc" id="L299">            writeString(property.name(), appender);</span>
+<span class="fc" id="L300">            appender.append(':');</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">            if (value != null) {</span>
+<span class="fc bfc" id="L302" title="All 4 branches covered.">                if (value instanceof Date || value instanceof TemporalAccessor) {</span>
+<span class="fc" id="L303">                    DatePattern datePattern = property.getAnnotation(DatePattern.class);</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">                    if (datePattern != null) {</span>
+<span class="fc" id="L305">                        String dateString = objectConverter.convert(</span>
+                            value,
+                            String.class,
+<span class="fc" id="L308">                            ConvertKit.getDateFormatterOption(datePattern)</span>
+                        );
+<span class="fc" id="L310">                        writeString(dateString, appender);</span>
+<span class="fc" id="L311">                        return;</span>
+                    }
+                }
+<span class="fc bfc" id="L314" title="All 2 branches covered.">                if (value instanceof Number) {</span>
+<span class="fc" id="L315">                    NumPattern numPattern = property.getAnnotation(NumPattern.class);</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">                    if (numPattern != null) {</span>
+<span class="fc" id="L317">                        String numString = objectConverter.convert(</span>
+                            value,
+                            String.class,
+<span class="fc" id="L320">                            ConvertKit.getNumFormatterOption(numPattern)</span>
+                        );
+<span class="fc" id="L322">                        appender.append(numString);</span>
+<span class="fc" id="L323">                        return;</span>
+                    }
+                }
+            }
+<span class="fc" id="L327">            writeAny(value, appender);</span>
+<span class="fc" id="L328">        }</span>
+
+        private void writeArray(@Nonnull Iterable&lt;?&gt; array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L331">            appender.append('[');</span>
+<span class="fc" id="L332">            boolean comma = false;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">            for (Object object : array) {</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L335">                    appender.append(',');</span>
+                }
+<span class="fc" id="L337">                writeAny(object, appender);</span>
+<span class="fc" id="L338">                comma = true;</span>
+<span class="fc" id="L339">            }</span>
+<span class="fc" id="L340">            appender.append(']');</span>
+<span class="fc" id="L341">        }</span>
+
+        private void writeArray(Object @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L344">            appender.append('[');</span>
+<span class="fc" id="L345">            boolean comma = false;</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">            for (Object object : array) {</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L348">                    appender.append(',');</span>
+                }
+<span class="fc" id="L350">                writeAny(object, appender);</span>
+<span class="fc" id="L351">                comma = true;</span>
+            }
+<span class="fc" id="L353">            appender.append(']');</span>
+<span class="fc" id="L354">        }</span>
+
+        private void writeArray(boolean @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L357">            appender.append('[');</span>
+<span class="fc" id="L358">            boolean comma = false;</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">            for (boolean element : array) {</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L361">                    appender.append(',');</span>
+                }
+<span class="fc" id="L363">                appender.append(Boolean.toString(element));</span>
+<span class="fc" id="L364">                comma = true;</span>
+            }
+<span class="fc" id="L366">            appender.append(']');</span>
+<span class="fc" id="L367">        }</span>
+
+        private void writeArray(short @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L370">            appender.append('[');</span>
+<span class="fc" id="L371">            boolean comma = false;</span>
+<span class="fc bfc" id="L372" title="All 2 branches covered.">            for (short element : array) {</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L374">                    appender.append(',');</span>
+                }
+<span class="fc" id="L376">                appender.append(String.valueOf(element));</span>
+<span class="fc" id="L377">                comma = true;</span>
+            }
+<span class="fc" id="L379">            appender.append(']');</span>
+<span class="fc" id="L380">        }</span>
+
+        private void writeArray(int @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L383">            appender.append('[');</span>
+<span class="fc" id="L384">            boolean comma = false;</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">            for (int element : array) {</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L387">                    appender.append(',');</span>
+                }
+<span class="fc" id="L389">                appender.append(String.valueOf(element));</span>
+<span class="fc" id="L390">                comma = true;</span>
+            }
+<span class="fc" id="L392">            appender.append(']');</span>
+<span class="fc" id="L393">        }</span>
+
+        private void writeArray(long @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L396">            appender.append('[');</span>
+<span class="fc" id="L397">            boolean comma = false;</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">            for (long l : array) {</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L400">                    appender.append(',');</span>
+                }
+<span class="fc" id="L402">                appender.append(String.valueOf(l));</span>
+<span class="fc" id="L403">                comma = true;</span>
+            }
+<span class="fc" id="L405">            appender.append(']');</span>
+<span class="fc" id="L406">        }</span>
+
+        private void writeArray(float @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L409">            appender.append('[');</span>
+<span class="fc" id="L410">            boolean comma = false;</span>
+<span class="fc bfc" id="L411" title="All 2 branches covered.">            for (float element : array) {</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L413">                    appender.append(',');</span>
+                }
+<span class="fc" id="L415">                appender.append(String.valueOf(element));</span>
+<span class="fc" id="L416">                comma = true;</span>
+            }
+<span class="fc" id="L418">            appender.append(']');</span>
+<span class="fc" id="L419">        }</span>
+
+        private void writeArray(double @Nonnull [] array, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L422">            appender.append('[');</span>
+<span class="fc" id="L423">            boolean comma = false;</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">            for (double element : array) {</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">                if (comma) {</span>
+<span class="fc" id="L426">                    appender.append(',');</span>
+                }
+<span class="fc" id="L428">                appender.append(String.valueOf(element));</span>
+<span class="fc" id="L429">                comma = true;</span>
+            }
+<span class="fc" id="L431">            appender.append(']');</span>
+<span class="fc" id="L432">        }</span>
+    }
+
+    private static final class ControlTables {
+
+        private static final @Nonnull String @Nonnull [] CONTROL_CHAR_ESCAPE_TABLE;
+
+        static {
+<span class="fc" id="L440">            CONTROL_CHAR_ESCAPE_TABLE = new String[32];</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">            for (int i = 0; i &lt; CONTROL_CHAR_ESCAPE_TABLE.length; i++) {</span>
+<span class="fc" id="L442">                CONTROL_CHAR_ESCAPE_TABLE[i] = CharsKit.toUnicode((char) i);</span>
+            }
+<span class="fc" id="L444">            CONTROL_CHAR_ESCAPE_TABLE['\r'] = &quot;\\r&quot;;</span>
+<span class="fc" id="L445">            CONTROL_CHAR_ESCAPE_TABLE['\n'] = &quot;\\n&quot;;</span>
+<span class="fc" id="L446">            CONTROL_CHAR_ESCAPE_TABLE['\t'] = &quot;\\t&quot;;</span>
+<span class="fc" id="L447">            CONTROL_CHAR_ESCAPE_TABLE['\b'] = &quot;\\b&quot;;</span>
+<span class="fc" id="L448">            CONTROL_CHAR_ESCAPE_TABLE['\f'] = &quot;\\f&quot;;</span>
+<span class="fc" id="L449">        }</span>
+
+        private static @Nullable String toUnicodeEscape(char c) {
+<span class="fc bfc" id="L452" title="All 2 branches covered.">            if (c &gt;= CONTROL_CHAR_ESCAPE_TABLE.length) {</span>
+<span class="fc" id="L453">                return null;</span>
+            }
+<span class="fc" id="L455">            return CONTROL_CHAR_ESCAPE_TABLE[c];</span>
+        }
+    }
+
+    private JsonFormatterBack() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

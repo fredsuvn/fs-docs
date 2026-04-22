@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectCopierImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.convert</a> &gt; <span class="el_source">ObjectCopierImpl.java</span></div><h1>ObjectCopierImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.convert;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.option.OptionKit;
+import space.sunqian.fs.collect.ListKit;
+import space.sunqian.fs.object.convert.handlers.CommonCopierHandler;
+import space.sunqian.fs.object.schema.DataSchemaException;
+import space.sunqian.fs.object.schema.MapSchema;
+import space.sunqian.fs.object.schema.MapSchemaParser;
+import space.sunqian.fs.object.schema.ObjectProperty;
+import space.sunqian.fs.object.schema.ObjectSchema;
+import space.sunqian.fs.object.schema.ObjectSchemaParser;
+
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+final class ObjectCopierImpl implements ObjectCopier, ObjectCopier.Handler {
+
+<span class="fc" id="L26">    static final @Nonnull ObjectCopier DEFAULT = new ObjectCopierImpl(</span>
+<span class="fc" id="L27">        ListKit.list(CommonCopierHandler.getInstance()),</span>
+<span class="fc" id="L28">        Collections.emptyList()</span>
+    );
+
+    private final @Nonnull List&lt;@Nonnull Handler&gt; handlers;
+    private final @Nonnull List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions;
+    private final @Nonnull Option&lt;?, ?&gt; @Nonnull [] defaultOptionsArray;
+
+    ObjectCopierImpl(
+        @Nonnull @RetainedParam List&lt;@Nonnull Handler&gt; handlers,
+        @Nonnull @RetainedParam List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions
+<span class="fc" id="L38">    ) {</span>
+<span class="fc" id="L39">        this.handlers = Collections.unmodifiableList(handlers);</span>
+<span class="fc" id="L40">        this.defaultOptions = Collections.unmodifiableList(defaultOptions);</span>
+<span class="fc" id="L41">        this.defaultOptionsArray = defaultOptions.toArray(new Option[0]);</span>
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    public void copyProperties(
+        @Nonnull Object src,
+        @Nonnull Type srcType,
+        @Nonnull Object dst,
+        @Nonnull Type dstType,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws ObjectCopyException {
+        try {
+<span class="fc" id="L54">            @Nonnull Option&lt;?, ?&gt; @Nonnull [] actualOptions = OptionKit.mergeOptions(defaultOptionsArray, options);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            if (src instanceof Map) {</span>
+<span class="fc" id="L56">                MapSchemaParser srcParser = ConvertOption.getMapSchemaParser(actualOptions);</span>
+<span class="fc" id="L57">                MapSchema srcSchema = parseMapSchema((Map&lt;?, ?&gt;) src, srcParser, srcType, actualOptions);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                if (dst instanceof Map) {</span>
+<span class="fc" id="L59">                    MapSchema dstParser = parseMapSchema((Map&lt;?, ?&gt;) dst, srcParser, dstType, actualOptions);</span>
+<span class="fc" id="L60">                    mapToMap(Fs.as(src), srcSchema, Fs.as(dst), dstParser, converter, actualOptions);</span>
+<span class="fc" id="L61">                } else {</span>
+<span class="fc" id="L62">                    ObjectSchemaParser objectParser = ConvertOption.getObjectSchemaParser(actualOptions);</span>
+<span class="fc" id="L63">                    ObjectSchema dstSchema = parseObjectSchema(dst, objectParser, dstType, actualOptions);</span>
+<span class="fc" id="L64">                    mapToObject(Fs.as(src), srcSchema, dst, dstSchema, converter, actualOptions);</span>
+                }
+<span class="fc" id="L66">            } else {</span>
+<span class="fc" id="L67">                ObjectSchemaParser srcParser = ConvertOption.getObjectSchemaParser(actualOptions);</span>
+<span class="fc" id="L68">                ObjectSchema srcSchema = parseObjectSchema(src, srcParser, srcType, actualOptions);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                if (dst instanceof Map) {</span>
+<span class="fc" id="L70">                    MapSchemaParser dstParser = ConvertOption.getMapSchemaParser(actualOptions);</span>
+<span class="fc" id="L71">                    MapSchema dstSchema = parseMapSchema((Map&lt;?, ?&gt;) dst, dstParser, dstType, actualOptions);</span>
+<span class="fc" id="L72">                    objectToMap(src, srcSchema, Fs.as(dst), dstSchema, converter, actualOptions);</span>
+<span class="fc" id="L73">                } else {</span>
+<span class="fc" id="L74">                    ObjectSchema dstSchema = srcParser.parse(dstType);</span>
+<span class="fc" id="L75">                    objectToObject(src, srcSchema, dst, dstSchema, converter, actualOptions);</span>
+                }
+            }
+<span class="fc" id="L78">        } catch (ObjectCopyException e) {</span>
+<span class="fc" id="L79">            throw e;</span>
+<span class="fc" id="L80">        } catch (Exception e) {</span>
+<span class="fc" id="L81">            throw new ObjectCopyException(e);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
+
+    private @Nonnull ObjectSchema parseObjectSchema(
+        @Nonnull Object object,
+        @Nonnull ObjectSchemaParser parser,
+        @Nonnull Type type,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+        try {
+<span class="fc" id="L92">            return parser.parse(type);</span>
+<span class="fc" id="L93">        } catch (DataSchemaException e) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (ConvertOption.isStrictSourceTypeMode(options)) {</span>
+<span class="fc" id="L95">                throw e;</span>
+            }
+<span class="fc" id="L97">            Type objType = object.getClass();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (Objects.equals(objType, type)) {</span>
+<span class="fc" id="L99">                throw e;</span>
+            }
+<span class="fc" id="L101">            return parser.parse(objType);</span>
+        }
+    }
+
+    private @Nonnull MapSchema parseMapSchema(
+        @Nonnull Map&lt;?, ?&gt; object,
+        @Nonnull MapSchemaParser parser,
+        @Nonnull Type type,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+        try {
+<span class="fc" id="L112">            return parser.parse(type);</span>
+<span class="fc" id="L113">        } catch (DataSchemaException e) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if (ConvertOption.isStrictSourceTypeMode(options)) {</span>
+<span class="fc" id="L115">                throw e;</span>
+            }
+            /*
+            this never happen:
+              Type objType = object.getClass();
+              if (Objects.equals(objType, type)) {
+                  throw e;
+              }
+             */
+<span class="fc" id="L124">            return parser.parse(object.getClass());</span>
+        }
+    }
+
+    @Override
+    public @Nonnull List&lt;@Nonnull Handler&gt; handlers() {
+<span class="fc" id="L130">        return handlers;</span>
+    }
+
+    @Override
+    public @Nonnull List&lt;@Nonnull Option&lt;?, ?&gt;&gt; defaultOptions() {
+<span class="fc" id="L135">        return defaultOptions;</span>
+    }
+
+    @Override
+    public @Nonnull Handler asHandler() {
+<span class="fc" id="L140">        return this;</span>
+    }
+
+    void mapToMap(
+        @Nonnull Map&lt;Object, Object&gt; src,
+        @Nonnull MapSchema srcSchema,
+        @Nonnull Map&lt;Object, Object&gt; dst,
+        @Nonnull MapSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L151">        src.forEach((srcKey, srcValue) -&gt; {</span>
+            try {
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                for (Handler handler : handlers) {</span>
+<span class="fc" id="L154">                    boolean goon = handler.copyProperty(</span>
+                        srcKey, srcValue, src, srcSchema, dst, dstSchema, converter, options
+                    );
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                    if (!goon) {</span>
+<span class="fc" id="L158">                        break;</span>
+                    }
+<span class="fc" id="L160">                }</span>
+<span class="fc" id="L161">            } catch (Exception e) {</span>
+<span class="fc" id="L162">                throw new ObjectCopyException(e);</span>
+<span class="fc" id="L163">            }</span>
+<span class="fc" id="L164">        });</span>
+<span class="fc" id="L165">    }</span>
+
+    void mapToObject(
+        @Nonnull Map&lt;Object, Object&gt; src,
+        @Nonnull MapSchema srcSchema,
+        @Nonnull Object dst,
+        @Nonnull ObjectSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L175">        src.forEach((srcKey, srcValue) -&gt; {</span>
+            try {
+<span class="fc bfc" id="L177" title="All 2 branches covered.">                for (Handler handler : handlers) {</span>
+<span class="fc" id="L178">                    boolean goon = handler.copyProperty(</span>
+                        srcKey, srcValue, src, srcSchema, dst, dstSchema, converter, options
+                    );
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                    if (!goon) {</span>
+<span class="fc" id="L182">                        break;</span>
+                    }
+<span class="fc" id="L184">                }</span>
+<span class="fc" id="L185">            } catch (Exception e) {</span>
+<span class="fc" id="L186">                throw new ObjectCopyException(e);</span>
+<span class="fc" id="L187">            }</span>
+<span class="fc" id="L188">        });</span>
+<span class="fc" id="L189">    }</span>
+
+    void objectToMap(
+        @Nonnull Object src,
+        @Nonnull ObjectSchema srcSchema,
+        @Nonnull Map&lt;Object, Object&gt; dst,
+        @Nonnull MapSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L199">        srcSchema.properties().forEach((srcPropertyName, srcProperty) -&gt; {</span>
+            try {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                for (Handler handler : handlers) {</span>
+<span class="fc" id="L202">                    boolean goon = handler.copyProperty(</span>
+<span class="fc" id="L203">                        srcProperty.name(), srcProperty, src, srcSchema, dst, dstSchema, converter, options</span>
+                    );
+<span class="fc bfc" id="L205" title="All 2 branches covered.">                    if (!goon) {</span>
+<span class="fc" id="L206">                        break;</span>
+                    }
+<span class="fc" id="L208">                }</span>
+<span class="fc" id="L209">            } catch (Exception e) {</span>
+<span class="fc" id="L210">                throw new ObjectCopyException(e);</span>
+<span class="fc" id="L211">            }</span>
+<span class="fc" id="L212">        });</span>
+<span class="fc" id="L213">    }</span>
+
+    void objectToObject(
+        @Nonnull Object src,
+        @Nonnull ObjectSchema srcSchema,
+        @Nonnull Object dst,
+        @Nonnull ObjectSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) {
+<span class="fc" id="L223">        srcSchema.properties().forEach((srcPropertyName, srcProperty) -&gt; {</span>
+            try {
+<span class="fc bfc" id="L225" title="All 2 branches covered.">                for (Handler handler : handlers) {</span>
+<span class="fc" id="L226">                    boolean goon = handler.copyProperty(</span>
+<span class="fc" id="L227">                        srcProperty.name(), srcProperty, src, srcSchema, dst, dstSchema, converter, options</span>
+                    );
+<span class="fc bfc" id="L229" title="All 2 branches covered.">                    if (!goon) {</span>
+<span class="fc" id="L230">                        break;</span>
+                    }
+<span class="fc" id="L232">                }</span>
+<span class="fc" id="L233">            } catch (Exception e) {</span>
+<span class="fc" id="L234">                throw new ObjectCopyException(e);</span>
+<span class="fc" id="L235">            }</span>
+<span class="fc" id="L236">        });</span>
+<span class="fc" id="L237">    }</span>
+
+    @Override
+    public boolean copyProperty(@Nonnull Object srcKey, @Nullable Object srcValue, @Nonnull Map&lt;Object, Object&gt; src, @Nonnull MapSchema srcSchema, @Nonnull Map&lt;Object, Object&gt; dst, @Nonnull MapSchema dstSchema, @Nonnull ObjectConverter converter, @Nonnull Option&lt;?, ?&gt; @Nonnull ... options) throws Exception {
+<span class="fc" id="L241">        boolean goon = true;</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        for (Handler handler : handlers) {</span>
+<span class="fc" id="L243">            goon = handler.copyProperty(</span>
+                srcKey, srcValue, src, srcSchema, dst, dstSchema, converter, options
+            );
+<span class="fc bfc" id="L246" title="All 2 branches covered.">            if (!goon) {</span>
+<span class="fc" id="L247">                break;</span>
+            }
+<span class="fc" id="L249">        }</span>
+<span class="fc" id="L250">        return goon;</span>
+    }
+
+    @Override
+    public boolean copyProperty(@Nonnull Object srcKey, @Nullable Object srcValue, @Nonnull Map&lt;Object, Object&gt; src, @Nonnull MapSchema srcSchema, @Nonnull Object dst, @Nonnull ObjectSchema dstSchema, @Nonnull ObjectConverter converter, @Nonnull Option&lt;?, ?&gt; @Nonnull ... options) throws Exception {
+<span class="fc" id="L255">        boolean goon = true;</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        for (Handler handler : handlers) {</span>
+<span class="fc" id="L257">            goon = handler.copyProperty(</span>
+                srcKey, srcValue, src, srcSchema, dst, dstSchema, converter, options
+            );
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            if (!goon) {</span>
+<span class="fc" id="L261">                break;</span>
+            }
+<span class="fc" id="L263">        }</span>
+<span class="fc" id="L264">        return goon;</span>
+    }
+
+    @Override
+    public boolean copyProperty(@Nonnull String srcPropertyName, @Nonnull ObjectProperty srcProperty, @Nonnull Object src, @Nonnull ObjectSchema srcSchema, @Nonnull Map&lt;Object, Object&gt; dst, @Nonnull MapSchema dstSchema, @Nonnull ObjectConverter converter, @Nonnull Option&lt;?, ?&gt; @Nonnull ... options) throws Exception {
+<span class="fc" id="L269">        boolean goon = true;</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        for (Handler handler : handlers) {</span>
+<span class="fc" id="L271">            goon = handler.copyProperty(</span>
+                srcPropertyName, srcProperty, src, srcSchema, dst, dstSchema, converter, options
+            );
+<span class="fc bfc" id="L274" title="All 2 branches covered.">            if (!goon) {</span>
+<span class="fc" id="L275">                break;</span>
+            }
+<span class="fc" id="L277">        }</span>
+<span class="fc" id="L278">        return goon;</span>
+    }
+
+    @Override
+    public boolean copyProperty(@Nonnull String srcPropertyName, @Nonnull ObjectProperty srcProperty, @Nonnull Object src, @Nonnull ObjectSchema srcSchema, @Nonnull Object dst, @Nonnull ObjectSchema dstSchema, @Nonnull ObjectConverter converter, @Nonnull Option&lt;?, ?&gt; @Nonnull ... options) throws Exception {
+<span class="fc" id="L283">        boolean goon = true;</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">        for (Handler handler : handlers) {</span>
+<span class="fc" id="L285">            goon = handler.copyProperty(</span>
+                srcPropertyName, srcProperty, src, srcSchema, dst, dstSchema, converter, options
+            );
+<span class="fc bfc" id="L288" title="All 2 branches covered.">            if (!goon) {</span>
+<span class="fc" id="L289">                break;</span>
+            }
+<span class="fc" id="L291">        }</span>
+<span class="fc" id="L292">        return goon;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.json</a> &gt; <span class="el_source">JsonParser.java</span></div><h1>JsonParser.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.json;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.data.ByteDataParser;
+import space.sunqian.fs.data.CharDataParser;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.channels.ReadableByteChannel;
+
+/**
+ * Represents the JSON data parser that parses JSON data a {@code JsonData} object.
+ *
+ * @author sunqian
+ */
+public interface JsonParser extends ByteDataParser&lt;JsonData&gt;, CharDataParser&lt;JsonData&gt; {
+
+    /**
+     * Returns the default {@link JsonParser}.
+     *
+     * @return the default {@link JsonParser}
+     */
+    static @Nonnull JsonParser defaultParser() {
+<span class="fc" id="L26">        return JsonParserImpl.INST;</span>
+    }
+
+    /**
+     * Parses and returns the JSON data from the given input stream to a {@link JsonData} object, using
+     * {@link CharsKit#defaultCharset()}.
+     *
+     * @param input the given input stream
+     * @return the parsed {@link JsonData} object
+     * @throws JsonDataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    JsonData parse(@Nonnull InputStream input) throws JsonDataParsingException;
+
+    /**
+     * Parses and returns the JSON data from the given readable byte channel to a {@link JsonData} object, using
+     * {@link CharsKit#defaultCharset()}.
+     *
+     * @param channel the given readable byte channel
+     * @return the parsed {@link JsonData} object
+     * @throws JsonDataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    JsonData parse(@Nonnull ReadableByteChannel channel) throws JsonDataParsingException;
+
+    /**
+     * Parses and returns the JSON data from the given reader to a {@link JsonData} object.
+     *
+     * @param reader the given reader
+     * @return the parsed {@link JsonData} object
+     * @throws JsonDataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    JsonData parse(@Nonnull Reader reader) throws JsonDataParsingException;
+
+    /**
+     * Parses and returns the JSON data from the given JSON string to a {@link JsonData} object.
+     *
+     * @param str the given JSON string
+     * @return the parsed {@link JsonData} object
+     * @throws JsonDataParsingException if any error occurs during parsing
+     */
+    default @Nonnull JsonData parse(@Nonnull String str) throws JsonDataParsingException {
+<span class="fc" id="L72">        return parse(new StringReader(str));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

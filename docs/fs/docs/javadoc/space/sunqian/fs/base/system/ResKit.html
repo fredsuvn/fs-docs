@@ -103,6 +103,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns all resource urls of the given resource path in .</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findStream(java.lang.String)" class="member-name-link">findStream</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the resource stream of the given resource path.</div>
+</div>
 </div>
 </div>
 </div>
@@ -152,6 +157,22 @@ loadScripts(document, 'script');</script>
 <dd>all resource urls of the given resource path, may be empty if not found</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../../io/IORuntimeException.html" title="class in space.sunqian.fs.io">IORuntimeException</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="findStream(java.lang.String)">
+<h3>findStream</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a></span>&nbsp;<span class="element-name">findStream</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
+<div class="block">Returns the resource stream of the given resource path. This method searches the resource in the classpath, and
+ doesn't expect the given path to start with "/".</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>path</code> - the given resource path</dd>
+<dt>Returns:</dt>
+<dd>the resource stream of the given resource path, or <code>null</code> if not found</dd>
 </dl>
 </section>
 </li>

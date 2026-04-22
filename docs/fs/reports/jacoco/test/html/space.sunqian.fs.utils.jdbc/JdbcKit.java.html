@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdbcKit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">JdbcKit.java</span></div><h1>JdbcKit.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Immutable;
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.base.string.NameFormatter;
+import space.sunqian.fs.base.string.NameMapper;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.reflect.TypeRef;
+
+import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Utilities for JDBC and SQL.
+ *
+ * @author sunqian
+ */
+public class JdbcKit {
+
+    /**
+     * Return the default name mapper to map the column name to the field name of the element type. The default name
+     * mapper assume the column name is in underscore case (e.g. {@code USER_ID}) and the field name is in lower camel
+     * case (e.g. {@code userId}).
+     *
+     * @return the default name mapper
+     */
+    public static @Nonnull NameMapper defaultNameMapper() {
+<span class="fc" id="L36">        return DbNameMapper.INST;</span>
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link #defaultNameMapper()} and
+     * }{@link ObjectConverter#defaultConverter()} to convert the object of the JDBC type to the java type.
+     *
+     * @param resultSet the result set
+     * @param javaType  the element java type of the returned list
+     * @param &lt;T&gt;       the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Class&lt;T&gt; javaType
+    ) throws SqlRuntimeException {
+<span class="fc" id="L53">        return toObject(</span>
+            resultSet,
+            javaType,
+<span class="fc" id="L56">            defaultNameMapper()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link #defaultNameMapper()} and
+     * {@link ObjectConverter#defaultConverter()} to convert the object of the JDBC type to the java type.
+     *
+     * @param resultSet the result set
+     * @param javaType  the element java type reference of the returned list
+     * @param &lt;T&gt;       the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull TypeRef&lt;T&gt; javaType
+    ) throws SqlRuntimeException {
+<span class="fc" id="L74">        return toObject(</span>
+            resultSet,
+            javaType,
+<span class="fc" id="L77">            defaultNameMapper()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link #defaultNameMapper()} and
+     * {@link ObjectConverter#defaultConverter()} to convert the object of the JDBC type to the java type.
+     *
+     * @param resultSet the result set
+     * @param javaType  the element java type of the returned list
+     * @return the row list of the result set of which each row is mapped to the specified java type
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static @Immutable @Nonnull List&lt;@Nonnull Object&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Type javaType
+    ) throws SqlRuntimeException {
+<span class="fc" id="L94">        return toObject(</span>
+            resultSet,
+            javaType,
+<span class="fc" id="L97">            defaultNameMapper()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link ObjectConverter#defaultConverter()} to convert the
+     * object of the JDBC type to the java type.
+     *
+     * @param resultSet  the result set
+     * @param javaType   the element java type of the returned list
+     * @param nameMapper the name mapper to map the column name to the field name of the element type
+     * @param &lt;T&gt;        the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Class&lt;T&gt; javaType,
+        @Nonnull NameMapper nameMapper
+    ) throws SqlRuntimeException {
+<span class="fc" id="L117">        return toObject(</span>
+            resultSet,
+            javaType,
+            nameMapper,
+<span class="fc" id="L121">            ObjectConverter.defaultConverter()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link ObjectConverter#defaultConverter()} to convert the
+     * object of the JDBC type to the java type.
+     *
+     * @param resultSet   the result set
+     * @param javaTypeRef the element java type reference of the returned list
+     * @param nameMapper  the name mapper to map the column name to the field name of the element type
+     * @param &lt;T&gt;         the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull TypeRef&lt;T&gt; javaTypeRef,
+        @Nonnull NameMapper nameMapper
+    ) throws SqlRuntimeException {
+<span class="fc" id="L141">        return toObject(</span>
+            resultSet,
+            javaTypeRef,
+            nameMapper,
+<span class="fc" id="L145">            ObjectConverter.defaultConverter()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects, using {@link ObjectConverter#defaultConverter()} to convert the
+     * object of the JDBC type to the java type.
+     *
+     * @param resultSet  the result set
+     * @param javaType   the element java type of the returned list
+     * @param nameMapper the name mapper to map the column name to the field name of the element type
+     * @return the row list of the result set of which each row is mapped to the specified java type
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static @Immutable @Nonnull List&lt;@Nonnull Object&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Type javaType,
+        @Nonnull NameMapper nameMapper
+    ) throws SqlRuntimeException {
+<span class="fc" id="L164">        return toObject(</span>
+            resultSet,
+            javaType,
+            nameMapper,
+<span class="fc" id="L168">            ObjectConverter.defaultConverter()</span>
+        );
+    }
+
+    /**
+     * Convert the result set to a list of objects.
+     *
+     * @param resultSet  the result set
+     * @param javaType   the element java type of the returned list
+     * @param nameMapper the name mapper to map the column name to the field name of the element type
+     * @param converter  the converter to convert the object of the JDBC type to the java type
+     * @param options    the options for converting
+     * @param &lt;T&gt;        the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Class&lt;T&gt; javaType,
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SqlRuntimeException {
+<span class="fc" id="L191">        return Fs.as(toObject(resultSet, (Type) javaType, nameMapper, converter, options));</span>
+    }
+
+    /**
+     * Convert the result set to a list of objects.
+     *
+     * @param resultSet   the result set
+     * @param javaTypeRef the element java type reference of the returned list
+     * @param nameMapper  the name mapper to map the column name to the field name of the element type
+     * @param converter   the converter to convert the object of the JDBC type to the java type
+     * @param options     the options for converting
+     * @param &lt;T&gt;         the element type of the returned list
+     * @return the row list of the result set of which each row is mapped to the type {@link T}
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull TypeRef&lt;T&gt; javaTypeRef,
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SqlRuntimeException {
+<span class="fc" id="L213">        return Fs.as(toObject(resultSet, javaTypeRef.type(), nameMapper, converter, options));</span>
+    }
+
+    /**
+     * Convert the result set to a list of objects.
+     *
+     * @param resultSet  the result set
+     * @param javaType   the element java type of the returned list
+     * @param nameMapper the name mapper to map the column name to the field name of the element type
+     * @param converter  the converter to convert the object of the JDBC type to the java type
+     * @param options    the options for converting
+     * @return the row list of the result set of which each row is mapped to the specified java type
+     * @throws SqlRuntimeException if any error occurs
+     */
+    public static @Immutable @Nonnull List&lt;@Nonnull Object&gt; toObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Type javaType,
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SqlRuntimeException {
+<span class="fc" id="L234">        return Fs.uncheck(() -&gt; resultToObject(resultSet, javaType, nameMapper, converter, options), SqlRuntimeException::new);</span>
+    }
+
+    private static &lt;T&gt; @Immutable @Nonnull List&lt;@Nonnull T&gt; resultToObject(
+        @Nonnull ResultSet resultSet,
+        @Nonnull Type javaType,
+        @Nonnull NameMapper nameMapper,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws SQLException {
+<span class="fc" id="L244">        ResultSetMetaData metaData = resultSet.getMetaData();</span>
+<span class="fc" id="L245">        ArrayList&lt;T&gt; objects = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L246">        Map&lt;String, Object&gt; rowMap = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            for (int column = 0; column &lt; metaData.getColumnCount(); column++) {</span>
+<span class="fc" id="L249">                String columnName = metaData.getColumnName(column + 1);</span>
+<span class="fc" id="L250">                Object jdbcObject = resultSet.getObject(column + 1);</span>
+<span class="fc" id="L251">                String fieldName = nameMapper.map(columnName);</span>
+<span class="fc" id="L252">                rowMap.put(fieldName, jdbcObject);</span>
+            }
+<span class="fc" id="L254">            Object element = converter.convert(rowMap, javaType, options);</span>
+<span class="fc" id="L255">            objects.add(Fs.as(element));</span>
+<span class="fc" id="L256">            rowMap.clear();</span>
+<span class="fc" id="L257">        }</span>
+<span class="fc" id="L258">        objects.trimToSize();</span>
+<span class="fc" id="L259">        return objects;</span>
+    }
+
+<span class="fc" id="L262">    private enum DbNameMapper implements NameMapper {</span>
+<span class="fc" id="L263">        INST;</span>
+
+<span class="fc" id="L265">        private final @Nonnull NameFormatter from = NameFormatter.delimiter(&quot;_&quot;);</span>
+<span class="fc" id="L266">        private final @Nonnull NameFormatter to = NameFormatter.lowerCamel();</span>
+
+        @Override
+        public @Nonnull String map(@Nonnull String name) {
+<span class="fc" id="L270">            String lowerName = name.toLowerCase();</span>
+<span class="fc" id="L271">            return from.format(lowerName, to);</span>
+        }
+    }
+
+    private JdbcKit() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

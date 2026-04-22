@@ -6,27 +6,37 @@ import space.sunqian.annotation.Nullable;
 import space.sunqian.fs.Fs;
 import space.sunqian.fs.base.exception.UnsupportedEnvException;
 import space.sunqian.fs.invoke.Invocable;
-import space.sunqian.fs.object.data.DataObjectException;
-import space.sunqian.fs.object.data.ObjectBuilder;
-import space.sunqian.fs.object.data.ObjectBuilderProvider;
+import space.sunqian.fs.object.ObjectException;
+import space.sunqian.fs.object.builder.BuilderOperator;
+import space.sunqian.fs.object.builder.BuilderOperatorProvider;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * {@link ObjectBuilderProvider.Handler} implementation for
+ * {@link BuilderOperatorProvider.Handler} implementation for
  * &lt;a href=&quot;https://github.com/protocolbuffers/protobuf&quot;&gt;Protocol Buffers&lt;/a&gt;, can be quickly used through similar
  * codes:
  * &lt;pre&gt;{@code
- * ObjectBuilderProvider provider = ObjectBuilderProvider
- *     .defaultProvider()
- *     .withFirstHandler(new ProtobufBuilderHandler());
+ * BuilderOperatorProvider provider = ...;
+ * BuilderOperatorProvider protoProvider = provider
+ *     .withFirstHandler(ProtobufBuilderHandler.getInstance());
  * }&lt;/pre&gt;
- * To use this class, the protobuf package {@code com.google.protobuf} must in the runtime environment.
+ * To use this class, the protobuf package {@code com.google.protobuf} must in the runtime environment. And in this
+ * environment, the {@link BuilderOperatorProvider#defaultProvider()} will automatically load this handler.
  *
  * @author sunqian
  */
-public class ProtobufBuilderHandler implements ObjectBuilderProvider.Handler {
+public class ProtobufBuilderHandler implements BuilderOperatorProvider.Handler {
+
+<span class="fc" id="L32">    private static final @Nonnull ProtobufBuilderHandler INST = new ProtobufBuilderHandler();</span>
+
+    /**
+     * Returns a same one instance of this handler.
+     */
+    public static @Nonnull ProtobufBuilderHandler getInstance() {
+<span class="fc" id="L38">        return INST;</span>
+    }
 
     /**
      * Constructs a new handler instance. This constructor will check whether the protobuf package is available in the
@@ -34,95 +44,108 @@ public class ProtobufBuilderHandler implements ObjectBuilderProvider.Handler {
      *
      * @throws UnsupportedEnvException if the protobuf package is not available in the current environment.
      */
-<span class="fc" id="L37">    public ProtobufBuilderHandler() throws UnsupportedEnvException {</span>
-<span class="fc" id="L38">        Fs.uncheck(() -&gt; Class.forName(&quot;com.google.protobuf.Message&quot;), UnsupportedEnvException::new);</span>
-<span class="fc" id="L39">    }</span>
+<span class="fc" id="L47">    public ProtobufBuilderHandler() throws UnsupportedEnvException {</span>
+<span class="fc" id="L48">        Fs.uncheck(() -&gt; Class.forName(&quot;com.google.protobuf.Message&quot;), UnsupportedEnvException::new);</span>
+<span class="fc" id="L49">    }</span>
 
     @Override
-    public @Nullable ObjectBuilder newBuilder(@Nonnull Type target) throws Exception {
+    public @Nullable BuilderOperator newOperator(@Nonnull Type target) throws Exception {
         // Check whether it is a protobuf object
-<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (!(target instanceof Class&lt;?&gt;)) {</span>
-<span class="fc" id="L45">            return null;</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (!(target instanceof Class&lt;?&gt;)) {</span>
+<span class="fc" id="L55">            return null;</span>
         }
-<span class="fc" id="L47">        Class&lt;?&gt; rawTarget = (Class&lt;?&gt;) target;</span>
-<span class="fc" id="L48">        boolean isProtobuf = false;</span>
-<span class="fc" id="L49">        boolean isBuilder = false;</span>
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (Message.class.isAssignableFrom(rawTarget)) {</span>
-<span class="fc" id="L51">            isProtobuf = true;</span>
+        @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L58">        Class&lt;?&gt; rawTarget = (Class&lt;?&gt;) target;</span>
+<span class="fc" id="L59">        boolean isProtobuf = false;</span>
+<span class="fc" id="L60">        boolean isBuilder = false;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (Message.class.isAssignableFrom(rawTarget)) {</span>
+<span class="fc" id="L62">            isProtobuf = true;</span>
         }
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (Message.Builder.class.isAssignableFrom(rawTarget)) {</span>
-<span class="fc" id="L54">            isProtobuf = true;</span>
-<span class="fc" id="L55">            isBuilder = true;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (Message.Builder.class.isAssignableFrom(rawTarget)) {</span>
+<span class="fc" id="L65">            isProtobuf = true;</span>
+<span class="fc" id="L66">            isBuilder = true;</span>
         }
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (!isProtobuf) {</span>
-<span class="fc" id="L58">            return null;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!isProtobuf) {</span>
+<span class="fc" id="L69">            return null;</span>
         }
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (isBuilder) {</span>
-<span class="fc" id="L61">            Method buildMethod = rawTarget.getMethod(&quot;build&quot;);</span>
-<span class="fc" id="L62">            Class&lt;?&gt; messageType = buildMethod.getReturnType();</span>
-<span class="fc" id="L63">            Method builderMethod = messageType.getMethod(&quot;newBuilder&quot;);</span>
-<span class="fc" id="L64">            return new BuilderToBuilder(builderMethod, rawTarget);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (isBuilder) {</span>
+<span class="fc" id="L72">            Method buildMethod = rawTarget.getMethod(&quot;build&quot;);</span>
+<span class="fc" id="L73">            Class&lt;?&gt; messageType = buildMethod.getReturnType();</span>
+<span class="fc" id="L74">            Method builderMethod = messageType.getMethod(&quot;newBuilder&quot;);</span>
+<span class="fc" id="L75">            return new ImplForBuilder(builderMethod, target);</span>
         } else {
-<span class="fc" id="L66">            Method builderMethod = rawTarget.getMethod(&quot;newBuilder&quot;);</span>
-<span class="fc" id="L67">            Class&lt;?&gt; builderType = builderMethod.getReturnType();</span>
-<span class="fc" id="L68">            Method buildMethod = builderType.getMethod(&quot;build&quot;);</span>
-<span class="fc" id="L69">            return new BuilderToObject(builderMethod, buildMethod, builderType);</span>
+<span class="fc" id="L77">            Method builderMethod = rawTarget.getMethod(&quot;newBuilder&quot;);</span>
+<span class="fc" id="L78">            Class&lt;?&gt; builderType = builderMethod.getReturnType();</span>
+<span class="fc" id="L79">            Method buildMethod = builderType.getMethod(&quot;build&quot;);</span>
+<span class="fc" id="L80">            return new ImplForMessage(builderMethod, buildMethod, builderType);</span>
         }
     }
 
-    private static final class BuilderToBuilder implements ObjectBuilder {
+    private static final class ImplForBuilder implements BuilderOperator {
 
         private final @Nonnull Invocable builder;
         private final @Nonnull Type builderType;
 
-<span class="fc" id="L78">        private BuilderToBuilder(@Nonnull Method builderMethod, @Nonnull Type builderType) {</span>
-<span class="fc" id="L79">            this.builder = Invocable.of(builderMethod);</span>
-<span class="fc" id="L80">            this.builderType = builderType;</span>
-<span class="fc" id="L81">        }</span>
-
-        @Override
-        public @Nonnull Object newBuilder() throws DataObjectException {
-<span class="fc" id="L85">            return Fs.uncheck(() -&gt; builder.invoke(null), DataObjectException::new);</span>
-        }
+<span class="fc" id="L89">        private ImplForBuilder(@Nonnull Method builderMethod, @Nonnull Type builderType) {</span>
+<span class="fc" id="L90">            this.builder = Invocable.of(builderMethod);</span>
+<span class="fc" id="L91">            this.builderType = builderType;</span>
+<span class="fc" id="L92">        }</span>
 
         @Override
         public @Nonnull Type builderType() {
-<span class="fc" id="L90">            return builderType;</span>
+<span class="fc" id="L96">            return builderType;</span>
         }
 
         @Override
-        public @Nonnull Object build(@Nonnull Object builder) throws DataObjectException {
-<span class="fc" id="L95">            return builder;</span>
+        public @Nonnull Type targetType() {
+<span class="fc" id="L101">            return builderType;</span>
+        }
+
+        @Override
+        public @Nonnull Object createBuilder() throws ObjectException {
+<span class="fc" id="L106">            return Fs.uncheck(() -&gt; builder.invoke(null), ObjectException::new);</span>
+        }
+
+        @Override
+        public @Nonnull Object buildTarget(@Nonnull Object builder) throws ObjectException {
+<span class="fc" id="L111">            return builder;</span>
         }
     }
 
-    private static final class BuilderToObject implements ObjectBuilder {
+    private static final class ImplForMessage implements BuilderOperator {
 
         private final @Nonnull Invocable builder;
         private final @Nonnull Invocable build;
         private final @Nonnull Type builderType;
+        private final @Nonnull Type messageType;
 
-        private BuilderToObject(
+        private ImplForMessage(
             @Nonnull Method builderMethod, @Nonnull Method buildMethod, @Nonnull Type builderType
-<span class="fc" id="L107">        ) {</span>
-<span class="fc" id="L108">            this.builder = Invocable.of(builderMethod);</span>
-<span class="fc" id="L109">            this.build = Invocable.of(buildMethod);</span>
-<span class="fc" id="L110">            this.builderType = builderType;</span>
-<span class="fc" id="L111">        }</span>
-
-        @Override
-        public @Nonnull Object newBuilder() throws DataObjectException {
-<span class="fc" id="L115">            return Fs.uncheck(() -&gt; builder.invoke(null), DataObjectException::new);</span>
-        }
+<span class="fc" id="L124">        ) {</span>
+<span class="fc" id="L125">            this.builder = Invocable.of(builderMethod);</span>
+<span class="fc" id="L126">            this.build = Invocable.of(buildMethod);</span>
+<span class="fc" id="L127">            this.builderType = builderType;</span>
+<span class="fc" id="L128">            this.messageType = buildMethod.getReturnType();</span>
+<span class="fc" id="L129">        }</span>
 
         @Override
         public @Nonnull Type builderType() {
-<span class="fc" id="L120">            return builderType;</span>
+<span class="fc" id="L133">            return builderType;</span>
         }
 
         @Override
-        public @Nonnull Object build(@Nonnull Object builder) throws DataObjectException {
-<span class="fc" id="L125">            return Fs.uncheck(() -&gt; build.invoke(builder), DataObjectException::new);</span>
+        public @Nonnull Type targetType() {
+<span class="fc" id="L138">            return messageType;</span>
+        }
+
+        @Override
+        public @Nonnull Object createBuilder() throws ObjectException {
+<span class="fc" id="L143">            return Fs.uncheck(() -&gt; builder.invoke(null), ObjectException::new);</span>
+        }
+
+        @Override
+        public @Nonnull Object buildTarget(@Nonnull Object builder) throws ObjectException {
+<span class="fc" id="L148">            return Fs.uncheck(() -&gt; build.invoke(builder), ObjectException::new);</span>
         }
     }
 }

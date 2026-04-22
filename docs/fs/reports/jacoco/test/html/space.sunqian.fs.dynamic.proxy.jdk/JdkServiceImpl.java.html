@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JdkServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.dynamic.proxy.jdk</a> &gt; <span class="el_source">JdkServiceImpl.java</span></div><h1>JdkServiceImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.dynamic.proxy.jdk;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.RetainedParam;
+import space.sunqian.fs.dynamic.DynamicClassLoader;
+import space.sunqian.fs.invoke.Invocable;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.List;
+
+<span class="fc" id="L16">enum JdkServiceImpl implements JdkService {</span>
+<span class="fc" id="L17">    INST;</span>
+
+    private Constructor&lt;MethodHandles.Lookup&gt; constructor;
+
+    @Override
+    public @Nonnull Invocable getDefaultMethodInvocable(@Nonnull Method method) throws Exception {
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (constructor == null) {</span>
+<span class="fc" id="L24">            Constructor&lt;MethodHandles.Lookup&gt; c = MethodHandles.Lookup.class</span>
+<span class="fc" id="L25">                .getDeclaredConstructor(Class.class);</span>
+<span class="fc" id="L26">            c.setAccessible(true);</span>
+<span class="fc" id="L27">            constructor = c;</span>
+        }
+<span class="fc" id="L29">        MethodHandles.Lookup lookup = constructor.newInstance(method.getDeclaringClass());</span>
+<span class="fc" id="L30">        MethodHandle methodHandle = lookup.unreflectSpecial(method, method.getDeclaringClass());</span>
+<span class="fc" id="L31">        return Invocable.of(methodHandle, false);</span>
+    }
+
+    @SuppressWarnings(&quot;deprecation&quot;)
+    @Override
+    public Class&lt;?&gt; getProxyClass(
+        @Nonnull @RetainedParam List&lt;@Nonnull Class&lt;?&gt;&gt; interfaces,
+        @Nonnull InvocationHandler invocationHandler
+    ) throws IllegalArgumentException {
+<span class="fc" id="L40">        Class&lt;?&gt;[] interfaceClasses = interfaces.toArray(new Class&lt;?&gt;[0]);</span>
+<span class="fc" id="L41">        return Proxy.getProxyClass(</span>
+            new DynamicClassLoader(),
+            interfaceClasses
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

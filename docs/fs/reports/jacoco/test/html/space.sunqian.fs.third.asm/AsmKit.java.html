@@ -2,12 +2,10 @@
 
 import space.sunqian.annotation.NonExported;
 import space.sunqian.annotation.Nonnull;
-import space.sunqian.annotation.Nullable;
 import space.sunqian.fs.Fs;
 import space.sunqian.fs.asm.MethodVisitor;
 import space.sunqian.fs.asm.Opcodes;
 import space.sunqian.fs.base.system.JvmKit;
-import space.sunqian.fs.collect.ArrayKit;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -34,26 +32,45 @@ public class AsmKit {
     public static final @Nonnull String CONSTRUCTOR_NAME = &quot;&lt;init&gt;&quot;;
 
     /**
-     * The descriptor of constructor with empty parameter.
+     * The descriptor of method/constructor with empty parameter and no return value and no throws.
      */
-    public static final @Nonnull String EMPTY_CONSTRUCTOR_DESCRIPTOR = &quot;()V&quot;;
+    public static final @Nonnull String EMPTY_METHOD_DESCRIPTOR = &quot;()V&quot;;
 
     /**
-     * The prefix of generated class name.
+     * The suffix of generated class name.
      */
-<span class="fc" id="L44">    public static final String GEN_CLASS_PREFIX = &quot;GenBy$&quot;</span>
+<span class="fc" id="L42">    public static final String GEN_SUFFIX = &quot;$GenBy$&quot;</span>
         +
         Fs.LIB_NAME
         +
         &quot;$&quot;
         +
-        Fs.LIB_VERSION
-<span class="fc" id="L51">            .replace('.', '_')</span>
-<span class="fc" id="L52">            .replace('-', '_')</span>
-        +
-        &quot;$&quot;;
+<span class="fc" id="L48">        toGeneratedClassName(Fs.LIB_VERSION);</span>
 
-<span class="fc" id="L56">    private static final @Nonnull AtomicLong classCounter = new AtomicLong();</span>
+<span class="fc" id="L50">    private static final @Nonnull AtomicLong classCounter = new AtomicLong();</span>
+
+    /**
+     * Converts the specified version string to a generated class name.
+     *
+     * @param version the specified version string
+     * @return the generated class name
+     */
+    public static @Nonnull String toGeneratedClassName(@Nonnull String version) {
+<span class="fc" id="L59">        char[] versionChars = version.toCharArray();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        for (int i = 0; i &lt; versionChars.length; i++) {</span>
+<span class="fc" id="L61">            char c = versionChars[i];</span>
+<span class="fc bfc" id="L62" title="All 12 branches covered.">            if (</span>
+                (c &gt;= '0' &amp;&amp; c &lt;= '9')
+                    || (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')
+                    || (c &gt;= 'a' &amp;&amp; c &lt;= 'z')
+            ) {
+<span class="fc" id="L67">                versionChars[i] = c;</span>
+            } else {
+<span class="fc" id="L69">                versionChars[i] = '_';</span>
+            }
+        }
+<span class="fc" id="L72">        return new String(versionChars);</span>
+    }
 
     /**
      * Loads a constant by {@code MethodVisitor.visitInsn}.
@@ -62,32 +79,32 @@ public class AsmKit {
      * @param i       the constant
      */
     public static void visitConst(@Nonnull MethodVisitor visitor, int i) {
-<span class="fc bfc" id="L65" title="All 7 branches covered.">        switch (i) {</span>
+<span class="fc bfc" id="L82" title="All 7 branches covered.">        switch (i) {</span>
             case 0:
-<span class="fc" id="L67">                visitor.visitInsn(Opcodes.ICONST_0);</span>
-<span class="fc" id="L68">                return;</span>
+<span class="fc" id="L84">                visitor.visitInsn(Opcodes.ICONST_0);</span>
+<span class="fc" id="L85">                return;</span>
             case 1:
-<span class="fc" id="L70">                visitor.visitInsn(Opcodes.ICONST_1);</span>
-<span class="fc" id="L71">                return;</span>
+<span class="fc" id="L87">                visitor.visitInsn(Opcodes.ICONST_1);</span>
+<span class="fc" id="L88">                return;</span>
             case 2:
-<span class="fc" id="L73">                visitor.visitInsn(Opcodes.ICONST_2);</span>
-<span class="fc" id="L74">                return;</span>
+<span class="fc" id="L90">                visitor.visitInsn(Opcodes.ICONST_2);</span>
+<span class="fc" id="L91">                return;</span>
             case 3:
-<span class="fc" id="L76">                visitor.visitInsn(Opcodes.ICONST_3);</span>
-<span class="fc" id="L77">                return;</span>
+<span class="fc" id="L93">                visitor.visitInsn(Opcodes.ICONST_3);</span>
+<span class="fc" id="L94">                return;</span>
             case 4:
-<span class="fc" id="L79">                visitor.visitInsn(Opcodes.ICONST_4);</span>
-<span class="fc" id="L80">                return;</span>
+<span class="fc" id="L96">                visitor.visitInsn(Opcodes.ICONST_4);</span>
+<span class="fc" id="L97">                return;</span>
             case 5:
-<span class="fc" id="L82">                visitor.visitInsn(Opcodes.ICONST_5);</span>
-<span class="fc" id="L83">                return;</span>
+<span class="fc" id="L99">                visitor.visitInsn(Opcodes.ICONST_5);</span>
+<span class="fc" id="L100">                return;</span>
         }
-<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (i &lt;= Byte.MAX_VALUE) {</span>
-<span class="fc" id="L86">            visitor.visitIntInsn(Opcodes.BIPUSH, i);</span>
-<span class="fc" id="L87">            return;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (i &lt;= Byte.MAX_VALUE) {</span>
+<span class="fc" id="L103">            visitor.visitIntInsn(Opcodes.BIPUSH, i);</span>
+<span class="fc" id="L104">            return;</span>
         }
-<span class="fc" id="L89">        visitor.visitIntInsn(Opcodes.SIPUSH, i);</span>
-<span class="fc" id="L90">    }</span>
+<span class="fc" id="L106">        visitor.visitIntInsn(Opcodes.SIPUSH, i);</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Loads a var by {@code MethodVisitor.visitVarInsn} with the specified type and slot index.
@@ -97,40 +114,40 @@ public class AsmKit {
      * @param i       the slot index
      */
     public static void visitLoad(@Nonnull MethodVisitor visitor, @Nonnull Class&lt;?&gt; type, int i) {
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
-<span class="fc" id="L101">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
-<span class="fc" id="L102">            return;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
+<span class="fc" id="L118">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
+<span class="fc" id="L119">            return;</span>
         }
-<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
-<span class="fc" id="L105">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
-<span class="fc" id="L106">            return;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
+<span class="fc" id="L122">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
+<span class="fc" id="L123">            return;</span>
         }
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
-<span class="fc" id="L109">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
-<span class="fc" id="L110">            return;</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
+<span class="fc" id="L126">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
+<span class="fc" id="L127">            return;</span>
         }
-<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
-<span class="fc" id="L113">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
-<span class="fc" id="L114">            return;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
+<span class="fc" id="L130">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
+<span class="fc" id="L131">            return;</span>
         }
-<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
-<span class="fc" id="L117">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
-<span class="fc" id="L118">            return;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
+<span class="fc" id="L134">            visitor.visitVarInsn(Opcodes.ILOAD, i);</span>
+<span class="fc" id="L135">            return;</span>
         }
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
-<span class="fc" id="L121">            visitor.visitVarInsn(Opcodes.LLOAD, i);</span>
-<span class="fc" id="L122">            return;</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
+<span class="fc" id="L138">            visitor.visitVarInsn(Opcodes.LLOAD, i);</span>
+<span class="fc" id="L139">            return;</span>
         }
-<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
-<span class="fc" id="L125">            visitor.visitVarInsn(Opcodes.FLOAD, i);</span>
-<span class="fc" id="L126">            return;</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
+<span class="fc" id="L142">            visitor.visitVarInsn(Opcodes.FLOAD, i);</span>
+<span class="fc" id="L143">            return;</span>
         }
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
-<span class="fc" id="L129">            visitor.visitVarInsn(Opcodes.DLOAD, i);</span>
-<span class="fc" id="L130">            return;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L146">            visitor.visitVarInsn(Opcodes.DLOAD, i);</span>
+<span class="fc" id="L147">            return;</span>
         }
-<span class="fc" id="L132">        visitor.visitVarInsn(Opcodes.ALOAD, i);</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L149">        visitor.visitVarInsn(Opcodes.ALOAD, i);</span>
+<span class="fc" id="L150">    }</span>
 
     // /**
     //  * Stores a var by {@code MethodVisitor.visitVarInsn} with the specified type and slot index.
@@ -189,51 +206,51 @@ public class AsmKit {
         boolean requiresCast,
         boolean returnNull
     ) {
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
-<span class="fc" id="L193">            visitor.visitInsn(Opcodes.IRETURN);</span>
-<span class="fc" id="L194">            return;</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
+<span class="fc" id="L210">            visitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L211">            return;</span>
         }
-<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
-<span class="fc" id="L197">            visitor.visitInsn(Opcodes.IRETURN);</span>
-<span class="fc" id="L198">            return;</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
+<span class="fc" id="L214">            visitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L215">            return;</span>
         }
-<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
-<span class="fc" id="L201">            visitor.visitInsn(Opcodes.IRETURN);</span>
-<span class="fc" id="L202">            return;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
+<span class="fc" id="L218">            visitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L219">            return;</span>
         }
-<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
-<span class="fc" id="L205">            visitor.visitInsn(Opcodes.IRETURN);</span>
-<span class="fc" id="L206">            return;</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
+<span class="fc" id="L222">            visitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L223">            return;</span>
         }
-<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
-<span class="fc" id="L209">            visitor.visitInsn(Opcodes.IRETURN);</span>
-<span class="fc" id="L210">            return;</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
+<span class="fc" id="L226">            visitor.visitInsn(Opcodes.IRETURN);</span>
+<span class="fc" id="L227">            return;</span>
         }
-<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
-<span class="fc" id="L213">            visitor.visitInsn(Opcodes.LRETURN);</span>
-<span class="fc" id="L214">            return;</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
+<span class="fc" id="L230">            visitor.visitInsn(Opcodes.LRETURN);</span>
+<span class="fc" id="L231">            return;</span>
         }
-<span class="fc bfc" id="L216" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
-<span class="fc" id="L217">            visitor.visitInsn(Opcodes.FRETURN);</span>
-<span class="fc" id="L218">            return;</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
+<span class="fc" id="L234">            visitor.visitInsn(Opcodes.FRETURN);</span>
+<span class="fc" id="L235">            return;</span>
         }
-<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
-<span class="fc" id="L221">            visitor.visitInsn(Opcodes.DRETURN);</span>
-<span class="fc" id="L222">            return;</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L238">            visitor.visitInsn(Opcodes.DRETURN);</span>
+<span class="fc" id="L239">            return;</span>
         }
-<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (Objects.equals(type, void.class)) {</span>
-<span class="fc bfc" id="L225" title="All 2 branches covered.">            if (returnNull) {</span>
-<span class="fc" id="L226">                visitor.visitInsn(Opcodes.ACONST_NULL);</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (Objects.equals(type, void.class)) {</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">            if (returnNull) {</span>
+<span class="fc" id="L243">                visitor.visitInsn(Opcodes.ACONST_NULL);</span>
             } else {
-<span class="fc" id="L228">                visitor.visitInsn(Opcodes.RETURN);</span>
-<span class="fc" id="L229">                return;</span>
+<span class="fc" id="L245">                visitor.visitInsn(Opcodes.RETURN);</span>
+<span class="fc" id="L246">                return;</span>
             }
         }
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (requiresCast) {</span>
-<span class="fc" id="L233">            visitor.visitTypeInsn(Opcodes.CHECKCAST, JvmKit.toInternalName(type));</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (requiresCast) {</span>
+<span class="fc" id="L250">            visitor.visitTypeInsn(Opcodes.CHECKCAST, JvmKit.toInternalName(type));</span>
         }
-<span class="fc" id="L235">        visitor.visitInsn(Opcodes.ARETURN);</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L252">        visitor.visitInsn(Opcodes.ARETURN);</span>
+<span class="fc" id="L253">    }</span>
 
     /**
      * Converts the object var at the top of the stack to the specified type.
@@ -242,56 +259,56 @@ public class AsmKit {
      * @param type    the specified type
      */
     public static void convertObjectTo(@Nonnull MethodVisitor visitor, @Nonnull Class&lt;?&gt; type) {
-<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
-<span class="fc" id="L246">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Boolean&quot;);</span>
-<span class="fc" id="L247">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
+<span class="fc" id="L263">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Boolean&quot;);</span>
+<span class="fc" id="L264">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Boolean&quot;, &quot;booleanValue&quot;, &quot;()Z&quot;, false);
-<span class="fc" id="L249">            return;</span>
+<span class="fc" id="L266">            return;</span>
         }
-<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
-<span class="fc" id="L252">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Byte&quot;);</span>
-<span class="fc" id="L253">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
+<span class="fc" id="L269">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Byte&quot;);</span>
+<span class="fc" id="L270">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Byte&quot;, &quot;byteValue&quot;, &quot;()B&quot;, false);
-<span class="fc" id="L255">            return;</span>
+<span class="fc" id="L272">            return;</span>
         }
-<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
-<span class="fc" id="L258">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Short&quot;);</span>
-<span class="fc" id="L259">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
+<span class="fc" id="L275">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Short&quot;);</span>
+<span class="fc" id="L276">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Short&quot;, &quot;shortValue&quot;, &quot;()S&quot;, false);
-<span class="fc" id="L261">            return;</span>
+<span class="fc" id="L278">            return;</span>
         }
-<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
-<span class="fc" id="L264">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Character&quot;);</span>
-<span class="fc" id="L265">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
+<span class="fc" id="L281">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Character&quot;);</span>
+<span class="fc" id="L282">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Character&quot;, &quot;charValue&quot;, &quot;()C&quot;, false);
-<span class="fc" id="L267">            return;</span>
+<span class="fc" id="L284">            return;</span>
         }
-<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
-<span class="fc" id="L270">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Integer&quot;);</span>
-<span class="fc" id="L271">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
+<span class="fc" id="L287">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Integer&quot;);</span>
+<span class="fc" id="L288">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Integer&quot;, &quot;intValue&quot;, &quot;()I&quot;, false);
-<span class="fc" id="L273">            return;</span>
+<span class="fc" id="L290">            return;</span>
         }
-<span class="fc bfc" id="L275" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
-<span class="fc" id="L276">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Long&quot;);</span>
-<span class="fc" id="L277">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
+<span class="fc" id="L293">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Long&quot;);</span>
+<span class="fc" id="L294">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Long&quot;, &quot;longValue&quot;, &quot;()J&quot;, false);
-<span class="fc" id="L279">            return;</span>
+<span class="fc" id="L296">            return;</span>
         }
-<span class="fc bfc" id="L281" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
-<span class="fc" id="L282">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Float&quot;);</span>
-<span class="fc" id="L283">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
+<span class="fc" id="L299">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Float&quot;);</span>
+<span class="fc" id="L300">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Float&quot;, &quot;floatValue&quot;, &quot;()F&quot;, false);
-<span class="fc" id="L285">            return;</span>
+<span class="fc" id="L302">            return;</span>
         }
-<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
-<span class="fc" id="L288">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Double&quot;);</span>
-<span class="fc" id="L289">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L305">            visitor.visitTypeInsn(Opcodes.CHECKCAST, &quot;java/lang/Double&quot;);</span>
+<span class="fc" id="L306">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL, &quot;java/lang/Double&quot;, &quot;doubleValue&quot;, &quot;()D&quot;, false);
-<span class="fc" id="L291">            return;</span>
+<span class="fc" id="L308">            return;</span>
         }
-<span class="fc" id="L293">        visitor.visitTypeInsn(Opcodes.CHECKCAST, JvmKit.toInternalName(type));</span>
-<span class="fc" id="L294">    }</span>
+<span class="fc" id="L310">        visitor.visitTypeInsn(Opcodes.CHECKCAST, JvmKit.toInternalName(type));</span>
+<span class="fc" id="L311">    }</span>
 
     /**
      * Wraps the primitive var at the top of the stack. If the var is an object type, then it has no effect. Returns the
@@ -302,47 +319,47 @@ public class AsmKit {
      * @return the wrapper type
      */
     public static Class&lt;?&gt; wrapToObject(@Nonnull MethodVisitor visitor, @Nonnull Class&lt;?&gt; type) {
-<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
-<span class="fc" id="L306">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        if (Objects.equals(type, boolean.class)) {</span>
+<span class="fc" id="L323">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Boolean&quot;, &quot;valueOf&quot;, &quot;(Z)Ljava/lang/Boolean;&quot;, false);
-<span class="fc" id="L308">            return Boolean.class;</span>
+<span class="fc" id="L325">            return Boolean.class;</span>
         }
-<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
-<span class="fc" id="L311">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        if (Objects.equals(type, byte.class)) {</span>
+<span class="fc" id="L328">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Byte&quot;, &quot;valueOf&quot;, &quot;(B)Ljava/lang/Byte;&quot;, false);
-<span class="fc" id="L313">            return Byte.class;</span>
+<span class="fc" id="L330">            return Byte.class;</span>
         }
-<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
-<span class="fc" id="L316">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (Objects.equals(type, short.class)) {</span>
+<span class="fc" id="L333">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Short&quot;, &quot;valueOf&quot;, &quot;(S)Ljava/lang/Short;&quot;, false);
-<span class="fc" id="L318">            return Short.class;</span>
+<span class="fc" id="L335">            return Short.class;</span>
         }
-<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
-<span class="fc" id="L321">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        if (Objects.equals(type, char.class)) {</span>
+<span class="fc" id="L338">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Character&quot;, &quot;valueOf&quot;, &quot;(C)Ljava/lang/Character;&quot;, false);
-<span class="fc" id="L323">            return Character.class;</span>
+<span class="fc" id="L340">            return Character.class;</span>
         }
-<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
-<span class="fc" id="L326">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (Objects.equals(type, int.class)) {</span>
+<span class="fc" id="L343">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Integer&quot;, &quot;valueOf&quot;, &quot;(I)Ljava/lang/Integer;&quot;, false);
-<span class="fc" id="L328">            return Integer.class;</span>
+<span class="fc" id="L345">            return Integer.class;</span>
         }
-<span class="fc bfc" id="L330" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
-<span class="fc" id="L331">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (Objects.equals(type, long.class)) {</span>
+<span class="fc" id="L348">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Long&quot;, &quot;valueOf&quot;, &quot;(J)Ljava/lang/Long;&quot;, false);
-<span class="fc" id="L333">            return Long.class;</span>
+<span class="fc" id="L350">            return Long.class;</span>
         }
-<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
-<span class="fc" id="L336">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (Objects.equals(type, float.class)) {</span>
+<span class="fc" id="L353">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Float&quot;, &quot;valueOf&quot;, &quot;(F)Ljava/lang/Float;&quot;, false);
-<span class="fc" id="L338">            return Float.class;</span>
+<span class="fc" id="L355">            return Float.class;</span>
         }
-<span class="fc bfc" id="L340" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
-<span class="fc" id="L341">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">        if (Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L358">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKESTATIC, &quot;java/lang/Double&quot;, &quot;valueOf&quot;, &quot;(D)Ljava/lang/Double;&quot;, false);
-<span class="fc" id="L343">            return Double.class;</span>
+<span class="fc" id="L360">            return Double.class;</span>
         }
-<span class="fc" id="L345">        return type;</span>
+<span class="fc" id="L362">        return type;</span>
     }
 
     /**
@@ -361,8 +378,8 @@ public class AsmKit {
         @Nonnull String descriptor,
         boolean isInterface
     ) {
-<span class="fc bfc" id="L364" title="All 2 branches covered.">        if (isInterface) {</span>
-<span class="fc" id="L365">            visitor.visitMethodInsn(</span>
+<span class="fc bfc" id="L381" title="All 2 branches covered.">        if (isInterface) {</span>
+<span class="fc" id="L382">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEINTERFACE,
                 owner,
                 name,
@@ -370,7 +387,7 @@ public class AsmKit {
                 true
             );
         } else {
-<span class="fc" id="L373">            visitor.visitMethodInsn(</span>
+<span class="fc" id="L390">            visitor.visitMethodInsn(</span>
                 Opcodes.INVOKEVIRTUAL,
                 owner,
                 name,
@@ -378,7 +395,7 @@ public class AsmKit {
                 false
             );
         }
-<span class="fc" id="L381">    }</span>
+<span class="fc" id="L398">    }</span>
 
     /**
      * Returns the slots count for the given method's parameters.
@@ -387,12 +404,12 @@ public class AsmKit {
      * @return the slots count for the given method's parameters
      */
     public static int countParamSlots(@Nonnull Method method) {
-<span class="fc" id="L390">        int count = 0;</span>
-<span class="fc bfc" id="L391" title="All 2 branches covered.">        for (Parameter parameter : method.getParameters()) {</span>
-<span class="fc" id="L392">            Class&lt;?&gt; type = parameter.getType();</span>
-<span class="fc" id="L393">            count += varSize(type);</span>
+<span class="fc" id="L407">        int count = 0;</span>
+<span class="fc bfc" id="L408" title="All 2 branches covered.">        for (Parameter parameter : method.getParameters()) {</span>
+<span class="fc" id="L409">            Class&lt;?&gt; type = parameter.getType();</span>
+<span class="fc" id="L410">            count += varSize(type);</span>
         }
-<span class="fc" id="L395">        return count;</span>
+<span class="fc" id="L412">        return count;</span>
     }
 
     /**
@@ -402,13 +419,13 @@ public class AsmKit {
      * @return the slot count of the specified type
      */
     public static int varSize(@Nonnull Class&lt;?&gt; type) {
-<span class="fc bfc" id="L405" title="All 4 branches covered.">        if (Objects.equals(type, long.class) || Objects.equals(type, double.class)) {</span>
-<span class="fc" id="L406">            return 2;</span>
+<span class="fc bfc" id="L422" title="All 4 branches covered.">        if (Objects.equals(type, long.class) || Objects.equals(type, double.class)) {</span>
+<span class="fc" id="L423">            return 2;</span>
         }
         // if (Objects.equals(type, void.class)) {
         //     return 0;
         // }
-<span class="fc" id="L411">        return 1;</span>
+<span class="fc" id="L428">        return 1;</span>
     }
 
     /**
@@ -418,37 +435,50 @@ public class AsmKit {
      * @return the all slot count of the specified parameters
      */
     public static int paramSize(@Nonnull Parameter @Nonnull [] parameters) {
-<span class="fc" id="L421">        int size = 0;</span>
-<span class="fc bfc" id="L422" title="All 2 branches covered.">        for (Parameter parameter : parameters) {</span>
-<span class="fc" id="L423">            size += varSize(parameter.getType());</span>
+<span class="fc" id="L438">        int size = 0;</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">        for (Parameter parameter : parameters) {</span>
+<span class="fc" id="L440">            size += varSize(parameter.getType());</span>
         }
-<span class="fc" id="L425">        return size;</span>
-    }
-
-    /**
-     * Returns the exception internal names of the specified method.
-     *
-     * @param method the specified method
-     * @return the exception internal names of the specified method
-     */
-    public static @Nonnull String @Nullable [] getExceptions(Method method) {
-<span class="fc" id="L435">        Class&lt;?&gt;[] exceptionTypes = method.getExceptionTypes();</span>
-<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (ArrayKit.isEmpty(exceptionTypes)) {</span>
-<span class="fc" id="L437">            return null;</span>
-        }
-<span class="fc" id="L439">        return Fs.stream(exceptionTypes).map(JvmKit::toInternalName).toArray(String[]::new);</span>
+<span class="fc" id="L442">        return size;</span>
     }
 
     /**
      * Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
-     * package.
+     * package. The class name will be automatically generated and is unique in the specified package.
+     * &lt;p&gt;
+     * Note this method uses internal class counter to generate the class name, using {@link #lastClassCount()} can get
+     * the last count value which used in the last class name generated by this method.
      *
      * @param pkg the specified package
      * @return a class name
      */
     public static String newClassInternalName(@Nonnull Package pkg) {
-<span class="fc" id="L450">        return pkg.getName().replace('.', '/')</span>
-<span class="fc" id="L451">            + &quot;/&quot; + GEN_CLASS_PREFIX + classCounter.incrementAndGet();</span>
+<span class="fc" id="L456">        return newClassInternalName(pkg, &quot;C&quot; + classCounter.incrementAndGet());</span>
+    }
+
+    /**
+     * Generates and returns a class internal name (of which dot '.' is replaced by slash '/') with the specified
+     * package. The class name will be automatically generated following the specified prefix, and the specified prefix
+     * should be unique in the specified package.
+     *
+     * @param pkg    the specified package
+     * @param prefix the prefix of class name generated
+     * @return a class name
+     */
+    public static String newClassInternalName(@Nonnull Package pkg, @Nonnull String prefix) {
+<span class="fc" id="L469">        return pkg.getName().replace('.', '/')</span>
+            + &quot;/&quot; + prefix + GEN_SUFFIX;
+    }
+
+    /**
+     * Returns the last count value which used in the last class name generated by
+     * {@link #newClassInternalName(Package)}.
+     *
+     * @return the last count value which used in the last class name generated by
+     * {@link #newClassInternalName(Package)}.
+     */
+    public static long lastClassCount() {
+<span class="fc" id="L481">        return classCounter.get();</span>
     }
 
     private AsmKit() {

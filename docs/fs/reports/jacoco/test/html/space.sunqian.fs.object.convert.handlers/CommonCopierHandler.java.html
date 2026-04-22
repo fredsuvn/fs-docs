@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonCopierHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.convert.handlers</a> &gt; <span class="el_source">CommonCopierHandler.java</span></div><h1>CommonCopierHandler.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.convert.handlers;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.option.Option;
+import space.sunqian.fs.object.annotation.DatePattern;
+import space.sunqian.fs.object.annotation.NumPattern;
+import space.sunqian.fs.object.convert.ConvertKit;
+import space.sunqian.fs.object.convert.ConvertOption;
+import space.sunqian.fs.object.convert.ObjectConverter;
+import space.sunqian.fs.object.convert.ObjectCopier;
+import space.sunqian.fs.object.schema.MapSchema;
+import space.sunqian.fs.object.schema.ObjectProperty;
+import space.sunqian.fs.object.schema.ObjectSchema;
+
+import java.util.Map;
+
+/**
+ * The common implementation of {@link ObjectCopier.Handler}, also be the default last handler of
+ * {@link ObjectCopier#defaultCopier()}. Using {@link #getInstance()} can get a same one instance of this handler.
+ * &lt;p&gt;
+ * This handler uses the default implementations of {@link ObjectCopier.Handler}, which directly copies properties from
+ * the source object to the target object, following the rules of the specified options defined in
+ * {@link ConvertOption}.
+ *
+ * @author sunqian
+ */
+<span class="fc" id="L29">public class CommonCopierHandler implements ObjectCopier.Handler {</span>
+
+<span class="fc" id="L31">    private static final @Nonnull CommonCopierHandler INST = new CommonCopierHandler();</span>
+
+    /**
+     * Returns a same one instance of this handler.
+     */
+    public static @Nonnull CommonCopierHandler getInstance() {
+<span class="fc" id="L37">        return INST;</span>
+    }
+
+    @Override
+    public boolean copyProperty(
+        @Nonnull Object srcKey,
+        @Nullable Object srcValue,
+        @Nonnull Map&lt;Object, Object&gt; src,
+        @Nonnull MapSchema srcSchema,
+        @Nonnull Map&lt;Object, Object&gt; dst,
+        @Nonnull MapSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (ConvertOption.isIgnoreProperty(srcKey, options)) {</span>
+<span class="fc" id="L52">            return false;</span>
+        }
+<span class="fc bfc" id="L54" title="All 4 branches covered.">        if (srcValue == null &amp;&amp; ConvertOption.isIgnoreNull(options)) {</span>
+<span class="fc" id="L55">            return false;</span>
+        }
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (srcKey instanceof String) {</span>
+<span class="fc" id="L58">            srcKey = Fs.as(ConvertOption.getNameMapper(options).map((String) srcKey));</span>
+        }
+<span class="fc" id="L60">        Object dstKey = converter.convert(srcKey, srcSchema.keyType(), dstSchema.keyType(), options);</span>
+<span class="fc" id="L61">        Object dstValue = converter.convert(srcValue, srcSchema.valueType(), dstSchema.valueType(), options);</span>
+<span class="fc" id="L62">        dst.put(dstKey, dstValue);</span>
+<span class="fc" id="L63">        return false;</span>
+    }
+
+    @Override
+    public boolean copyProperty(
+        @Nonnull Object srcKey,
+        @Nullable Object srcValue,
+        @Nonnull Map&lt;Object, Object&gt; src,
+        @Nonnull MapSchema srcSchema,
+        @Nonnull Object dst,
+        @Nonnull ObjectSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (ConvertOption.isIgnoreProperty(srcKey, options)) {</span>
+<span class="fc" id="L78">            return false;</span>
+        }
+<span class="fc bfc" id="L80" title="All 4 branches covered.">        if (srcValue == null &amp;&amp; ConvertOption.isIgnoreNull(options)) {</span>
+<span class="fc" id="L81">            return false;</span>
+        }
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (srcKey instanceof String) {</span>
+<span class="fc" id="L84">            srcKey = ConvertOption.getNameMapper(options).map((String) srcKey);</span>
+        }
+<span class="fc" id="L86">        String dstPropertyName = Fs.as(converter.convert(srcKey, srcSchema.keyType(), String.class, options));</span>
+<span class="fc" id="L87">        ObjectProperty dstProperty = dstSchema.getProperty(dstPropertyName);</span>
+<span class="fc bfc" id="L88" title="All 4 branches covered.">        if (dstProperty == null || !dstProperty.isWritable()) {</span>
+<span class="fc" id="L89">            return false;</span>
+        }
+<span class="fc" id="L91">        DatePattern datePattern = dstProperty.getAnnotation(DatePattern.class);</span>
+<span class="fc" id="L92">        NumPattern numPattern = dstProperty.getAnnotation(NumPattern.class);</span>
+<span class="fc" id="L93">        Option&lt;?, ?&gt;[] actualOps = ConvertKit.mergeOptions(options, datePattern, numPattern);</span>
+<span class="fc" id="L94">        Object dstPropertyValue = converter.convert(srcValue, srcSchema.valueType(), dstProperty.type(), actualOps);</span>
+<span class="fc" id="L95">        dstProperty.setValue(dst, dstPropertyValue);</span>
+<span class="fc" id="L96">        return false;</span>
+    }
+
+    @Override
+    public boolean copyProperty(
+        @Nonnull String srcPropertyName,
+        @Nonnull ObjectProperty srcProperty,
+        @Nonnull Object src,
+        @Nonnull ObjectSchema srcSchema,
+        @Nonnull Map&lt;Object, Object&gt; dst,
+        @Nonnull MapSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (ConvertOption.isIgnoreProperty(srcProperty.name(), options)) {</span>
+<span class="fc" id="L111">            return false;</span>
+        }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (!srcProperty.isReadable()) {</span>
+<span class="fc" id="L114">            return false;</span>
+        }
+<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (&quot;class&quot;.equals(srcPropertyName) &amp;&amp; !ConvertOption.isIncludeClass(options)) {</span>
+<span class="fc" id="L117">            return false;</span>
+        }
+<span class="fc" id="L119">        String actualSrcPropertyName = ConvertOption.getNameMapper(options).map(srcPropertyName);</span>
+<span class="fc" id="L120">        Object srcPropertyValue = srcProperty.getValue(src);</span>
+<span class="fc bfc" id="L121" title="All 4 branches covered.">        if (srcPropertyValue == null &amp;&amp; ConvertOption.isIgnoreNull(options)) {</span>
+<span class="fc" id="L122">            return false;</span>
+        }
+<span class="fc" id="L124">        Object dstKey = converter.convert(actualSrcPropertyName, String.class, dstSchema.keyType(), options);</span>
+<span class="fc" id="L125">        Object dstValue = converter.convert(srcPropertyValue, srcProperty.type(), dstSchema.valueType(), options);</span>
+<span class="fc" id="L126">        dst.put(dstKey, dstValue);</span>
+<span class="fc" id="L127">        return false;</span>
+    }
+
+    @Override
+    public boolean copyProperty(
+        @Nonnull String srcPropertyName,
+        @Nonnull ObjectProperty srcProperty,
+        @Nonnull Object src,
+        @Nonnull ObjectSchema srcSchema,
+        @Nonnull Object dst,
+        @Nonnull ObjectSchema dstSchema,
+        @Nonnull ObjectConverter converter,
+        @Nonnull Option&lt;?, ?&gt; @Nonnull ... options
+    ) throws Exception {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (ConvertOption.isIgnoreProperty(srcProperty.name(), options)) {</span>
+<span class="fc" id="L142">            return false;</span>
+        }
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (!srcProperty.isReadable()) {</span>
+<span class="fc" id="L145">            return false;</span>
+        }
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if (&quot;class&quot;.equals(srcPropertyName) &amp;&amp; !ConvertOption.isIncludeClass(options)) {</span>
+<span class="fc" id="L148">            return false;</span>
+        }
+<span class="fc" id="L150">        String actualSrcPropertyName = ConvertOption.getNameMapper(options).map(srcPropertyName);</span>
+<span class="fc" id="L151">        Object srcPropertyValue = srcProperty.getValue(src);</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">        if (srcPropertyValue == null &amp;&amp; ConvertOption.isIgnoreNull(options)) {</span>
+<span class="fc" id="L153">            return false;</span>
+        }
+<span class="fc" id="L155">        String dstPropertyName = Fs.as(converter.convert(actualSrcPropertyName, String.class, String.class, options));</span>
+<span class="fc" id="L156">        ObjectProperty dstProperty = dstSchema.getProperty(dstPropertyName);</span>
+<span class="fc bfc" id="L157" title="All 4 branches covered.">        if (dstProperty == null || !dstProperty.isWritable()) {</span>
+<span class="fc" id="L158">            return false;</span>
+        }
+<span class="fc" id="L160">        DatePattern datePattern = ConvertKit.getAnnotation(</span>
+            DatePattern.class, srcProperty, dstProperty
+        );
+<span class="fc" id="L163">        NumPattern numPattern = ConvertKit.getAnnotation(</span>
+            NumPattern.class, srcProperty, dstProperty
+        );
+<span class="fc" id="L166">        Option&lt;?, ?&gt;[] actualOps = ConvertKit.mergeOptions(options, datePattern, numPattern);</span>
+<span class="fc" id="L167">        Object dstPropertyValue = converter.convert(</span>
+<span class="fc" id="L168">            srcPropertyValue, srcProperty.type(), dstProperty.type(), actualOps</span>
+        );
+<span class="fc" id="L170">        dstProperty.setValue(dst, dstPropertyValue);</span>
+<span class="fc" id="L171">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

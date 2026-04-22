@@ -14,6 +14,11 @@ import java.math.BigInteger;
 public class NumKit {
 
     /**
+     * Default format pattern: &quot;#.00&quot;.
+     */
+    public static final @Nonnull String DEFAULT_PATTERN = &quot;#.00&quot;;
+
+    /**
      * Converts the given string to the specified number type. Supported number types are:
      * &lt;ul&gt;
      *     &lt;li&gt;{@code byte}, {@link Byte}&lt;/li&gt;
@@ -31,42 +36,45 @@ public class NumKit {
      * @param numType the specified number type
      * @param &lt;T&gt;     the number type
      * @return the converted number object
-     * @throws NumberFormatException         if the given string can't be converted to the specified number type
-     * @throws UnsupportedOperationException if the given number type is not supported
+     * @throws NumException if any error occurs during the conversion
      */
     public static &lt;T&gt; @Nonnull T toNumber(
         @Nonnull CharSequence str, Class&lt;T&gt; numType
-    ) throws NumberFormatException, UnsupportedOperationException {
-<span class="fc bfc" id="L40" title="All 4 branches covered.">        if (byte.class.equals(numType) || Byte.class.equals(numType)) {</span>
-<span class="fc" id="L41">            return Fs.as(Byte.parseByte(str.toString()));</span>
-        }
-<span class="fc bfc" id="L43" title="All 4 branches covered.">        if (short.class.equals(numType) || Short.class.equals(numType)) {</span>
-<span class="fc" id="L44">            return Fs.as(Short.parseShort(str.toString()));</span>
-        }
-<span class="fc bfc" id="L46" title="All 4 branches covered.">        if (char.class.equals(numType) || Character.class.equals(numType)) {</span>
-<span class="fc" id="L47">            int i = Integer.parseInt(str.toString());</span>
-<span class="fc" id="L48">            char c = (char) i;</span>
-<span class="fc" id="L49">            return Fs.as(c);</span>
-        }
-<span class="fc bfc" id="L51" title="All 4 branches covered.">        if (int.class.equals(numType) || Integer.class.equals(numType)) {</span>
-<span class="fc" id="L52">            return Fs.as(Integer.parseInt(str.toString()));</span>
-        }
-<span class="fc bfc" id="L54" title="All 4 branches covered.">        if (long.class.equals(numType) || Long.class.equals(numType)) {</span>
-<span class="fc" id="L55">            return Fs.as(Long.parseLong(str.toString()));</span>
-        }
-<span class="fc bfc" id="L57" title="All 4 branches covered.">        if (float.class.equals(numType) || Float.class.equals(numType)) {</span>
-<span class="fc" id="L58">            return Fs.as(Float.parseFloat(str.toString()));</span>
-        }
-<span class="fc bfc" id="L60" title="All 4 branches covered.">        if (double.class.equals(numType) || Double.class.equals(numType)) {</span>
-<span class="fc" id="L61">            return Fs.as(Double.parseDouble(str.toString()));</span>
-        }
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (BigInteger.class.equals(numType)) {</span>
-<span class="fc" id="L64">            return Fs.as(new BigInteger(str.toString()));</span>
-        }
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (BigDecimal.class.equals(numType)) {</span>
-<span class="fc" id="L67">            return Fs.as(new BigDecimal(str.toString()));</span>
-        }
-<span class="fc" id="L69">        throw new UnsupportedOperationException(&quot;Unsupported number type: &quot; + numType);</span>
+    ) throws NumException {
+        try {
+<span class="fc bfc" id="L45" title="All 4 branches covered.">            if (byte.class.equals(numType) || Byte.class.equals(numType)) {</span>
+<span class="fc" id="L46">                return Fs.as(Byte.parseByte(str.toString()));</span>
+            }
+<span class="fc bfc" id="L48" title="All 4 branches covered.">            if (short.class.equals(numType) || Short.class.equals(numType)) {</span>
+<span class="fc" id="L49">                return Fs.as(Short.parseShort(str.toString()));</span>
+            }
+<span class="fc bfc" id="L51" title="All 4 branches covered.">            if (char.class.equals(numType) || Character.class.equals(numType)) {</span>
+<span class="fc" id="L52">                int i = Integer.parseInt(str.toString());</span>
+<span class="fc" id="L53">                char c = (char) i;</span>
+<span class="fc" id="L54">                return Fs.as(c);</span>
+            }
+<span class="fc bfc" id="L56" title="All 4 branches covered.">            if (int.class.equals(numType) || Integer.class.equals(numType)) {</span>
+<span class="fc" id="L57">                return Fs.as(Integer.parseInt(str.toString()));</span>
+            }
+<span class="fc bfc" id="L59" title="All 4 branches covered.">            if (long.class.equals(numType) || Long.class.equals(numType)) {</span>
+<span class="fc" id="L60">                return Fs.as(Long.parseLong(str.toString()));</span>
+            }
+<span class="fc bfc" id="L62" title="All 4 branches covered.">            if (float.class.equals(numType) || Float.class.equals(numType)) {</span>
+<span class="fc" id="L63">                return Fs.as(Float.parseFloat(str.toString()));</span>
+            }
+<span class="fc bfc" id="L65" title="All 4 branches covered.">            if (double.class.equals(numType) || Double.class.equals(numType)) {</span>
+<span class="fc" id="L66">                return Fs.as(Double.parseDouble(str.toString()));</span>
+            }
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            if (BigInteger.class.equals(numType)) {</span>
+<span class="fc" id="L69">                return Fs.as(new BigInteger(str.toString()));</span>
+            }
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if (BigDecimal.class.equals(numType)) {</span>
+<span class="fc" id="L72">                return Fs.as(new BigDecimal(str.toString()));</span>
+            }
+<span class="fc" id="L74">        } catch (Exception e) {</span>
+<span class="fc" id="L75">            throw new NumException(e);</span>
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">        throw new NumException(&quot;Failed to convert &quot; + str + &quot; to &quot; + numType + &quot;.&quot;);</span>
     }
 
     /**
@@ -87,56 +95,92 @@ public class NumKit {
      * @param numType the specified other number type
      * @param &lt;T&gt;     the number type
      * @return the converted number object
-     * @throws NumberFormatException         if the given number can't be converted to the specified number type
-     * @throws UnsupportedOperationException if the given number type is not supported
+     * @throws NumException if any error occurs during the conversion
      */
     public static &lt;T&gt; @Nonnull T toNumber(
         @Nonnull Number num, Class&lt;T&gt; numType
-    ) throws NumberFormatException, UnsupportedOperationException {
-<span class="fc bfc" id="L96" title="All 4 branches covered.">        if (byte.class.equals(numType) || Byte.class.equals(numType)) {</span>
-<span class="fc" id="L97">            return Fs.as(num.byteValue());</span>
-        }
-<span class="fc bfc" id="L99" title="All 4 branches covered.">        if (short.class.equals(numType) || Short.class.equals(numType)) {</span>
-<span class="fc" id="L100">            return Fs.as(num.shortValue());</span>
-        }
-<span class="fc bfc" id="L102" title="All 4 branches covered.">        if (char.class.equals(numType) || Character.class.equals(numType)) {</span>
-<span class="fc" id="L103">            int i = num.intValue();</span>
-<span class="fc" id="L104">            char c = (char) i;</span>
-<span class="fc" id="L105">            return Fs.as(c);</span>
-        }
-<span class="fc bfc" id="L107" title="All 4 branches covered.">        if (int.class.equals(numType) || Integer.class.equals(numType)) {</span>
-<span class="fc" id="L108">            return Fs.as(num.intValue());</span>
-        }
-<span class="fc bfc" id="L110" title="All 4 branches covered.">        if (long.class.equals(numType) || Long.class.equals(numType)) {</span>
-<span class="fc" id="L111">            return Fs.as(num.longValue());</span>
-        }
-<span class="fc bfc" id="L113" title="All 4 branches covered.">        if (float.class.equals(numType) || Float.class.equals(numType)) {</span>
-<span class="fc" id="L114">            return Fs.as(num.floatValue());</span>
-        }
-<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (double.class.equals(numType) || Double.class.equals(numType)) {</span>
-<span class="fc" id="L117">            return Fs.as(num.doubleValue());</span>
-        }
-<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (BigInteger.class.equals(numType)) {</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (num instanceof BigInteger) {</span>
-<span class="fc" id="L121">                return Fs.as(num);</span>
+    ) throws NumException {
+        try {
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            if (numType.isAssignableFrom(num.getClass())) {</span>
+<span class="fc" id="L105">                return numType.cast(num);</span>
             }
-<span class="fc bfc" id="L123" title="All 2 branches covered.">            if (num instanceof BigDecimal) {</span>
-<span class="fc" id="L124">                BigDecimal decimal = (BigDecimal) num;</span>
-<span class="fc" id="L125">                return Fs.as(decimal.toBigInteger());</span>
+<span class="fc bfc" id="L107" title="All 4 branches covered.">            if (byte.class.equals(numType) || Byte.class.equals(numType)) {</span>
+<span class="fc" id="L108">                return Fs.as(num.byteValue());</span>
             }
-<span class="fc" id="L127">            return Fs.as(new BigInteger(num.toString()));</span>
+<span class="fc bfc" id="L110" title="All 4 branches covered.">            if (short.class.equals(numType) || Short.class.equals(numType)) {</span>
+<span class="fc" id="L111">                return Fs.as(num.shortValue());</span>
+            }
+<span class="fc bfc" id="L113" title="All 4 branches covered.">            if (char.class.equals(numType) || Character.class.equals(numType)) {</span>
+<span class="fc" id="L114">                int i = num.intValue();</span>
+<span class="fc" id="L115">                char c = (char) i;</span>
+<span class="fc" id="L116">                return Fs.as(c);</span>
+            }
+<span class="fc bfc" id="L118" title="All 4 branches covered.">            if (int.class.equals(numType) || Integer.class.equals(numType)) {</span>
+<span class="fc" id="L119">                return Fs.as(num.intValue());</span>
+            }
+<span class="fc bfc" id="L121" title="All 4 branches covered.">            if (long.class.equals(numType) || Long.class.equals(numType)) {</span>
+<span class="fc" id="L122">                return Fs.as(num.longValue());</span>
+            }
+<span class="fc bfc" id="L124" title="All 4 branches covered.">            if (float.class.equals(numType) || Float.class.equals(numType)) {</span>
+<span class="fc" id="L125">                return Fs.as(num.floatValue());</span>
+            }
+<span class="fc bfc" id="L127" title="All 4 branches covered.">            if (double.class.equals(numType) || Double.class.equals(numType)) {</span>
+<span class="fc" id="L128">                return Fs.as(num.doubleValue());</span>
+            }
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (BigInteger.class.equals(numType)) {</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">                if (num instanceof BigDecimal) {</span>
+                    @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L133">                    BigDecimal decimal = (BigDecimal) num;</span>
+<span class="fc" id="L134">                    return Fs.as(decimal.toBigInteger());</span>
+                }
+<span class="fc" id="L136">                return Fs.as(new BigInteger(num.toString()));</span>
+            }
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (BigDecimal.class.equals(numType)) {</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                if (num instanceof BigInteger) {</span>
+                    @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L141">                    BigInteger integer = (BigInteger) num;</span>
+<span class="fc" id="L142">                    return Fs.as(new BigDecimal(integer));</span>
+                }
+<span class="fc" id="L144">                return Fs.as(new BigDecimal(num.toString()));</span>
+            }
+<span class="fc" id="L146">        } catch (Exception e) {</span>
+<span class="fc" id="L147">            throw new NumException(e);</span>
+<span class="fc" id="L148">        }</span>
+<span class="fc" id="L149">        throw new NumException(&quot;Failed to convert &quot; + num + &quot; to type: &quot; + numType + &quot;.&quot;);</span>
+    }
+
+    /**
+     * Returns a {@link Number} object parsed from the given string. The actual type of the object may be
+     * {@link Integer}, {@link Long}, {@link BigInteger} or {@link BigDecimal}.
+     *
+     * @param cs the given string
+     * @return a {@link Number} object parsed from the given string
+     * @throws NumException if any error occurs during the parsing
+     */
+    public static @Nonnull Number toNumber(@Nonnull CharSequence cs) throws NumException {
+        try {
+<span class="fc" id="L162">            return toNumber0(cs);</span>
+<span class="fc" id="L163">        } catch (Exception e) {</span>
+<span class="fc" id="L164">            throw new NumException(e);</span>
         }
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (BigDecimal.class.equals(numType)) {</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (num instanceof BigDecimal) {</span>
-<span class="fc" id="L131">                return Fs.as(num);</span>
-            }
-<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (num instanceof BigInteger) {</span>
-<span class="fc" id="L134">                BigInteger integer = (BigInteger) num;</span>
-<span class="fc" id="L135">                return Fs.as(new BigDecimal(integer));</span>
-            }
-<span class="fc" id="L137">            return Fs.as(new BigDecimal(num.toString()));</span>
+    }
+
+    private static @Nonnull Number toNumber0(@Nonnull CharSequence cs) throws NumberFormatException {
+<span class="fc" id="L169">        String str = cs.toString();</span>
+<span class="fc bfc" id="L170" title="All 6 branches covered.">        if (str.contains(&quot;.&quot;) || str.contains(&quot;e&quot;) || str.contains(&quot;E&quot;)) {</span>
+<span class="fc" id="L171">            return new BigDecimal(str);</span>
         }
-<span class="fc" id="L139">        throw new UnsupportedOperationException(&quot;Unsupported number type: &quot; + numType);</span>
+<span class="fc" id="L173">        int len = str.length();</span>
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        if (str.startsWith(&quot;-&quot;) || str.startsWith(&quot;+&quot;)) {</span>
+<span class="fc" id="L175">            len--;</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (len &lt;= 9) {</span>
+<span class="fc" id="L178">            return Integer.parseInt(str);</span>
+        }
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (len &lt;= 18) {</span>
+<span class="fc" id="L181">            return Long.parseLong(str);</span>
+        }
+<span class="fc" id="L183">        return new BigInteger(str);</span>
     }
 
     private NumKit() {

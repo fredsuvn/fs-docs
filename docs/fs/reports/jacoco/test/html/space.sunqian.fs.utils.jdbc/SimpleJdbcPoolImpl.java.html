@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleJdbcPoolImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">SimpleJdbcPoolImpl.java</span></div><h1>SimpleJdbcPoolImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.function.VoidCallable;
+import space.sunqian.fs.object.pool.SimplePool;
+
+import java.sql.Connection;
+import java.time.Duration;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+final class SimpleJdbcPoolImpl implements SimpleJdbcPool {
+
+    private final @Nonnull SimplePool&lt;@Nonnull Connection&gt; pool;
+    private final @Nonnull ConnectionWrapperFactory connectionWrapperFactory;
+
+    SimpleJdbcPoolImpl(
+        @Nonnull String url,
+        @Nullable String username,
+        @Nullable String password,
+        @Nonnull String driver,
+        @Nonnull ConnectionFactory connectionFactory,
+        @Nonnull ConnectionWrapperFactory connectionWrapperFactory,
+        @Nonnull Consumer&lt;@Nonnull Connection&gt; closer,
+        @Nonnull Predicate&lt;@Nonnull Connection&gt; validator,
+        int coreSize,
+        int maxSize,
+        @Nonnull Duration idleTimeout
+<span class="fc" id="L33">    ) {</span>
+<span class="fc" id="L34">        this.connectionWrapperFactory = connectionWrapperFactory;</span>
+<span class="fc" id="L35">        Fs.uncheck(() -&gt; Class.forName(driver));</span>
+<span class="fc" id="L36">        pool = SimplePool.&lt;Connection&gt;newBuilder()</span>
+<span class="fc" id="L37">            .coreSize(coreSize)</span>
+<span class="fc" id="L38">            .maxSize(maxSize)</span>
+<span class="fc" id="L39">            .idleTimeout(idleTimeout)</span>
+<span class="fc" id="L40">            .supplier(() -&gt; connectionFactory.create(driver, url, username, password))</span>
+<span class="fc" id="L41">            .discarder(closer)</span>
+<span class="fc" id="L42">            .validator(validator)</span>
+<span class="fc" id="L43">            .build();</span>
+<span class="fc" id="L44">    }</span>
+
+    @Override
+    public @Nullable Connection getConnection() throws SqlRuntimeException {
+<span class="fc" id="L48">        Connection connection = pool.get();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        return connection == null ? null : connectionWrapperFactory.wrap(connection, pool);</span>
+    }
+
+    @Override
+    public void clean() throws SqlRuntimeException {
+<span class="fc" id="L54">        pool.clean();</span>
+<span class="fc" id="L55">    }</span>
+
+    @Override
+    public void close() throws SqlRuntimeException {
+<span class="fc" id="L59">        pool.close();</span>
+<span class="fc" id="L60">        List&lt;VoidCallable&gt; callables = pool.unreleasedObjects().stream()</span>
+<span class="fc" id="L61">            .map(c -&gt; (VoidCallable) c::close)</span>
+<span class="fc" id="L62">            .collect(Collectors.toList());</span>
+<span class="fc" id="L63">        Fs.uncheck(callables, SqlRuntimeException::new);</span>
+<span class="fc" id="L64">    }</span>
+
+    @Override
+    public boolean isClosed() {
+<span class="fc" id="L68">        return pool.isClosed();</span>
+    }
+
+    @Override
+    public int size() {
+<span class="fc" id="L73">        return pool.size();</span>
+    }
+
+    @Override
+    public int idleSize() {
+<span class="fc" id="L78">        return pool.idleSize();</span>
+    }
+
+    @Override
+    public int activeSize() {
+<span class="fc" id="L83">        return pool.activeSize();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

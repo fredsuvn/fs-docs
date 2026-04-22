@@ -8,24 +8,24 @@ import space.sunqian.fs.collect.ArrayKit;
 final class NameFormatterBack {
 
     static @Nonnull NameFormatter camelCase(boolean upperFirst) {
-<span class="fc" id="L11">        return new CamelCase(upperFirst);</span>
+<span class="fc" id="L11">        return new CamelCaseFormatter(upperFirst);</span>
     }
 
-    static @Nonnull NameFormatter delimiterCase(
+    static @Nonnull NameFormatter delimiter(
         @Nonnull CharSequence delimiter, @Nonnull NameFormatter.Appender appender
     ) throws IllegalArgumentException {
-<span class="fc" id="L17">        return new DelimiterCase(delimiter, appender);</span>
+<span class="fc" id="L17">        return new DelimiterFormatter(delimiter, appender);</span>
     }
 
     static @Nonnull NameFormatter fileNaming() {
-<span class="fc" id="L21">        return new FileNaming();</span>
+<span class="fc" id="L21">        return new FileNamingFormatter();</span>
     }
 
     static @Nonnull NameFormatter.Appender simpleAppender() {
 <span class="fc" id="L25">        return SimpleAppender.INST;</span>
     }
 
-    private static final class CamelCase implements NameFormatter {
+    private static final class CamelCaseFormatter implements NameFormatter {
 
         private static final int LOWER = 1;
         private static final int UPPER = 2;
@@ -34,7 +34,7 @@ final class NameFormatterBack {
 
         private final boolean upperFirst;
 
-<span class="fc" id="L37">        private CamelCase(boolean upperFirst) {</span>
+<span class="fc" id="L37">        private CamelCaseFormatter(boolean upperFirst) {</span>
 <span class="fc" id="L38">            this.upperFirst = upperFirst;</span>
 <span class="fc" id="L39">        }</span>
 
@@ -140,7 +140,7 @@ final class NameFormatterBack {
 
         @Override
         public void format(
-            @Nonnull CharSequence originalName,
+            @Nonnull CharSequence origin,
             @Nonnull Span @Nonnull [] wordSpans,
             @Nonnull Appendable dst
         ) throws NameFormatException {
@@ -148,7 +148,7 @@ final class NameFormatterBack {
 <span class="fc" id="L148">                return;</span>
             }
             try {
-<span class="fc" id="L151">                format0(originalName, wordSpans, dst);</span>
+<span class="fc" id="L151">                format0(origin, wordSpans, dst);</span>
 <span class="fc" id="L152">            } catch (Exception e) {</span>
 <span class="fc" id="L153">                throw new NameFormatException(e);</span>
 <span class="fc" id="L154">            }</span>
@@ -228,125 +228,126 @@ final class NameFormatterBack {
         }
     }
 
-    private static final class DelimiterCase implements NameFormatter {
+    private static final class DelimiterFormatter implements NameFormatter {
 
         private final @Nonnull CharSequence delimiter;
         private final @Nonnull NameFormatter.Appender appender;
 
-        private DelimiterCase(
+        @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
+        private DelimiterFormatter(
             @Nonnull CharSequence delimiter, @Nonnull NameFormatter.Appender appender
-<span class="fc" id="L238">        ) throws IllegalArgumentException {</span>
-<span class="fc bfc" id="L239" title="All 2 branches covered.">            Checker.checkArgument(delimiter.length() &gt; 0, &quot;The delimiter must not be empty.&quot;);</span>
-<span class="fc" id="L240">            this.delimiter = delimiter;</span>
-<span class="fc" id="L241">            this.appender = appender;</span>
-<span class="fc" id="L242">        }</span>
+<span class="fc" id="L239">        ) throws IllegalArgumentException {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">            Checker.checkArgument(delimiter.length() &gt; 0, &quot;The delimiter must not be empty.&quot;);</span>
+<span class="fc" id="L241">            this.delimiter = delimiter;</span>
+<span class="fc" id="L242">            this.appender = appender;</span>
+<span class="fc" id="L243">        }</span>
 
         @Override
         public @Nonnull Span @Nonnull [] tokenize(@Nonnull CharSequence name) {
-<span class="fc bfc" id="L246" title="All 2 branches covered.">            if (name.length() &lt; delimiter.length()) {</span>
-<span class="fc" id="L247">                return new Span[]{Span.of(0, name.length())};</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">            if (name.length() &lt; delimiter.length()) {</span>
+<span class="fc" id="L248">                return new Span[]{Span.of(0, name.length())};</span>
             }
-<span class="fc" id="L249">            int size = 1;</span>
-<span class="fc" id="L250">            int start = 0;</span>
-<span class="fc bfc" id="L251" title="All 2 branches covered.">            while (start &lt; name.length()) {</span>
-<span class="fc" id="L252">                int index = StringKit.indexOf(name, delimiter, start);</span>
-<span class="fc bfc" id="L253" title="All 2 branches covered.">                if (index &lt; 0) {</span>
-<span class="fc" id="L254">                    break;</span>
+<span class="fc" id="L250">            int size = 1;</span>
+<span class="fc" id="L251">            int start = 0;</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">            while (start &lt; name.length()) {</span>
+<span class="fc" id="L253">                int index = StringKit.indexOf(name, delimiter, start);</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">                if (index &lt; 0) {</span>
+<span class="fc" id="L255">                    break;</span>
                 }
-<span class="fc" id="L256">                size++;</span>
-<span class="fc" id="L257">                start = index + delimiter.length();</span>
-<span class="fc" id="L258">            }</span>
-<span class="fc" id="L259">            Span[] spans = new Span[size];</span>
-<span class="fc" id="L260">            int i = 0;</span>
-<span class="fc" id="L261">            start = 0;</span>
-<span class="fc bfc" id="L262" title="All 2 branches covered.">            while (start &lt; name.length()) {</span>
-<span class="fc" id="L263">                int index = StringKit.indexOf(name, delimiter, start);</span>
-<span class="fc bfc" id="L264" title="All 2 branches covered.">                if (index &lt; 0) {</span>
-<span class="fc" id="L265">                    break;</span>
+<span class="fc" id="L257">                size++;</span>
+<span class="fc" id="L258">                start = index + delimiter.length();</span>
+<span class="fc" id="L259">            }</span>
+<span class="fc" id="L260">            Span[] spans = new Span[size];</span>
+<span class="fc" id="L261">            int i = 0;</span>
+<span class="fc" id="L262">            start = 0;</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">            while (start &lt; name.length()) {</span>
+<span class="fc" id="L264">                int index = StringKit.indexOf(name, delimiter, start);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                if (index &lt; 0) {</span>
+<span class="fc" id="L266">                    break;</span>
                 }
-<span class="fc" id="L267">                spans[i++] = Span.of(start, index);</span>
-<span class="fc" id="L268">                start = index + delimiter.length();</span>
-<span class="fc" id="L269">            }</span>
-<span class="fc bfc" id="L270" title="All 2 branches covered.">            spans[i] = start &lt; name.length() ? Span.of(start, name.length()) : Span.empty();</span>
-<span class="fc" id="L271">            return spans;</span>
+<span class="fc" id="L268">                spans[i++] = Span.of(start, index);</span>
+<span class="fc" id="L269">                start = index + delimiter.length();</span>
+<span class="fc" id="L270">            }</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            spans[i] = start &lt; name.length() ? Span.of(start, name.length()) : Span.empty();</span>
+<span class="fc" id="L272">            return spans;</span>
         }
 
         @Override
         public void format(
             @Nonnull CharSequence @Nonnull [] words, @Nonnull Appendable dst
         ) throws NameFormatException {
-<span class="fc bfc" id="L278" title="All 2 branches covered.">            if (words.length == 0) {</span>
-<span class="fc" id="L279">                return;</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">            if (words.length == 0) {</span>
+<span class="fc" id="L280">                return;</span>
             }
             try {
-<span class="fc" id="L282">                format0(words, dst);</span>
-<span class="fc" id="L283">            } catch (Exception e) {</span>
-<span class="fc" id="L284">                throw new NameFormatException(e);</span>
-<span class="fc" id="L285">            }</span>
-<span class="fc" id="L286">        }</span>
+<span class="fc" id="L283">                format0(words, dst);</span>
+<span class="fc" id="L284">            } catch (Exception e) {</span>
+<span class="fc" id="L285">                throw new NameFormatException(e);</span>
+<span class="fc" id="L286">            }</span>
+<span class="fc" id="L287">        }</span>
 
         private void format0(
             @Nonnull CharSequence @Nonnull [] words, @Nonnull Appendable dst
         ) throws Exception {
-<span class="fc bfc" id="L291" title="All 2 branches covered.">            if (words.length == 1) {</span>
-<span class="fc" id="L292">                CharSequence first = words[0];</span>
-<span class="fc" id="L293">                dst.append(first);</span>
-<span class="fc" id="L294">                return;</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">            if (words.length == 1) {</span>
+<span class="fc" id="L293">                CharSequence first = words[0];</span>
+<span class="fc" id="L294">                dst.append(first);</span>
+<span class="fc" id="L295">                return;</span>
             }
-<span class="fc" id="L296">            dst.append(words[0]);</span>
-<span class="fc bfc" id="L297" title="All 2 branches covered.">            for (int i = 1; i &lt; words.length; i++) {</span>
-<span class="fc" id="L298">                dst.append(delimiter);</span>
-<span class="fc" id="L299">                dst.append(words[i]);</span>
+<span class="fc" id="L297">            dst.append(words[0]);</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">            for (int i = 1; i &lt; words.length; i++) {</span>
+<span class="fc" id="L299">                dst.append(delimiter);</span>
+<span class="fc" id="L300">                dst.append(words[i]);</span>
             }
-<span class="fc" id="L301">        }</span>
+<span class="fc" id="L302">        }</span>
 
         @Override
         public void format(
-            @Nonnull CharSequence originalName,
+            @Nonnull CharSequence origin,
             @Nonnull Span @Nonnull [] wordSpans,
             @Nonnull Appendable dst
         ) throws NameFormatException {
-<span class="fc bfc" id="L309" title="All 2 branches covered.">            if (wordSpans.length == 0) {</span>
-<span class="fc" id="L310">                return;</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">            if (wordSpans.length == 0) {</span>
+<span class="fc" id="L311">                return;</span>
             }
             try {
-<span class="fc" id="L313">                format0(originalName, wordSpans, dst);</span>
-<span class="fc" id="L314">            } catch (Exception e) {</span>
-<span class="fc" id="L315">                throw new NameFormatException(e);</span>
-<span class="fc" id="L316">            }</span>
-<span class="fc" id="L317">        }</span>
+<span class="fc" id="L314">                format0(origin, wordSpans, dst);</span>
+<span class="fc" id="L315">            } catch (Exception e) {</span>
+<span class="fc" id="L316">                throw new NameFormatException(e);</span>
+<span class="fc" id="L317">            }</span>
+<span class="fc" id="L318">        }</span>
 
         private void format0(
             @Nonnull CharSequence originalName,
             @Nonnull Span @Nonnull [] wordSpans,
             @Nonnull Appendable dst
         ) throws Exception {
-<span class="fc bfc" id="L324" title="All 2 branches covered.">            if (wordSpans.length == 1) {</span>
-<span class="fc" id="L325">                Span first = wordSpans[0];</span>
-<span class="fc" id="L326">                appender.append(dst, originalName, first, 0);</span>
-<span class="fc" id="L327">                return;</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">            if (wordSpans.length == 1) {</span>
+<span class="fc" id="L326">                Span first = wordSpans[0];</span>
+<span class="fc" id="L327">                appender.append(dst, originalName, first, 0);</span>
+<span class="fc" id="L328">                return;</span>
             }
-<span class="fc" id="L329">            appender.append(dst, originalName, wordSpans[0], 0);</span>
-<span class="fc bfc" id="L330" title="All 2 branches covered.">            for (int i = 1; i &lt; wordSpans.length; i++) {</span>
-<span class="fc" id="L331">                dst.append(delimiter);</span>
-<span class="fc" id="L332">                appender.append(dst, originalName, wordSpans[i], i);</span>
+<span class="fc" id="L330">            appender.append(dst, originalName, wordSpans[0], 0);</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">            for (int i = 1; i &lt; wordSpans.length; i++) {</span>
+<span class="fc" id="L332">                dst.append(delimiter);</span>
+<span class="fc" id="L333">                appender.append(dst, originalName, wordSpans[i], i);</span>
             }
-<span class="fc" id="L334">        }</span>
+<span class="fc" id="L335">        }</span>
     }
 
-    private static final class FileNaming implements NameFormatter {
+    private static final class FileNamingFormatter implements NameFormatter {
 
-<span class="fc" id="L339">        private static final SimpleAppender appender = (SimpleAppender) simpleAppender();</span>
+<span class="fc" id="L340">        private static final Appender appender = (SimpleAppender) simpleAppender();</span>
 
         @Override
         public @Nonnull Span @Nonnull [] tokenize(@Nonnull CharSequence name) {
-<span class="fc" id="L343">            int lastDot = StringKit.lastIndexOf(name, '.');</span>
-<span class="fc bfc" id="L344" title="All 4 branches covered.">            if (lastDot &lt; 0 || lastDot == name.length() - 1) {</span>
-<span class="fc" id="L345">                return new Span[]{Span.of(0, name.length())};</span>
+<span class="fc" id="L344">            int lastDot = StringKit.lastIndexOf(name, '.');</span>
+<span class="fc bfc" id="L345" title="All 4 branches covered.">            if (lastDot &lt; 0 || lastDot == name.length() - 1) {</span>
+<span class="fc" id="L346">                return new Span[]{Span.of(0, name.length())};</span>
             }
-<span class="fc" id="L347">            return ArrayKit.array(</span>
-<span class="fc" id="L348">                Span.of(0, lastDot),</span>
-<span class="fc" id="L349">                Span.of(lastDot + 1, name.length())</span>
+<span class="fc" id="L348">            return ArrayKit.array(</span>
+<span class="fc" id="L349">                Span.of(0, lastDot),</span>
+<span class="fc" id="L350">                Span.of(lastDot + 1, name.length())</span>
             );
         }
 
@@ -354,93 +355,117 @@ final class NameFormatterBack {
         public void format(
             @Nonnull CharSequence @Nonnull [] words, @Nonnull Appendable dst
         ) throws NameFormatException {
-<span class="fc bfc" id="L357" title="All 2 branches covered.">            if (words.length == 0) {</span>
-<span class="fc" id="L358">                return;</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">            if (words.length == 0) {</span>
+<span class="fc" id="L359">                return;</span>
             }
             try {
-<span class="fc" id="L361">                format0(words, dst);</span>
-<span class="fc" id="L362">            } catch (Exception e) {</span>
-<span class="fc" id="L363">                throw new NameFormatException(e);</span>
-<span class="fc" id="L364">            }</span>
-<span class="fc" id="L365">        }</span>
+<span class="fc" id="L362">                format0(words, dst);</span>
+<span class="fc" id="L363">            } catch (Exception e) {</span>
+<span class="fc" id="L364">                throw new NameFormatException(e);</span>
+<span class="fc" id="L365">            }</span>
+<span class="fc" id="L366">        }</span>
 
         private void format0(
             @Nonnull CharSequence @Nonnull [] words, @Nonnull Appendable dst
         ) throws Exception {
-<span class="fc bfc" id="L370" title="All 2 branches covered.">            if (words.length == 1) {</span>
-<span class="fc" id="L371">                CharSequence first = words[0];</span>
-<span class="fc" id="L372">                dst.append(first);</span>
-<span class="fc" id="L373">                return;</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">            if (words.length == 1) {</span>
+<span class="fc" id="L372">                CharSequence first = words[0];</span>
+<span class="fc" id="L373">                dst.append(first);</span>
+<span class="fc" id="L374">                return;</span>
             }
-<span class="fc bfc" id="L375" title="All 2 branches covered.">            if (words.length == 2) {</span>
-<span class="fc" id="L376">                CharSequence prefix = words[0];</span>
-<span class="fc" id="L377">                CharSequence suffix = words[1];</span>
-<span class="fc" id="L378">                dst.append(prefix);</span>
-<span class="fc" id="L379">                dst.append('.');</span>
-<span class="fc" id="L380">                dst.append(suffix);</span>
-<span class="fc" id="L381">                return;</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">            if (words.length == 2) {</span>
+<span class="fc" id="L377">                CharSequence prefix = words[0];</span>
+<span class="fc" id="L378">                CharSequence suffix = words[1];</span>
+<span class="fc" id="L379">                dst.append(prefix);</span>
+<span class="fc" id="L380">                dst.append('.');</span>
+<span class="fc" id="L381">                dst.append(suffix);</span>
+<span class="fc" id="L382">                return;</span>
             }
-<span class="fc bfc" id="L383" title="All 2 branches covered.">            for (int i = 0; i &lt; words.length - 1; i++) {</span>
-<span class="fc" id="L384">                dst.append(words[i]);</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">            for (int i = 0; i &lt; words.length - 1; i++) {</span>
+<span class="fc" id="L385">                dst.append(words[i]);</span>
             }
-<span class="fc" id="L386">            dst.append('.');</span>
-<span class="fc" id="L387">            CharSequence suffix = words[words.length - 1];</span>
-<span class="fc" id="L388">            dst.append(suffix);</span>
-<span class="fc" id="L389">        }</span>
+<span class="fc" id="L387">            dst.append('.');</span>
+<span class="fc" id="L388">            CharSequence suffix = words[words.length - 1];</span>
+<span class="fc" id="L389">            dst.append(suffix);</span>
+<span class="fc" id="L390">        }</span>
 
         @Override
         public void format(
-            @Nonnull CharSequence originalName,
+            @Nonnull CharSequence origin,
             @Nonnull Span @Nonnull [] wordSpans,
             @Nonnull Appendable dst
         ) throws NameFormatException {
-<span class="fc bfc" id="L397" title="All 2 branches covered.">            if (wordSpans.length == 0) {</span>
-<span class="fc" id="L398">                return;</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">            if (wordSpans.length == 0) {</span>
+<span class="fc" id="L399">                return;</span>
             }
             try {
-<span class="fc" id="L401">                format0(originalName, wordSpans, dst);</span>
-<span class="fc" id="L402">            } catch (Exception e) {</span>
-<span class="fc" id="L403">                throw new NameFormatException(e);</span>
-<span class="fc" id="L404">            }</span>
-<span class="fc" id="L405">        }</span>
+<span class="fc" id="L402">                format0(origin, wordSpans, dst);</span>
+<span class="fc" id="L403">            } catch (Exception e) {</span>
+<span class="fc" id="L404">                throw new NameFormatException(e);</span>
+<span class="fc" id="L405">            }</span>
+<span class="fc" id="L406">        }</span>
 
         private void format0(
             @Nonnull CharSequence originalName,
             @Nonnull Span @Nonnull [] wordSpans,
             @Nonnull Appendable dst
         ) throws Exception {
-<span class="fc bfc" id="L412" title="All 2 branches covered.">            if (wordSpans.length == 1) {</span>
-<span class="fc" id="L413">                Span first = wordSpans[0];</span>
-<span class="fc" id="L414">                appender.append(dst, originalName, first, 0);</span>
-<span class="fc" id="L415">                return;</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">            if (wordSpans.length == 1) {</span>
+<span class="fc" id="L414">                Span first = wordSpans[0];</span>
+<span class="fc" id="L415">                appender.append(dst, originalName, first, 0);</span>
+<span class="fc" id="L416">                return;</span>
             }
-<span class="fc bfc" id="L417" title="All 2 branches covered.">            if (wordSpans.length == 2) {</span>
-<span class="fc" id="L418">                Span prefix = wordSpans[0];</span>
-<span class="fc" id="L419">                Span suffix = wordSpans[1];</span>
-<span class="fc" id="L420">                appender.append(dst, originalName, prefix, 0);</span>
-<span class="fc" id="L421">                dst.append('.');</span>
-<span class="fc" id="L422">                appender.append(dst, originalName, suffix, 1);</span>
-<span class="fc" id="L423">                return;</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">            if (wordSpans.length == 2) {</span>
+<span class="fc" id="L419">                Span prefix = wordSpans[0];</span>
+<span class="fc" id="L420">                Span suffix = wordSpans[1];</span>
+<span class="fc" id="L421">                appender.append(dst, originalName, prefix, 0);</span>
+<span class="fc" id="L422">                dst.append('.');</span>
+<span class="fc" id="L423">                appender.append(dst, originalName, suffix, 1);</span>
+<span class="fc" id="L424">                return;</span>
             }
-<span class="fc bfc" id="L425" title="All 2 branches covered.">            for (int i = 0; i &lt; wordSpans.length - 1; i++) {</span>
-<span class="fc" id="L426">                appender.append(dst, originalName, wordSpans[i], i);</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">            for (int i = 0; i &lt; wordSpans.length - 1; i++) {</span>
+<span class="fc" id="L427">                appender.append(dst, originalName, wordSpans[i], i);</span>
             }
-<span class="fc" id="L428">            dst.append('.');</span>
-<span class="fc" id="L429">            Span suffix = wordSpans[wordSpans.length - 1];</span>
-<span class="fc" id="L430">            appender.append(dst, originalName, suffix, wordSpans.length - 1);</span>
-<span class="fc" id="L431">        }</span>
+<span class="fc" id="L429">            dst.append('.');</span>
+<span class="fc" id="L430">            Span suffix = wordSpans[wordSpans.length - 1];</span>
+<span class="fc" id="L431">            appender.append(dst, originalName, suffix, wordSpans.length - 1);</span>
+<span class="fc" id="L432">        }</span>
     }
 
-<span class="fc" id="L434">    private enum SimpleAppender implements NameFormatter.Appender {</span>
+<span class="fc" id="L435">    enum SimpleAppender implements NameFormatter.Appender {</span>
 
-<span class="fc" id="L436">        INST;</span>
+<span class="fc" id="L437">        INST;</span>
 
         @Override
         public void append(
-            @Nonnull Appendable dst, @Nonnull CharSequence originalName, @Nonnull Span span, int index
+            @Nonnull Appendable dst, @Nonnull CharSequence origin, @Nonnull Span span, int index
         ) throws Exception {
-<span class="fc" id="L442">            dst.append(originalName, span.startIndex(), span.endIndex());</span>
-<span class="fc" id="L443">        }</span>
+<span class="fc" id="L443">            dst.append(origin, span.startIndex(), span.endIndex());</span>
+<span class="fc" id="L444">        }</span>
+    }
+
+<span class="fc" id="L447">    enum LowerAppender implements NameFormatter.Appender {</span>
+
+<span class="fc" id="L449">        INST;</span>
+
+        @Override
+        public void append(
+            @Nonnull Appendable dst, @Nonnull CharSequence origin, @Nonnull Span span, int index
+        ) throws Exception {
+<span class="fc" id="L455">            dst.append(origin.subSequence(span.startIndex(), span.endIndex()).toString().toLowerCase());</span>
+<span class="fc" id="L456">        }</span>
+    }
+
+<span class="fc" id="L459">    enum UpperAppender implements NameFormatter.Appender {</span>
+
+<span class="fc" id="L461">        INST;</span>
+
+        @Override
+        public void append(
+            @Nonnull Appendable dst, @Nonnull CharSequence origin, @Nonnull Span span, int index
+        ) throws Exception {
+<span class="fc" id="L467">            dst.append(origin.subSequence(span.startIndex(), span.endIndex()).toString().toUpperCase());</span>
+<span class="fc" id="L468">        }</span>
     }
 
     private NameFormatterBack() {

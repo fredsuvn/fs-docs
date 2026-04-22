@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.properties</a> &gt; <span class="el_source">PropertiesParser.java</span></div><h1>PropertiesParser.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.properties;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.data.ByteDataParser;
+import space.sunqian.fs.data.CharDataParser;
+import space.sunqian.fs.data.DataParsingException;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.channels.ReadableByteChannel;
+
+/**
+ * Represents the properties data parser that parses properties data a {@code PropertiesData} object.
+ *
+ * @author sunqian
+ */
+public interface PropertiesParser extends ByteDataParser&lt;PropertiesData&gt;, CharDataParser&lt;PropertiesData&gt; {
+
+    /**
+     * Returns the default {@link PropertiesParser}.
+     *
+     * @return the default {@link PropertiesParser}
+     */
+    static @Nonnull PropertiesParser defaultParser() {
+<span class="fc" id="L26">        return PropertiesParserImpl.INST;</span>
+    }
+
+    /**
+     * Parses and returns the properties data from the given input stream to a {@link PropertiesData} object, using
+     * {@link CharsKit#defaultCharset()}.
+     *
+     * @param input the given input stream
+     * @return the parsed {@link PropertiesData} object
+     * @throws DataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    PropertiesData parse(@Nonnull InputStream input) throws DataParsingException;
+
+    /**
+     * Parses and returns the properties data from the given readable byte channel to a {@link PropertiesData} object,
+     * using {@link CharsKit#defaultCharset()}.
+     *
+     * @param channel the given readable byte channel
+     * @return the parsed {@link PropertiesData} object
+     * @throws DataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    PropertiesData parse(@Nonnull ReadableByteChannel channel) throws DataParsingException;
+
+    /**
+     * Parses and returns the properties data from the given reader to a {@link PropertiesData} object.
+     *
+     * @param reader the given reader
+     * @return the parsed {@link PropertiesData} object
+     * @throws DataParsingException if any error occurs during parsing
+     */
+    @Override
+    @Nonnull
+    PropertiesData parse(@Nonnull Reader reader) throws DataParsingException;
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

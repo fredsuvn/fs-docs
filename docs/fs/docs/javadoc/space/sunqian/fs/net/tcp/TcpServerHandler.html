@@ -106,8 +106,7 @@ extends <a href="../../io/communicate/ChannelHandler.html" title="interface in s
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#channelLoop(space.sunqian.fs.net.tcp.TcpContext)" class="member-name-link">channelLoop</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpContext.html" title="interface in space.sunqian.fs.net.tcp">TcpContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">This method is invoked for all active clients in the event loop after each selector wake-up
- (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/Selector.html#select(long)" title="class or interface in java.nio.channels" class="external-link"><code>Selector.select(long)</code></a>).</div>
+<div class="block">This method is invoked for all active clients in the event loop after the selector wake-up.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#channelOpen(space.sunqian.fs.net.tcp.TcpContext)" class="member-name-link">channelOpen</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpContext.html" title="interface in space.sunqian.fs.net.tcp">TcpContext</a>&nbsp;context)</code></div>
@@ -219,8 +218,8 @@ extends <a href="../../io/communicate/ChannelHandler.html" title="interface in s
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">channelLoop</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpContext.html" title="interface in space.sunqian.fs.net.tcp">TcpContext</a>&nbsp;context)</span>
                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<div class="block">This method is invoked for all active clients in the event loop after each selector wake-up
- (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/Selector.html#select(long)" title="class or interface in java.nio.channels" class="external-link"><code>Selector.select(long)</code></a>). It can be used to uniformly handle some issues, such as connection heartbeats.
+<div class="block">This method is invoked for all active clients in the event loop after the selector wake-up. It can be used to
+ uniformly handle some issues, such as connection heartbeats.
  <p>
  Note the default implementation does nothing.</div>
 <dl class="notes">

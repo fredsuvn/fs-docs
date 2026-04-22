@@ -6,13 +6,21 @@ import space.sunqian.annotation.Nullable;
 import space.sunqian.annotation.OutParam;
 import space.sunqian.fs.Fs;
 
+import java.lang.reflect.Type;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -29,10 +37,10 @@ public class MapKit {
      * @return whether the given map is null or empty
      */
     public static boolean isEmpty(@Nullable Map&lt;?, ?&gt; map) {
-<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (map == null) {</span>
-<span class="fc" id="L33">            return true;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (map == null) {</span>
+<span class="fc" id="L41">            return true;</span>
         }
-<span class="fc" id="L35">        return map.isEmpty();</span>
+<span class="fc" id="L43">        return map.isEmpty();</span>
     }
 
     /**
@@ -42,7 +50,7 @@ public class MapKit {
      * @return whether the given map is not null and empty
      */
     public static boolean isNotEmpty(@Nullable Map&lt;?, ?&gt; map) {
-<span class="fc bfc" id="L45" title="All 2 branches covered.">        return !isEmpty(map);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        return !isEmpty(map);</span>
     }
 
     /**
@@ -55,8 +63,8 @@ public class MapKit {
      * &lt;p&gt;
      * The behavior of this method is equivalent to:
      * &lt;pre&gt;{@code
-     *  return Collections.unmodifiableMap(linkedHashMap(array));
-     *  }&lt;/pre&gt;
+     * return Collections.unmodifiableMap(linkedHashMap(array));
+     * }&lt;/pre&gt;
      *
      * @param array the given array
      * @param &lt;K&gt;   the key type
@@ -64,7 +72,7 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given array
      */
     public static &lt;K, V&gt; @Nonnull @Immutable Map&lt;K, V&gt; map(Object @Nonnull ... array) {
-<span class="fc" id="L67">        return Collections.unmodifiableMap(linkedHashMap(array));</span>
+<span class="fc" id="L75">        return Collections.unmodifiableMap(linkedHashMap(array));</span>
     }
 
     /**
@@ -81,7 +89,7 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given array
      */
     public static &lt;K, V&gt; @Nonnull HashMap&lt;K, V&gt; hashMap(Object @Nonnull ... array) {
-<span class="fc" id="L84">        return putAll(new HashMap&lt;&gt;(), array);</span>
+<span class="fc" id="L92">        return putAll(new HashMap&lt;&gt;(), array);</span>
     }
 
     /**
@@ -98,7 +106,7 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given array
      */
     public static &lt;K, V&gt; @Nonnull LinkedHashMap&lt;K, V&gt; linkedHashMap(Object @Nonnull ... array) {
-<span class="fc" id="L101">        return putAll(new LinkedHashMap&lt;&gt;(), array);</span>
+<span class="fc" id="L109">        return putAll(new LinkedHashMap&lt;&gt;(), array);</span>
     }
 
     /**
@@ -115,8 +123,8 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given iterable
      */
     public static &lt;K, V&gt; @Nonnull @Immutable Map&lt;K, V&gt; toMap(@Nonnull Iterable&lt;?&gt; it) {
-<span class="fc" id="L118">        Object[] array = CollectKit.toArray(it);</span>
-<span class="fc" id="L119">        return map(array);</span>
+<span class="fc" id="L126">        Object[] array = CollectKit.toArray(it);</span>
+<span class="fc" id="L127">        return map(array);</span>
     }
 
     /**
@@ -147,11 +155,11 @@ public class MapKit {
         @Nonnull Function&lt;? super KO, ? extends KN&gt; keyMapper,
         @Nonnull Function&lt;? super VO, ? extends VN&gt; valueMapper
     ) {
-<span class="fc" id="L150">        return Collections.unmodifiableMap(</span>
-<span class="fc" id="L151">            map.entrySet().stream().collect(Collectors.toMap(</span>
-<span class="fc" id="L152">                entry -&gt; keyMapper.apply(entry.getKey()),</span>
-<span class="fc" id="L153">                entry -&gt; valueMapper.apply(entry.getValue()),</span>
-<span class="fc" id="L154">                (v1, v2) -&gt; v2,</span>
+<span class="fc" id="L158">        return Collections.unmodifiableMap(</span>
+<span class="fc" id="L159">            map.entrySet().stream().collect(Collectors.toMap(</span>
+<span class="fc" id="L160">                entry -&gt; keyMapper.apply(entry.getKey()),</span>
+<span class="fc" id="L161">                entry -&gt; valueMapper.apply(entry.getValue()),</span>
+<span class="fc" id="L162">                (v1, v2) -&gt; v2,</span>
                 LinkedHashMap::new
             ))
         );
@@ -171,8 +179,8 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given iterable
      */
     public static &lt;K, V&gt; @Nonnull HashMap&lt;K, V&gt; toHashMap(@Nonnull Iterable&lt;?&gt; it) {
-<span class="fc" id="L174">        Object[] array = CollectKit.toArray(it);</span>
-<span class="fc" id="L175">        return hashMap(array);</span>
+<span class="fc" id="L182">        Object[] array = CollectKit.toArray(it);</span>
+<span class="fc" id="L183">        return hashMap(array);</span>
     }
 
     /**
@@ -189,8 +197,8 @@ public class MapKit {
      * @return a new {@link HashMap} initialing with the given iterable
      */
     public static &lt;K, V&gt; @Nonnull LinkedHashMap&lt;K, V&gt; toLinkedHashMap(@Nonnull Iterable&lt;?&gt; it) {
-<span class="fc" id="L192">        Object[] array = CollectKit.toArray(it);</span>
-<span class="fc" id="L193">        return linkedHashMap(array);</span>
+<span class="fc" id="L200">        Object[] array = CollectKit.toArray(it);</span>
+<span class="fc" id="L201">        return linkedHashMap(array);</span>
     }
 
     /**
@@ -212,17 +220,17 @@ public class MapKit {
         @Nonnull @OutParam M map,
         Object @Nonnull ... array
     ) {
-<span class="fc" id="L215">        int end = array.length / 2 * 2;</span>
-<span class="fc" id="L216">        int i = 0;</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">        while (i &lt; end) {</span>
-<span class="fc" id="L218">            K key = Fs.as(array[i++]);</span>
-<span class="fc" id="L219">            V value = Fs.as(array[i++]);</span>
-<span class="fc" id="L220">            map.put(key, value);</span>
-<span class="fc" id="L221">        }</span>
-<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (end &lt; array.length) {</span>
-<span class="fc" id="L223">            map.put(Fs.as(array[end]), null);</span>
+<span class="fc" id="L223">        int end = array.length / 2 * 2;</span>
+<span class="fc" id="L224">        int i = 0;</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        while (i &lt; end) {</span>
+<span class="fc" id="L226">            K key = Fs.as(array[i++]);</span>
+<span class="fc" id="L227">            V value = Fs.as(array[i++]);</span>
+<span class="fc" id="L228">            map.put(key, value);</span>
+<span class="fc" id="L229">        }</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (end &lt; array.length) {</span>
+<span class="fc" id="L231">            map.put(Fs.as(array[end]), null);</span>
         }
-<span class="fc" id="L225">        return map;</span>
+<span class="fc" id="L233">        return map;</span>
     }
 
     /**
@@ -244,13 +252,13 @@ public class MapKit {
         @Nonnull @OutParam M map,
         @Nonnull Iterable&lt;?&gt; it
     ) {
-<span class="fc" id="L247">        Iterator&lt;?&gt; iterator = it.iterator();</span>
-<span class="fc bfc" id="L248" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
-<span class="fc" id="L249">            K key = Fs.as(iterator.next());</span>
-<span class="fc bfc" id="L250" title="All 2 branches covered.">            V value = iterator.hasNext() ? Fs.as(iterator.next()) : null;</span>
-<span class="fc" id="L251">            map.put(key, value);</span>
-<span class="fc" id="L252">        }</span>
-<span class="fc" id="L253">        return map;</span>
+<span class="fc" id="L255">        Iterator&lt;?&gt; iterator = it.iterator();</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L257">            K key = Fs.as(iterator.next());</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">            V value = iterator.hasNext() ? Fs.as(iterator.next()) : null;</span>
+<span class="fc" id="L259">            map.put(key, value);</span>
+<span class="fc" id="L260">        }</span>
+<span class="fc" id="L261">        return map;</span>
     }
 
     /**
@@ -269,20 +277,20 @@ public class MapKit {
      * @return the final value in a chain
      */
     public static &lt;T&gt; @Nullable T resolveChain(@Nonnull Map&lt;?, T&gt; map, T key, @Nonnull Set&lt;T&gt; stack) {
-<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (!map.containsKey(key)) {</span>
-<span class="fc" id="L273">            return null;</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (!map.containsKey(key)) {</span>
+<span class="fc" id="L281">            return null;</span>
         }
-<span class="fc" id="L275">        stack.add(key);</span>
-<span class="fc" id="L276">        T nextKey = map.get(key);</span>
+<span class="fc" id="L283">        stack.add(key);</span>
+<span class="fc" id="L284">        T nextKey = map.get(key);</span>
         while (true) {
-<span class="fc bfc" id="L278" title="All 2 branches covered.">            if (stack.contains(nextKey)) {</span>
-<span class="fc" id="L279">                return null;</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            if (stack.contains(nextKey)) {</span>
+<span class="fc" id="L287">                return null;</span>
             }
-<span class="fc bfc" id="L281" title="All 2 branches covered.">            if (!map.containsKey(nextKey)) {</span>
-<span class="fc" id="L282">                return nextKey;</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            if (!map.containsKey(nextKey)) {</span>
+<span class="fc" id="L290">                return nextKey;</span>
             }
-<span class="fc" id="L284">            stack.add(nextKey);</span>
-<span class="fc" id="L285">            nextKey = map.get(nextKey);</span>
+<span class="fc" id="L292">            stack.add(nextKey);</span>
+<span class="fc" id="L293">            nextKey = map.get(nextKey);</span>
         }
     }
 
@@ -296,22 +304,65 @@ public class MapKit {
      * @return a new immutable {@link Map.Entry} with the given key and value
      */
     public static &lt;K, V&gt; Map.@Nonnull Entry&lt;K, V&gt; entry(K key, V value) {
-<span class="fc" id="L299">        return new Map.Entry&lt;K, V&gt;() {</span>
+<span class="fc" id="L307">        return new Map.Entry&lt;K, V&gt;() {</span>
             @Override
             public K getKey() {
-<span class="fc" id="L302">                return key;</span>
+<span class="fc" id="L310">                return key;</span>
             }
 
             @Override
             public V getValue() {
-<span class="fc" id="L307">                return value;</span>
+<span class="fc" id="L315">                return value;</span>
             }
 
             @Override
             public V setValue(V value) {
-<span class="fc" id="L312">                throw new UnsupportedOperationException();</span>
+<span class="fc" id="L320">                throw new UnsupportedOperationException();</span>
             }
         };
+    }
+
+    /**
+     * Returns a new map instance with the given map type and initial capacity. If the given map type is unsupported,
+     * returns {@code null}. The supported map types follow the {@link #newFunction(Type)}.
+     *
+     * @param mapType         the given map type
+     * @param initialCapacity the initial capacity
+     * @param &lt;K&gt;             the type of the map keys
+     * @param &lt;V&gt;             the type of the map values
+     * @return a new map instance, or {@code null} if the given map type is unsupported
+     */
+    public static &lt;K, V&gt; @Nullable Map&lt;K, V&gt; newMap(@Nonnull Type mapType, int initialCapacity) {
+<span class="fc" id="L336">        IntFunction&lt;@Nonnull Map&lt;K, V&gt;&gt; function = newFunction(mapType);</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        if (function == null) {</span>
+<span class="fc" id="L338">            return null;</span>
+        }
+<span class="fc" id="L340">        return function.apply(initialCapacity);</span>
+    }
+
+    /**
+     * Returns a new instance of {@link IntFunction} that creates a new map instance with the given map type. If the
+     * given map type is unsupported, returns {@code null}. The supported map types are:
+     * &lt;ul&gt;
+     *     &lt;li&gt;{@link Map}&lt;/li&gt;
+     *     &lt;li&gt;{@link AbstractMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link LinkedHashMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link HashMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link TreeMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link ConcurrentMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link ConcurrentHashMap}&lt;/li&gt;
+     *     &lt;li&gt;{@link Hashtable}&lt;/li&gt;
+     *     &lt;li&gt;{@link ConcurrentSkipListMap}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param maType the given map type
+     * @param &lt;K&gt;    the type of the map keys
+     * @param &lt;V&gt;    the type of the map values
+     * @return a new instance of {@link IntFunction} that creates a new map instance with the given map type, or
+     * {@code null} if the given map type is unsupported
+     */
+    public static &lt;K, V&gt; @Nullable IntFunction&lt;@Nonnull Map&lt;K, V&gt;&gt; newFunction(@Nonnull Type maType) {
+<span class="fc" id="L365">        return Fs.as(CollectBack.mapFunction(maType));</span>
     }
 
     private MapKit() {

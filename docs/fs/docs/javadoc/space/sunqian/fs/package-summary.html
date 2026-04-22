@@ -63,21 +63,18 @@ loadScripts(document, 'script');</script>
 <section class="package-description" id="package-description">
 <div class="block">The root package of fs, provides root supports for fs:
  <p>
- Global kits:
+ Global core kits:
  <ul>
-     <li><a href="Fs.html" title="class in space.sunqian.fs"><code>Fs</code></a>: the core utilities kit;</li>
-     <li><a href="FsLoader.html" title="class in space.sunqian.fs"><code>FsLoader</code></a>: the loader for implementations of fs;</li>
+     <li><a href="Fs.html" title="class in space.sunqian.fs"><code>Fs</code></a>: the core utilities of this lib;</li>
  </ul>
  Sub-packages for specific functions:
  <ul>
      <li><a href="base/package-summary.html"><code>space.sunqian.fs.base</code></a></li>
      <li><a href="cache/package-summary.html"><code>space.sunqian.fs.cache</code></a></li>
-     <li><a href="codec/package-summary.html"><code>space.sunqian.fs.codec</code></a></li>
      <li><a href="collect/package-summary.html"><code>space.sunqian.fs.collect</code></a></li>
      <li><a href="concurrent/package-summary.html"><code>space.sunqian.fs.concurrent</code></a></li>
      <li><a href="di/package-summary.html"><code>space.sunqian.fs.di</code></a></li>
      <li><a href="dynamic/package-summary.html"><code>space.sunqian.fs.dynamic</code></a></li>
-     <li><a href="eventbus/package-summary.html"><code>space.sunqian.fs.eventbus</code></a></li>
      <li><a href="invoke/package-summary.html"><code>space.sunqian.fs.invoke</code></a></li>
      <li><a href="io/package-summary.html"><code>space.sunqian.fs.io</code></a></li>
      <li><a href="net/package-summary.html"><code>space.sunqian.fs.net</code></a></li>
@@ -107,17 +104,29 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Provides simple cache interfaces, with soft/weak reference implementation by default.</div>
 </div>
-<div class="col-first odd-row-color"><a href="codec/package-summary.html">space.sunqian.fs.codec</a></div>
+<div class="col-first odd-row-color"><a href="collect/package-summary.html">space.sunqian.fs.collect</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Provides utilities for codec, including crypto, base64, hex, etc.</div>
-</div>
-<div class="col-first even-row-color"><a href="collect/package-summary.html">space.sunqian.fs.collect</a></div>
-<div class="col-last even-row-color">
 <div class="block">Provides utilities for array, collection and stream.</div>
 </div>
-<div class="col-first odd-row-color"><a href="concurrent/package-summary.html">space.sunqian.fs.concurrent</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="concurrent/package-summary.html">space.sunqian.fs.concurrent</a></div>
+<div class="col-last even-row-color">
 <div class="block">Provides utilities for concurrent related, such as <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Future.html" title="class or interface in java.util.concurrent" class="external-link"><code>Future</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><a href="data/package-summary.html">space.sunqian.fs.data</a></div>
+<div class="col-last odd-row-color">
+<div class="block">This package and its subpackage provide utilities and interfaces to deal with data, such as <code>JSON</code> and
+ <code>Properties</code>:
+ 
+     <a href="data/ByteData.html" title="interface in space.sunqian.fs.data"><code>ByteData</code></a>: Core byte data interface;
+     <a href="data/ByteDataParser.html" title="interface in space.sunqian.fs.data"><code>ByteDataParser</code></a>: Core byte data parser interface;
+     <a href="data/ByteDataFormatter.html" title="interface in space.sunqian.fs.data"><code>ByteDataFormatter</code></a>: Core byte data formatter interface;
+     <a href="data/CharData.html" title="interface in space.sunqian.fs.data"><code>CharData</code></a>: Core char data interface;
+     <a href="data/CharDataParser.html" title="interface in space.sunqian.fs.data"><code>CharDataParser</code></a>: Core char data parser interface;
+     <a href="data/CharDataFormatter.html" title="interface in space.sunqian.fs.data"><code>CharDataFormatter</code></a>: Core char data formatter interface;
+     <a href="data/DataKit.html" title="class in space.sunqian.fs.data"><code>DataKit</code></a>: Utilities for all data;
+     <a href="data/json/package-summary.html"><code>space.sunqian.fs.data.json</code></a>: Subpackage for <code>JSON</code>;
+     <a href="data/properties/package-summary.html"><code>space.sunqian.fs.data.properties</code></a>: Subpackage for <code>Properties</code>;
+ </div>
 </div>
 <div class="col-first even-row-color"><a href="di/package-summary.html">space.sunqian.fs.di</a></div>
 <div class="col-last even-row-color">
@@ -130,49 +139,60 @@ loadScripts(document, 'script');</script>
      <a href="dynamic/DynamicKit.html" title="class in space.sunqian.fs.dynamic"><code>DynamicKit</code></a>: Dynamic utilities;
      <a href="dynamic/DynamicClassLoader.html" title="class in space.sunqian.fs.dynamic"><code>DynamicClassLoader</code></a>: Dynamic class loader;
      <a href="dynamic/proxy/package-summary.html"><code>space.sunqian.fs.dynamic.proxy</code></a>: Enables dynamic proxying capabilities;
-     <a href="dynamic/aop/package-summary.html"><code>space.sunqian.fs.dynamic.aop</code></a>: Enables AOP (Aspect-Oriented Programming) features;
+     <a href="dynamic/aspect/package-summary.html"><code>space.sunqian.fs.dynamic.aspect</code></a>: Enables AOP (Aspect-Oriented Programming) features;
  </div>
 </div>
-<div class="col-first even-row-color"><a href="eventbus/package-summary.html">space.sunqian.fs.eventbus</a></div>
+<div class="col-first even-row-color"><a href="invoke/package-summary.html">space.sunqian.fs.invoke</a></div>
 <div class="col-last even-row-color">
-<div class="block">Provides simple event bus interface and default implementation:
- 
-     <a href="eventbus/SimpleEventBus.html" title="interface in space.sunqian.fs.eventbus"><code>SimpleEventBus</code></a>: Simple event bus interface;
- </div>
-</div>
-<div class="col-first odd-row-color"><a href="invoke/package-summary.html">space.sunqian.fs.invoke</a></div>
-<div class="col-last odd-row-color">
 <div class="block">Provides unified interfaces to handle an invocable body, for example:</div>
 </div>
-<div class="col-first even-row-color"><a href="io/package-summary.html">space.sunqian.fs.io</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="io/package-summary.html">space.sunqian.fs.io</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Provides utilities and interfaces for IO related, including subpackages.</div>
 </div>
-<div class="col-first odd-row-color"><a href="net/package-summary.html">space.sunqian.fs.net</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="net/package-summary.html">space.sunqian.fs.net</a></div>
+<div class="col-last even-row-color">
 <div class="block">Provides utilities and interfaces for network, such as Http client, TCP client and server, UDP sender and server.</div>
 </div>
-<div class="col-first even-row-color"><a href="object/package-summary.html">space.sunqian.fs.object</a></div>
-<div class="col-last even-row-color">
-<div class="block">This package and its subpackages provide various object related operations;
+<div class="col-first odd-row-color"><a href="object/package-summary.html">space.sunqian.fs.object</a></div>
+<div class="col-last odd-row-color">
+<div class="block">This package provides basic object related supports:
  
-     <a href="object/ObjectKit.html" title="class in space.sunqian.fs.object"><code>ObjectKit</code></a>: Object utilities;
-     <a href="object/data/package-summary.html"><code>space.sunqian.fs.object.data</code></a>: Parses and manipulates objects as data entities;
-     <a href="object/convert/package-summary.html"><code>space.sunqian.fs.object.convert</code></a>: Converts objects into different types;
+     <a href="object/ObjectKit.html" title="class in space.sunqian.fs.object"><code>ObjectKit</code></a>: The utilities for objects;
+     <a href="object/ObjectException.html" title="class in space.sunqian.fs.object"><code>ObjectException</code></a>: Base exception for object related errors;
+ 
+ And its subpackages provide specific object related supports;
+ 
+     <a href="object/schema/package-summary.html"><code>space.sunqian.fs.object.schema</code></a>: Defines schemas for data objects;
+     <a href="object/builder/package-summary.html"><code>space.sunqian.fs.object.builder</code></a>: Defines steps for creating and building objects;
+     <a href="object/convert/package-summary.html"><code>space.sunqian.fs.object.convert</code></a>: Converts and copies objects and properties;
+     <a href="object/pool/package-summary.html"><code>space.sunqian.fs.object.pool</code></a>: Provides pool interfaces for objects;
+     <a href="object/annotation/package-summary.html"><code>space.sunqian.fs.object.annotation</code></a>: Provides annotations for object related operations;
  </div>
 </div>
-<div class="col-first odd-row-color"><a href="reflect/package-summary.html">space.sunqian.fs.reflect</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="reflect/package-summary.html">space.sunqian.fs.reflect</a></div>
+<div class="col-last even-row-color">
 <div class="block">Provides utilities and classes for reflection related.</div>
 </div>
-<div class="col-first even-row-color"><a href="third/package-summary.html">space.sunqian.fs.third</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="third/package-summary.html">space.sunqian.fs.third</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Provides support for third-party:
  
      <a href="third/ThirdKit.html" title="class in space.sunqian.fs.third"><code>ThirdKit</code></a>: Third-party utilities;
      <a href="third/asm/package-summary.html"><code>space.sunqian.fs.third.asm</code></a>: For <a href="https://asm.ow2.io/">ASM</a>;
      <a href="third/protobuf/package-summary.html"><code>space.sunqian.fs.third.protobuf</code></a>: For <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffers</a>;
  </div>
+</div>
+<div class="col-first even-row-color"><a href="utils/package-summary.html">space.sunqian.fs.utils</a></div>
+<div class="col-last even-row-color">
+<div class="block">This package and its subpackages contain common non-core tools, including:
+ 
+     <a href="utils/codec/package-summary.html"><code>space.sunqian.fs.utils.codec</code></a>: For codec;
+     <a href="utils/eventbus/package-summary.html"><code>space.sunqian.fs.utils.eventbus</code></a>: Provides simple event-bus interfaces and implementations;
+     <a href="utils/jdbc/package-summary.html"><code>space.sunqian.fs.utils.jdbc</code></a>: Package for JDBC and SQL;
+     <a href="utils/version/package-summary.html"><code>space.sunqian.fs.utils.version</code></a>: Semantic version;
+ 
+ And a utilities kit for common operations: <a href="utils/UtilKit.html" title="class in space.sunqian.fs.utils"><code>UtilKit</code></a>.</div>
 </div>
 </div>
 </div>
@@ -187,10 +207,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The core utility class of this library, provides support methods for <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>, such as <code>equals</code> and
  <code>hashCode</code>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FsLoader.html" title="class in space.sunqian.fs">FsLoader</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Loader for implementations of this lib.</div>
 </div>
 </div>
 </div>

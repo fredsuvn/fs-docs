@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NameMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.base.string</a> &gt; <span class="el_source">NameMapper.java</span></div><h1>NameMapper.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.base.string;
+
+import space.sunqian.annotation.Nonnull;
+
+/**
+ * Mapper for mapping name to another string.
+ *
+ * @author sunqian
+ */
+public interface NameMapper {
+
+    /**
+     * Returns a name mapper that keeps the name as it is, the logic is {@code name -&gt; name}.
+     *
+     * @return a name mapper that keeps the name as it is
+     */
+    static @Nonnull NameMapper keep() {
+<span class="fc" id="L18">        return NameMapperBack.KEEP;</span>
+    }
+
+    /**
+     * Creates a name mapper from the specified source formatter to the destination formatter.
+     *
+     * @param src the source formatter
+     * @param dst the destination formatter
+     * @return a name mapper from the specified source formatter to the destination formatter
+     */
+    static @Nonnull NameMapper with(@Nonnull NameFormatter src, @Nonnull NameFormatter dst) {
+<span class="fc" id="L29">        return name -&gt; src.format(name, dst);</span>
+    }
+
+    /**
+     * Maps the specified name to another string.
+     *
+     * @param name the specified name to be mapped
+     * @return the mapped name
+     */
+    @Nonnull
+    String map(@Nonnull String name);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

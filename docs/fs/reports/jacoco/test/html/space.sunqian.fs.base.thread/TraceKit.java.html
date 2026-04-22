@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TraceKit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.base.thread</a> &gt; <span class="el_source">TraceKit.java</span></div><h1>TraceKit.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.base.thread;
 
 import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.Fs;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,8 +17,8 @@ public class TraceKit {
     /**
      * An empty stack trace element, indicating that the caller is unknown or not available or not exists.
      */
-<span class="fc" id="L19">    public static final @Nonnull StackTraceElement EMPTY_FRAME = new StackTraceElement(</span>
-        &quot;null&quot;, &quot;null&quot;, null, -1);
+<span class="fc" id="L20">    public static final @Nonnull StackTraceElement EMPTY_FRAME = new StackTraceElement(</span>
+        Fs.NULL_STRING, Fs.NULL_STRING, null, -1);
 
     /**
      * Returns the stack trace list of the current thread, starting at the method that invokes this method
@@ -33,7 +34,7 @@ public class TraceKit {
      * @return the stack trace list of the current thread
      */
     public static @Nonnull List&lt;@Nonnull StackTraceElement&gt; stackTrace() {
-<span class="fc" id="L36">        return stackTrace(Thread.currentThread());</span>
+<span class="fc" id="L37">        return stackTrace(Thread.currentThread());</span>
     }
 
     /**
@@ -51,27 +52,27 @@ public class TraceKit {
      * @return the stack trace list of the specified thread
      */
     public static @Nonnull List&lt;@Nonnull StackTraceElement&gt; stackTrace(@Nonnull Thread thread) {
-<span class="fc" id="L54">        StackTraceElement[] elements = thread.getStackTrace();</span>
-<span class="fc" id="L55">        return parseStackTrace(elements);</span>
+<span class="fc" id="L55">        StackTraceElement[] elements = thread.getStackTrace();</span>
+<span class="fc" id="L56">        return parseStackTrace(elements);</span>
     }
 
     private static @Nonnull List&lt;@Nonnull StackTraceElement&gt; parseStackTrace(
         @Nonnull StackTraceElement @Nonnull [] elements
     ) {
-<span class="fc" id="L61">        int preIndex = -1;</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (int i = 0; i &lt; elements.length; i++) {</span>
-<span class="fc" id="L63">            StackTraceElement element = elements[i];</span>
-<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (TraceKit.class.getName().equals(element.getClassName())</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">                &amp;&amp; &quot;stackTrace&quot;.equals(element.getMethodName())) {</span>
-<span class="fc" id="L66">                preIndex = i;</span>
+<span class="fc" id="L62">        int preIndex = -1;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (int i = 0; i &lt; elements.length; i++) {</span>
+<span class="fc" id="L64">            StackTraceElement element = elements[i];</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            if (TraceKit.class.getName().equals(element.getClassName())</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                &amp;&amp; &quot;stackTrace&quot;.equals(element.getMethodName())) {</span>
+<span class="fc" id="L67">                preIndex = i;</span>
             }
         }
-<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (preIndex &lt; 0) {</span>
-<span class="fc" id="L70">            return Collections.emptyList();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (preIndex &lt; 0) {</span>
+<span class="fc" id="L71">            return Collections.emptyList();</span>
         }
-<span class="fc" id="L72">        StackTraceElement[] actualElements = new StackTraceElement[elements.length - preIndex - 1];</span>
-<span class="fc" id="L73">        System.arraycopy(elements, preIndex + 1, actualElements, 0, actualElements.length);</span>
-<span class="fc" id="L74">        return Arrays.asList(actualElements);</span>
+<span class="fc" id="L73">        StackTraceElement[] actualElements = new StackTraceElement[elements.length - preIndex - 1];</span>
+<span class="fc" id="L74">        System.arraycopy(elements, preIndex + 1, actualElements, 0, actualElements.length);</span>
+<span class="fc" id="L75">        return Arrays.asList(actualElements);</span>
     }
 
     private TraceKit() {

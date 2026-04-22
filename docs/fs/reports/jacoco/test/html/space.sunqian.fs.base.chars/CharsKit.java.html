@@ -4,6 +4,7 @@ import space.sunqian.annotation.Nonnull;
 import space.sunqian.annotation.Nullable;
 import space.sunqian.fs.Fs;
 import space.sunqian.fs.base.system.SystemKeys;
+import space.sunqian.fs.io.IORuntimeException;
 
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -19,15 +20,15 @@ public class CharsKit {
     /**
      * Charset: UTF-8.
      */
-<span class="fc" id="L22">    public static final @Nonnull Charset UTF_8 = StandardCharsets.UTF_8;</span>
+<span class="fc" id="L23">    public static final @Nonnull Charset UTF_8 = StandardCharsets.UTF_8;</span>
 
     /**
      * Charset: ISO-8859-1.
      */
-<span class="fc" id="L27">    public static final @Nonnull Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;</span>
+<span class="fc" id="L28">    public static final @Nonnull Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;</span>
 
-<span class="fc" id="L29">    private static final char @Nonnull [] EMPTY = {};</span>
-<span class="fc" id="L30">    private static final @Nonnull CharBuffer EMPTY_BUFFER = CharBuffer.wrap(EMPTY);</span>
+<span class="fc" id="L30">    private static final char @Nonnull [] EMPTY = {};</span>
+<span class="fc" id="L31">    private static final @Nonnull CharBuffer EMPTY_BUFFER = CharBuffer.wrap(EMPTY);</span>
 
     /**
      * Returns whether the given buffer is null or empty.
@@ -36,7 +37,7 @@ public class CharsKit {
      * @return whether the given buffer is null or empty
      */
     public static boolean isEmpty(@Nullable CharBuffer buffer) {
-<span class="fc bfc" id="L39" title="All 4 branches covered.">        return buffer == null || !buffer.hasRemaining();</span>
+<span class="fc bfc" id="L40" title="All 4 branches covered.">        return buffer == null || !buffer.hasRemaining();</span>
     }
 
     /**
@@ -45,7 +46,7 @@ public class CharsKit {
      * @return an empty char array
      */
     public static char @Nonnull [] empty() {
-<span class="fc" id="L48">        return EMPTY;</span>
+<span class="fc" id="L49">        return EMPTY;</span>
     }
 
     /**
@@ -54,7 +55,7 @@ public class CharsKit {
      * @return an empty char buffer
      */
     public static @Nonnull CharBuffer emptyBuffer() {
-<span class="fc" id="L57">        return EMPTY_BUFFER;</span>
+<span class="fc" id="L58">        return EMPTY_BUFFER;</span>
     }
 
     /**
@@ -63,7 +64,7 @@ public class CharsKit {
      * @return the default charset: {@link #UTF_8}
      */
     public static @Nonnull Charset defaultCharset() {
-<span class="fc" id="L66">        return UTF_8;</span>
+<span class="fc" id="L67">        return UTF_8;</span>
     }
 
     /**
@@ -72,7 +73,7 @@ public class CharsKit {
      * @return the latin charset: {@link #ISO_8859_1}
      */
     public static @Nonnull Charset latinCharset() {
-<span class="fc" id="L75">        return ISO_8859_1;</span>
+<span class="fc" id="L76">        return ISO_8859_1;</span>
     }
 
     /**
@@ -83,7 +84,7 @@ public class CharsKit {
      * {@link #jvmCharset()}.
      */
     public static @Nonnull Charset localCharset() {
-<span class="fc" id="L86">        return Fs.nonnull(nativeCharset(), jvmCharset());</span>
+<span class="fc" id="L87">        return Fs.nonnull(nativeCharset(), jvmCharset());</span>
     }
 
     /**
@@ -93,7 +94,7 @@ public class CharsKit {
      * @see Charset#defaultCharset()
      */
     public static @Nonnull Charset jvmCharset() {
-<span class="fc" id="L96">        return Charset.defaultCharset();</span>
+<span class="fc" id="L97">        return Charset.defaultCharset();</span>
     }
 
     /**
@@ -111,7 +112,7 @@ public class CharsKit {
      * @return the charset from the host environment, which is typically the charset of current OS
      */
     public static @Nullable Charset nativeCharset() {
-<span class="fc" id="L114">        return Natives.NATIVE_CHARSET;</span>
+<span class="fc" id="L115">        return Natives.NATIVE_CHARSET;</span>
     }
 
     /**
@@ -122,34 +123,159 @@ public class CharsKit {
      */
     public static @Nullable Charset charset(String name) {
         try {
-<span class="fc" id="L125">            return Charset.forName(name);</span>
-<span class="fc" id="L126">        } catch (Exception e) {</span>
-<span class="fc" id="L127">            return null;</span>
+<span class="fc" id="L126">            return Charset.forName(name);</span>
+<span class="fc" id="L127">        } catch (Exception e) {</span>
+<span class="fc" id="L128">            return null;</span>
         }
+    }
+
+    /**
+     * Converts the given char to the corresponding Unicode escape string. For example:
+     * &lt;ul&gt;
+     *    &lt;li&gt;{@code 'a'} -&gt; {@code \\u0061}&lt;/li&gt;
+     *    &lt;li&gt;{@code 'h'} -&gt; {@code \\u0068}&lt;/li&gt;
+     *    &lt;li&gt;{@code '中'} -&gt; {@code \\u4E20}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param c the given char
+     * @return the corresponding Unicode escape string
+     */
+    public static @Nonnull String toUnicode(char c) {
+<span class="fc" id="L144">        return toUnicode(c, true);</span>
+    }
+
+    /**
+     * Converts the given char to the corresponding Unicode escape string. For example:
+     * &lt;ul&gt;
+     *    &lt;li&gt;{@code 'a'} -&gt; {@code \\u0061}&lt;/li&gt;
+     *    &lt;li&gt;{@code 'h'} -&gt; {@code \\u0068}&lt;/li&gt;
+     *    &lt;li&gt;{@code '中'} -&gt; {@code \\u4E20}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param c         the given char
+     * @param uppercase {@code true} to use uppercase letters, {@code false} to use lowercase letters
+     * @return the corresponding Unicode escape string
+     */
+    public static @Nonnull String toUnicode(char c, boolean uppercase) {
+<span class="fc" id="L160">        return CharToUnicode.charToUnicode(c, uppercase);</span>
+    }
+
+    /**
+     * Converts the given char to the corresponding Unicode escape string and appends it to the given appender. For
+     * example:
+     * &lt;ul&gt;
+     *    &lt;li&gt;{@code 'a'} -&gt; {@code \\u0061}&lt;/li&gt;
+     *    &lt;li&gt;{@code 'h'} -&gt; {@code \\u0068}&lt;/li&gt;
+     *    &lt;li&gt;{@code '中'} -&gt; {@code \\u4E20}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param c         the given char
+     * @param uppercase {@code true} to use uppercase letters, {@code false} to use lowercase letters
+     * @param appender  the appender to append the result
+     */
+    public static void toUnicode(char c, boolean uppercase, @Nonnull Appendable appender) throws IORuntimeException {
+        try {
+<span class="fc" id="L178">            CharToUnicode.charToUnicode(c, uppercase, appender);</span>
+<span class="fc" id="L179">        } catch (Exception e) {</span>
+<span class="fc" id="L180">            throw new IORuntimeException(e);</span>
+<span class="fc" id="L181">        }</span>
+<span class="fc" id="L182">    }</span>
+
+    /**
+     * Converts the Unicode escape sequence to the corresponding character. For example:
+     * &lt;ul&gt;
+     *    &lt;li&gt;{@code \\u0061} -&gt; {@code 'a'}&lt;/li&gt;
+     *    &lt;li&gt;{@code \\u0068} -&gt; {@code 'h'}&lt;/li&gt;
+     *    &lt;li&gt;{@code \\u4E20} -&gt; {@code '中'}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param c1 the first character of the Unicode escape sequence
+     * @param c2 the second character of the Unicode escape sequence
+     * @param c3 the third character of the Unicode escape sequence
+     * @param c4 the fourth character of the Unicode escape sequence
+     * @return the corresponding character
+     */
+    public static char unicodeToChar(char c1, char c2, char c3, char c4) {
+<span class="fc" id="L199">        int digits = unicodeToDigits(c1);</span>
+<span class="fc" id="L200">        digits &lt;&lt;= 4;</span>
+<span class="fc" id="L201">        digits |= unicodeToDigits(c2);</span>
+<span class="fc" id="L202">        digits &lt;&lt;= 4;</span>
+<span class="fc" id="L203">        digits |= unicodeToDigits(c3);</span>
+<span class="fc" id="L204">        digits &lt;&lt;= 4;</span>
+<span class="fc" id="L205">        digits |= unicodeToDigits(c4);</span>
+<span class="fc" id="L206">        return (char) digits;</span>
+    }
+
+    private static int unicodeToDigits(char c) {
+        int digit;
+<span class="fc bfc" id="L211" title="All 4 branches covered.">        if (c &gt;= '0' &amp;&amp; c &lt;= '9') {</span>
+<span class="fc" id="L212">            digit = c - '0';</span>
+<span class="fc bfc" id="L213" title="All 4 branches covered.">        } else if (c &gt;= 'A' &amp;&amp; c &lt;= 'F') {</span>
+<span class="fc" id="L214">            digit = c - 'A' + 10;</span>
+<span class="fc bfc" id="L215" title="All 4 branches covered.">        } else if (c &gt;= 'a' &amp;&amp; c &lt;= 'f') {</span>
+<span class="fc" id="L216">            digit = c - 'a' + 10;</span>
+        } else {
+<span class="fc" id="L218">            throw new IllegalArgumentException(&quot;Illegal hex character: &quot; + c);</span>
+        }
+<span class="fc" id="L220">        return digit;</span>
     }
 
     private static final class Natives {
 
-<span class="fc" id="L133">        private static final @Nullable Charset NATIVE_CHARSET = searchNativeCharset();</span>
+<span class="fc" id="L225">        private static final @Nullable Charset NATIVE_CHARSET = searchNativeCharset();</span>
 
         private static @Nullable Charset searchNativeCharset() {
-<span class="fc" id="L136">            return search(</span>
+<span class="fc" id="L228">            return search(</span>
                 SystemKeys.NATIVE_ENCODING,
                 &quot;sun.jnu.encoding&quot;,
                 SystemKeys.FILE_ENCODING
             );
         }
 
-        private static @Nullable Charset search(String... proName) {
-<span class="fc bfc" id="L144" title="All 2 branches covered.">            for (String s : proName) {</span>
-<span class="fc" id="L145">                String prop = System.getProperty(s);</span>
-<span class="fc" id="L146">                @Nullable Charset charset = charset(prop);</span>
-<span class="fc bfc" id="L147" title="All 2 branches covered.">                if (charset != null) {</span>
-<span class="fc" id="L148">                    return charset;</span>
+        @SuppressWarnings(&quot;SameParameterValue&quot;)
+        private static @Nullable Charset search(@Nonnull String @Nonnull ... proName) {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">            for (String s : proName) {</span>
+<span class="fc" id="L238">                String prop = System.getProperty(s);</span>
+<span class="fc" id="L239">                @Nullable Charset charset = charset(prop);</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                if (charset != null) {</span>
+<span class="fc" id="L241">                    return charset;</span>
                 }
             }
-<span class="fc" id="L151">            return null;</span>
+<span class="fc" id="L244">            return null;</span>
         }
+    }
+
+    private static final class CharToUnicode {
+
+<span class="fc" id="L250">        private static final char[] UPPERS =</span>
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+<span class="fc" id="L252">        private static final char[] LOWERS =</span>
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+        private static String charToUnicode(char ch, boolean uppercase) {
+<span class="fc" id="L256">            char[] result = new char[6];</span>
+<span class="fc" id="L257">            result[0] = '\\';</span>
+<span class="fc" id="L258">            result[1] = 'u';</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">            char[] dict = uppercase ? UPPERS : LOWERS;</span>
+<span class="fc" id="L260">            int code = ch &amp; 0xFFFF;</span>
+<span class="fc" id="L261">            result[2] = dict[(code &gt;&gt;&gt; 12) &amp; 0x0F];</span>
+<span class="fc" id="L262">            result[3] = dict[(code &gt;&gt;&gt; 8) &amp; 0x0F];</span>
+<span class="fc" id="L263">            result[4] = dict[(code &gt;&gt;&gt; 4) &amp; 0x0F];</span>
+<span class="fc" id="L264">            result[5] = dict[code &amp; 0x0F];</span>
+<span class="fc" id="L265">            return new String(result);</span>
+        }
+
+        private static void charToUnicode(char ch, boolean uppercase, @Nonnull Appendable appender) throws Exception {
+<span class="fc" id="L269">            char c0 = '\\';</span>
+<span class="fc" id="L270">            char c1 = 'u';</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            char[] dict = uppercase ? UPPERS : LOWERS;</span>
+<span class="fc" id="L272">            int code = ch &amp; 0xFFFF;</span>
+<span class="fc" id="L273">            char c2 = dict[(code &gt;&gt;&gt; 12) &amp; 0x0F];</span>
+<span class="fc" id="L274">            char c3 = dict[(code &gt;&gt;&gt; 8) &amp; 0x0F];</span>
+<span class="fc" id="L275">            char c4 = dict[(code &gt;&gt;&gt; 4) &amp; 0x0F];</span>
+<span class="fc" id="L276">            char c5 = dict[code &amp; 0x0F];</span>
+<span class="fc" id="L277">            appender.append(c0).append(c1).append(c2).append(c3).append(c4).append(c5);</span>
+<span class="fc" id="L278">        }</span>
     }
 
     private CharsKit() {

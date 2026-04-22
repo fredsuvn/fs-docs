@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.jdbc</a> &gt; <span class="el_source">SqlBuilder.java</span></div><h1>SqlBuilder.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.jdbc;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+
+import java.util.List;
+
+/**
+ * This interface is used for building SQL in method chaining. For example:
+ * &lt;pre&gt;{@code
+ * // simple sql:
+ * List&lt;User&gt; users = SqlBuilder.newBuilder()
+ *     .append(&quot;SELECT * FROM users WHERE 1=1)
+ *     .append(&quot; AND gender = &quot;, gender)
+ *     .append(&quot; AND id in (&quot;, idList).append(&quot;)&quot;)
+ *     .build()
+ *     .connection(connection)
+ *     .query(User.class);
+ * // batch sql:
+ * BatchSql batchSql = SqlBuilder.newBuilder()
+ *     .append(&quot;INSERT INTO users (name, age) VALUES (?, ?);&quot;)
+ *     .buildBatch()
+ *     .batchParameters(batchParams)
+ *     .connection(connection)
+ *     .execute();
+ * }&lt;/pre&gt;
+ *
+ * @author sunqian
+ * @see PreparedSql
+ */
+public interface SqlBuilder {
+
+    /**
+     * Returns a new instance of {@link SqlBuilder}.
+     *
+     * @return a new instance of {@link SqlBuilder}
+     */
+    static @Nonnull SqlBuilder newBuilder() {
+<span class="fc" id="L39">        return SqlBack.newBuilder();</span>
+    }
+
+    /**
+     * Appends a raw string to the current SQL.
+     *
+     * @param sql the given raw string to append
+     * @return this builder
+     */
+    @Nonnull
+    SqlBuilder append(@Nonnull String sql);
+
+    /**
+     * Appends a parameterized string to the current SQL.
+     * &lt;p&gt;
+     * This method first appends the given raw string, and then appends the question mark (?) for parameter binding. If
+     * the given parameter is not an instance of {@link Iterable}, this method appends one question mark (?), otherwise,
+     * this method appends multiple question marks joined by commas (?,?,?...), and the number of question marks is
+     * equal to the size of the {@link Iterable} parameter.
+     *
+     * @param sql   the given raw string to append
+     * @param param the given parameter value to bind
+     * @return this builder
+     */
+    @Nonnull
+    SqlBuilder append(@Nonnull String sql, @Nullable Object param);
+
+    /**
+     * Conditionally appends a raw string to the current SQL.
+     * &lt;p&gt;
+     * The given raw string will only be added if the specified condition evaluates to {@code true}.
+     *
+     * @param condition the condition that determines whether to append the SQL
+     * @param sql       the given raw string to append if condition is {@code true}
+     * @return this builder
+     */
+    default @Nonnull SqlBuilder appendIf(boolean condition, @Nonnull String sql) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (condition) {</span>
+<span class="fc" id="L77">            append(sql);</span>
+        }
+<span class="fc" id="L79">        return this;</span>
+    }
+
+    /**
+     * Conditionally appends a parameterized string to the current SQL.
+     * &lt;p&gt;
+     * The given parameterized string will only be added if the specified condition evaluates to {@code true}. If it is,
+     * this method first appends the given raw string, and then appends the question mark (?) for parameter binding. If
+     * the given parameter is not an instance of {@link Iterable}, this method appends one question mark (?), otherwise,
+     * this method appends multiple question marks joined by commas (?,?,?...), and the number of question marks is
+     * equal to the size of the {@link Iterable} parameter.
+     *
+     * @param condition the condition that determines whether to append the SQL
+     * @param sql       the given raw string to append if condition is {@code true}
+     * @param param     the given parameter value to bind if condition is {@code true}
+     * @return this builder
+     */
+    default @Nonnull SqlBuilder appendIf(boolean condition, @Nonnull String sql, @Nullable Object param) {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (condition) {</span>
+<span class="fc" id="L98">            append(sql, param);</span>
+        }
+<span class="fc" id="L100">        return this;</span>
+    }
+
+    /**
+     * Builds and returns the final prepared SQL.
+     *
+     * @return the prepared SQL ready for execution
+     */
+    @Nonnull
+    PreparedSql build();
+
+    /**
+     * Builds and returns the final prepared SQL for batch execution. The returned {@link PreparedBatchSql} object is
+     * only built from the current prepared SQL string, and the previously added parameters will be discarded. The
+     * actual batch parameters should be added by {@link PreparedBatchSql#batchParameters(List)} or
+     * {@link PreparedBatchSql#parameters(List)}.
+     *
+     * @return the prepared SQL ready for execution for batch execution
+     */
+    @Nonnull
+    PreparedBatchSql buildBatch();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

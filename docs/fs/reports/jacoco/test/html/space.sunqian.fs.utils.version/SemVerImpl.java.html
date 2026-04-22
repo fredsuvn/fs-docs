@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SemVerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.utils.version</a> &gt; <span class="el_source">SemVerImpl.java</span></div><h1>SemVerImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.utils.version;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.collect.ListKit;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+final class SemVerImpl implements SemVer {
+
+<span class="fc" id="L16">    private static final @Nonnull Pattern SEM_VER_PATTERN = Pattern.compile(</span>
+        &quot;^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$&quot;
+    );
+
+    private final int major;
+    private final int minor;
+    private final int patch;
+    private final @Nullable PreRelease preRelease;
+    private final @Nullable BuildMeta buildMeta;
+
+<span class="fc" id="L26">    SemVerImpl(@Nonnull String version) throws IllegalArgumentException {</span>
+<span class="fc" id="L27">        Matcher matcher = SEM_VER_PATTERN.matcher(version);</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (!matcher.matches()) {</span>
+<span class="fc" id="L29">            throw new IllegalArgumentException(&quot;Invalid semantic version: &quot; + version);</span>
+        }
+<span class="fc" id="L31">        major = Integer.parseInt(matcher.group(1));</span>
+<span class="fc" id="L32">        minor = Integer.parseInt(matcher.group(2));</span>
+<span class="fc" id="L33">        patch = Integer.parseInt(matcher.group(3));</span>
+<span class="fc" id="L34">        String g4 = matcher.group(4);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (g4 != null) {</span>
+<span class="fc" id="L36">            String[] ids = g4.split(&quot;\\.&quot;);</span>
+<span class="fc" id="L37">            Object[] preReleaseIds = new Object[ids.length];</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            for (int i = 0; i &lt; ids.length; i++) {</span>
+                try {
+<span class="fc" id="L40">                    Object intObj = Integer.valueOf(ids[i]);</span>
+<span class="fc" id="L41">                    preReleaseIds[i] = intObj;</span>
+<span class="fc" id="L42">                } catch (NumberFormatException e) {</span>
+<span class="fc" id="L43">                    preReleaseIds[i] = ids[i];</span>
+<span class="fc" id="L44">                }</span>
+            }
+<span class="fc" id="L46">            preRelease = new PreReleaseImpl(preReleaseIds);</span>
+<span class="fc" id="L47">        } else {</span>
+<span class="fc" id="L48">            preRelease = null;</span>
+        }
+<span class="fc" id="L50">        String g5 = matcher.group(5);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (g5 != null) {</span>
+<span class="fc" id="L52">            String[] ids = g5.split(&quot;\\.&quot;);</span>
+<span class="fc" id="L53">            buildMeta = new BuildMetaImpl(ids);</span>
+<span class="fc" id="L54">        } else {</span>
+<span class="fc" id="L55">            buildMeta = null;</span>
+        }
+<span class="fc" id="L57">    }</span>
+
+    @Override
+    public int major() {
+<span class="fc" id="L61">        return major;</span>
+    }
+
+    @Override
+    public int minor() {
+<span class="fc" id="L66">        return minor;</span>
+    }
+
+    @Override
+    public int patch() {
+<span class="fc" id="L71">        return patch;</span>
+    }
+
+    @Override
+    public @Nullable PreRelease preRelease() {
+<span class="fc" id="L76">        return preRelease;</span>
+    }
+
+    @Override
+    public @Nullable BuildMeta buildMeta() {
+<span class="fc" id="L81">        return buildMeta;</span>
+    }
+
+    @Override
+    public @Nonnull String toString() {
+<span class="fc" id="L86">        return major() + &quot;.&quot; + minor() + &quot;.&quot; + patch()</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            + (preRelease() == null ? &quot;&quot; : &quot;-&quot; + preRelease())</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            + (buildMeta() == null ? &quot;&quot; : &quot;+&quot; + buildMeta());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L93">        return Objects.hash(major, minor, patch, preRelease, buildMeta);</span>
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (!(obj instanceof SemVer)) {</span>
+<span class="fc" id="L99">            return false;</span>
+        }
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        return compareTo((SemVer) obj) == 0;</span>
+    }
+
+    @Override
+    public int compareTo(@Nonnull SemVer o) {
+        // Precedence MUST be calculated by separating the version into major, minor, patch and pre-release identifiers
+        // in that order (Build metadata does not figure into precedence).
+        //
+        // Precedence is determined by the first difference when comparing each of these identifiers from left to right
+        // as follows: Major, minor, and patch versions are always compared numerically.
+        // Example: 1.0.0 &lt; 2.0.0 &lt; 2.1.0 &lt; 2.1.1.
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (major &lt; o.major()) {</span>
+<span class="fc" id="L113">            return -1;</span>
+        }
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (major &gt; o.major()) {</span>
+<span class="fc" id="L116">            return 1;</span>
+        }
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (minor &lt; o.minor()) {</span>
+<span class="fc" id="L119">            return -1;</span>
+        }
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (minor &gt; o.minor()) {</span>
+<span class="fc" id="L122">            return 1;</span>
+        }
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (patch &lt; o.patch()) {</span>
+<span class="fc" id="L125">            return -1;</span>
+        }
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (patch &gt; o.patch()) {</span>
+<span class="fc" id="L128">            return 1;</span>
+        }
+        // When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version:
+        //
+        // Example: 1.0.0-alpha &lt; 1.0.0.
+<span class="fc" id="L133">        PreRelease oRelease = o.preRelease();</span>
+<span class="fc bfc" id="L134" title="All 4 branches covered.">        if (preRelease == null &amp;&amp; oRelease != null) {</span>
+<span class="fc" id="L135">            return 1;</span>
+        }
+<span class="fc bfc" id="L137" title="All 4 branches covered.">        if (preRelease != null &amp;&amp; oRelease == null) {</span>
+<span class="fc" id="L138">            return -1;</span>
+        }
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (preRelease != null) {</span>
+<span class="fc" id="L141">            return preRelease.compareTo(oRelease);</span>
+        }
+<span class="fc" id="L143">        return 0;</span>
+    }
+
+    private static final class PreReleaseImpl implements PreRelease {
+
+        private final @Nonnull Object @Nonnull [] identifiers;
+        private final @Nonnull List&lt;@Nonnull Object&gt; identifierList;
+
+<span class="fc" id="L151">        private PreReleaseImpl(@Nonnull Object @Nonnull [] identifiers) {</span>
+<span class="fc" id="L152">            this.identifiers = identifiers;</span>
+<span class="fc" id="L153">            this.identifierList = ListKit.list(identifiers);</span>
+<span class="fc" id="L154">        }</span>
+
+        @Override
+        public @Nonnull List&lt;@Nonnull Object&gt; identifiers() {
+<span class="fc" id="L158">            return identifierList;</span>
+        }
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L163">            return identifierList.stream().map(Object::toString).collect(Collectors.joining(&quot;.&quot;));</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="fc" id="L168">            return Arrays.hashCode(identifiers);</span>
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+<span class="fc bfc" id="L173" title="All 2 branches covered.">            if (!(obj instanceof PreRelease)) {</span>
+<span class="fc" id="L174">                return false;</span>
+            }
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            return compareTo((PreRelease) obj) == 0;</span>
+        }
+
+        @Override
+        public int compareTo(@Nonnull PreRelease o) {
+<span class="fc" id="L181">            int size = Math.min(identifiers.length, o.identifiers().size());</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L183">                Object id = identifiers[i];</span>
+<span class="fc" id="L184">                Object oId = o.identifiers().get(i);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                if (id instanceof Integer) {</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">                    if (oId instanceof Integer) {</span>
+                        // Identifiers consisting of only digits are compared numerically.
+<span class="fc" id="L188">                        int cmp = ((Integer) id).compareTo((Integer) oId);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">                        if (cmp != 0) {</span>
+<span class="fc" id="L190">                            return cmp;</span>
+                        }
+<span class="fc" id="L192">                    } else {</span>
+                        // Numeric identifiers always have lower precedence than non-numeric identifiers.
+<span class="fc" id="L194">                        return -1;</span>
+                    }
+                } else {
+<span class="fc bfc" id="L197" title="All 2 branches covered.">                    if (oId instanceof Integer) {</span>
+                        // Identifiers consisting of only digits are compared numerically.
+<span class="fc" id="L199">                        return 1;</span>
+                    } else {
+                        // Identifiers with letters or hyphens are compared lexically in ASCII sort order.
+<span class="fc" id="L202">                        int cmp = ((String) id).compareTo((String) oId);</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">                        if (cmp != 0) {</span>
+<span class="fc" id="L204">                            return cmp;</span>
+                        }
+                    }
+                }
+            }
+            // A larger set of pre-release fields has a higher precedence than a smaller set,
+            // if all of the preceding identifiers are equal.
+<span class="fc" id="L211">            return Integer.compare(identifiers.length, o.identifiers().size());</span>
+        }
+    }
+
+    private static final class BuildMetaImpl implements BuildMeta {
+
+        private final @Nonnull String @Nonnull [] identifiers;
+        private final @Nonnull List&lt;@Nonnull String&gt; identifierList;
+
+<span class="fc" id="L220">        BuildMetaImpl(@Nonnull String @Nonnull [] identifiers) {</span>
+<span class="fc" id="L221">            this.identifiers = identifiers;</span>
+<span class="fc" id="L222">            this.identifierList = ListKit.list(identifiers);</span>
+<span class="fc" id="L223">        }</span>
+
+        @Override
+        public @Nonnull List&lt;@Nonnull String&gt; identifiers() {
+<span class="fc" id="L227">            return identifierList;</span>
+        }
+
+        @Override
+        public @Nonnull String toString() {
+<span class="fc" id="L232">            return String.join(&quot;.&quot;, identifiers);</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="fc" id="L237">            return Arrays.hashCode(identifiers);</span>
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+<span class="fc bfc" id="L242" title="All 2 branches covered.">            if (!(obj instanceof BuildMeta)) {</span>
+<span class="fc" id="L243">                return false;</span>
+            }
+<span class="fc" id="L245">            return identifierList.equals(((BuildMeta) obj).identifiers());</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

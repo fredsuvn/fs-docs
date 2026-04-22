@@ -3,30 +3,48 @@
 import space.sunqian.annotation.Nonnull;
 import space.sunqian.annotation.Nullable;
 
+import java.util.Objects;
+
 final class OptionImpl&lt;K, V&gt; implements Option&lt;K, V&gt; {
 
-<span class="fc" id="L8">    static final @Nonnull Option&lt;?, ?&gt; @Nonnull [] EMPTY_OPTIONS = new Option&lt;?, ?&gt;[0];</span>
-
-    static &lt;K, V&gt; @Nonnull Option&lt;K, V&gt; of(@Nonnull K key, @Nullable V value) {
-<span class="fc" id="L11">        return new OptionImpl&lt;&gt;(key, value);</span>
-    }
+<span class="fc" id="L10">    static final @Nonnull Option&lt;?, ?&gt; @Nonnull [] EMPTY_OPTIONS = new Option&lt;?, ?&gt;[0];</span>
 
     private final @Nonnull K key;
     private final @Nullable V value;
 
-<span class="fc" id="L17">    private OptionImpl(@Nonnull K key, @Nullable V value) {</span>
-<span class="fc" id="L18">        this.key = key;</span>
-<span class="fc" id="L19">        this.value = value;</span>
-<span class="fc" id="L20">    }</span>
+<span class="fc" id="L15">    OptionImpl(@Nonnull K key, @Nullable V value) {</span>
+<span class="fc" id="L16">        this.key = key;</span>
+<span class="fc" id="L17">        this.value = value;</span>
+<span class="fc" id="L18">    }</span>
 
     @Override
     public @Nonnull K key() {
-<span class="fc" id="L24">        return key;</span>
+<span class="fc" id="L22">        return key;</span>
     }
 
     @Override
     public @Nullable V value() {
-<span class="fc" id="L29">        return value;</span>
+<span class="fc" id="L27">        return value;</span>
+    }
+
+    @Override
+    public boolean equals(@Nullable Object object) {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (!(object instanceof Option)) {</span>
+<span class="fc" id="L33">            return false;</span>
+        }
+        @SuppressWarnings(&quot;PatternVariableCanBeUsed&quot;)
+<span class="fc" id="L36">        Option&lt;?, ?&gt; other = (Option&lt;?, ?&gt;) object;</span>
+<span class="fc bfc" id="L37" title="All 4 branches covered.">        return Objects.equals(key, other.key()) &amp;&amp; Objects.equals(value, other.value());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L42">        return Objects.hash(key, value);</span>
+    }
+
+    @Override
+    public @Nonnull String toString() {
+<span class="fc" id="L47">        return &quot;[&quot; + key + &quot;: &quot; + value + &quot;]&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

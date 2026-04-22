@@ -23,8 +23,9 @@ public class StringKit {
      * @param str the given string
      * @return whether the given string is {@code null} or empty
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static boolean isEmpty(@Nullable CharSequence str) {
-<span class="fc bfc" id="L27" title="All 4 branches covered.">        return str == null || str.length() == 0;</span>
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        return str == null || str.length() == 0;</span>
     }
 
     /**
@@ -34,7 +35,7 @@ public class StringKit {
      * @return whether the given string is not {@code null} nor empty
      */
     public static boolean isNonEmpty(@Nullable CharSequence str) {
-<span class="fc bfc" id="L37" title="All 2 branches covered.">        return !isEmpty(str);</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        return !isEmpty(str);</span>
     }
 
     /**
@@ -44,16 +45,16 @@ public class StringKit {
      * @return whether the given string is blank
      */
     public static boolean isBlank(@Nullable CharSequence str) {
-<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (isEmpty(str)) {</span>
-<span class="fc" id="L48">            return true;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (isEmpty(str)) {</span>
+<span class="fc" id="L49">            return true;</span>
         }
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L51">            char c = str.charAt(i);</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">            if (!Character.isWhitespace(c)) {</span>
-<span class="fc" id="L53">                return false;</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L52">            char c = str.charAt(i);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if (!Character.isWhitespace(c)) {</span>
+<span class="fc" id="L54">                return false;</span>
             }
         }
-<span class="fc" id="L56">        return true;</span>
+<span class="fc" id="L57">        return true;</span>
     }
 
     /**
@@ -63,7 +64,7 @@ public class StringKit {
      * @return whether the given string is not blank
      */
     public static boolean isNonBlank(@Nullable CharSequence str) {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        return !isBlank(str);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        return !isBlank(str);</span>
     }
 
     /**
@@ -73,12 +74,12 @@ public class StringKit {
      * @return {@code true} if any of the given strings is {@code null} or empty, otherwise {@code false}
      */
     public static boolean anyEmpty(@Nullable CharSequence @Nonnull ... strings) {
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (isEmpty(str)) {</span>
-<span class="fc" id="L78">                return true;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (isEmpty(str)) {</span>
+<span class="fc" id="L79">                return true;</span>
             }
         }
-<span class="fc" id="L81">        return false;</span>
+<span class="fc" id="L82">        return false;</span>
     }
 
     /**
@@ -88,12 +89,12 @@ public class StringKit {
      * @return {@code true} if all the given strings are {@code null} or empty, otherwise {@code false}
      */
     public static boolean allEmpty(@Nullable CharSequence @Nonnull ... strings) {
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">            if (!isEmpty(str)) {</span>
-<span class="fc" id="L93">                return false;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (!isEmpty(str)) {</span>
+<span class="fc" id="L94">                return false;</span>
             }
         }
-<span class="fc" id="L96">        return true;</span>
+<span class="fc" id="L97">        return true;</span>
     }
 
     /**
@@ -104,12 +105,12 @@ public class StringKit {
      * @return {@code true} if any of the given strings is blank, otherwise {@code false}
      */
     public static boolean anyBlank(@Nullable CharSequence @Nonnull ... strings) {
-<span class="fc bfc" id="L107" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">            if (isBlank(str)) {</span>
-<span class="fc" id="L109">                return true;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (isBlank(str)) {</span>
+<span class="fc" id="L110">                return true;</span>
             }
         }
-<span class="fc" id="L112">        return false;</span>
+<span class="fc" id="L113">        return false;</span>
     }
 
     /**
@@ -120,12 +121,12 @@ public class StringKit {
      * @return {@code true} if all the given strings are blank, otherwise {@code false}
      */
     public static boolean allBlank(@Nullable CharSequence @Nonnull ... strings) {
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
-<span class="fc bfc" id="L124" title="All 2 branches covered.">            if (!isBlank(str)) {</span>
-<span class="fc" id="L125">                return false;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        for (CharSequence str : strings) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            if (!isBlank(str)) {</span>
+<span class="fc" id="L126">                return false;</span>
             }
         }
-<span class="fc" id="L128">        return true;</span>
+<span class="fc" id="L129">        return true;</span>
     }
 
     /**
@@ -135,7 +136,7 @@ public class StringKit {
      * @return a new byte array contains the encoded bytes
      */
     public static byte @Nonnull [] toBytes(char @Nonnull [] chars) {
-<span class="fc" id="L138">        return toBytes(chars, CharsKit.defaultCharset());</span>
+<span class="fc" id="L139">        return toBytes(chars, CharsKit.defaultCharset());</span>
     }
 
     /**
@@ -146,7 +147,7 @@ public class StringKit {
      * @return a new byte array contains the encoded bytes
      */
     public static byte @Nonnull [] toBytes(char @Nonnull [] chars, Charset charset) {
-<span class="fc" id="L149">        return new String(chars).getBytes(charset);</span>
+<span class="fc" id="L150">        return new String(chars).getBytes(charset);</span>
     }
 
     /**
@@ -156,7 +157,7 @@ public class StringKit {
      * @return a new byte array contains the encoded bytes
      */
     public static byte @Nonnull [] toBytes(@Nonnull CharSequence chars) {
-<span class="fc" id="L159">        return toBytes(chars, CharsKit.defaultCharset());</span>
+<span class="fc" id="L160">        return toBytes(chars, CharsKit.defaultCharset());</span>
     }
 
     /**
@@ -167,7 +168,7 @@ public class StringKit {
      * @return a new byte array contains the encoded bytes
      */
     public static byte @Nonnull [] toBytes(@Nonnull CharSequence chars, Charset charset) {
-<span class="fc" id="L170">        return chars.toString().getBytes(charset);</span>
+<span class="fc" id="L171">        return chars.toString().getBytes(charset);</span>
     }
 
     /**
@@ -177,13 +178,13 @@ public class StringKit {
      * @return whether all chars of the given string are upper case
      */
     public static boolean allUpperCase(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L180" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L181">            char c = str.charAt(i);</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">            if (!Character.isUpperCase(c)) {</span>
-<span class="fc" id="L183">                return false;</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L182">            char c = str.charAt(i);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">            if (!Character.isUpperCase(c)) {</span>
+<span class="fc" id="L184">                return false;</span>
             }
         }
-<span class="fc" id="L186">        return true;</span>
+<span class="fc" id="L187">        return true;</span>
     }
 
     /**
@@ -193,13 +194,13 @@ public class StringKit {
      * @return whether all chars of the given string are lower case
      */
     public static boolean allLowerCase(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L196" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L197">            char c = str.charAt(i);</span>
-<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (!Character.isLowerCase(c)) {</span>
-<span class="fc" id="L199">                return false;</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L198">            char c = str.charAt(i);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">            if (!Character.isLowerCase(c)) {</span>
+<span class="fc" id="L200">                return false;</span>
             }
         }
-<span class="fc" id="L202">        return true;</span>
+<span class="fc" id="L203">        return true;</span>
     }
 
     /**
@@ -208,24 +209,25 @@ public class StringKit {
      * @param str the given string
      * @return the capitalized string
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static @Nonnull String capitalize(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (str.length() == 0) {</span>
-<span class="fc" id="L213">            return str.toString();</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (str.length() == 0) {</span>
+<span class="fc" id="L215">            return str.toString();</span>
         }
-<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (str.length() == 1) {</span>
-<span class="fc" id="L216">            char c = str.charAt(0);</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (Character.isLowerCase(c)) {</span>
-<span class="fc" id="L218">                return String.valueOf(Character.toUpperCase(c));</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (str.length() == 1) {</span>
+<span class="fc" id="L218">            char c = str.charAt(0);</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">            if (Character.isLowerCase(c)) {</span>
+<span class="fc" id="L220">                return String.valueOf(Character.toUpperCase(c));</span>
             }
         }
-<span class="fc" id="L221">        char c = str.charAt(0);</span>
-<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (Character.isLowerCase(c)) {</span>
-<span class="fc" id="L223">            StringBuilder sb = new StringBuilder(str.length());</span>
-<span class="fc" id="L224">            sb.append(Character.toUpperCase(c));</span>
-<span class="fc" id="L225">            sb.append(str, 1, str.length());</span>
-<span class="fc" id="L226">            return sb.toString();</span>
+<span class="fc" id="L223">        char c = str.charAt(0);</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (Character.isLowerCase(c)) {</span>
+<span class="fc" id="L225">            StringBuilder sb = new StringBuilder(str.length());</span>
+<span class="fc" id="L226">            sb.append(Character.toUpperCase(c));</span>
+<span class="fc" id="L227">            sb.append(str, 1, str.length());</span>
+<span class="fc" id="L228">            return sb.toString();</span>
         }
-<span class="fc" id="L228">        return str.toString();</span>
+<span class="fc" id="L230">        return str.toString();</span>
     }
 
     /**
@@ -236,23 +238,23 @@ public class StringKit {
      * @return the uncapitalized string
      */
     public static @Nonnull String uncapitalize(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (str.length() == 1) {</span>
-<span class="fc" id="L240">            char c = str.charAt(0);</span>
-<span class="fc bfc" id="L241" title="All 2 branches covered.">            if (Character.isUpperCase(c)) {</span>
-<span class="fc" id="L242">                return String.valueOf(Character.toLowerCase(c));</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (str.length() == 1) {</span>
+<span class="fc" id="L242">            char c = str.charAt(0);</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">            if (Character.isUpperCase(c)) {</span>
+<span class="fc" id="L244">                return String.valueOf(Character.toLowerCase(c));</span>
             }
         }
-<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (allUpperCase(str)) {</span>
-<span class="fc" id="L246">            return str.toString();</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (allUpperCase(str)) {</span>
+<span class="fc" id="L248">            return str.toString();</span>
         }
-<span class="fc" id="L248">        char c = str.charAt(0);</span>
-<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (Character.isUpperCase(c)) {</span>
-<span class="fc" id="L250">            StringBuilder sb = new StringBuilder(str.length());</span>
-<span class="fc" id="L251">            sb.append(Character.toLowerCase(c));</span>
-<span class="fc" id="L252">            sb.append(str, 1, str.length());</span>
-<span class="fc" id="L253">            return sb.toString();</span>
+<span class="fc" id="L250">        char c = str.charAt(0);</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (Character.isUpperCase(c)) {</span>
+<span class="fc" id="L252">            StringBuilder sb = new StringBuilder(str.length());</span>
+<span class="fc" id="L253">            sb.append(Character.toLowerCase(c));</span>
+<span class="fc" id="L254">            sb.append(str, 1, str.length());</span>
+<span class="fc" id="L255">            return sb.toString();</span>
         }
-<span class="fc" id="L255">        return str.toString();</span>
+<span class="fc" id="L257">        return str.toString();</span>
     }
 
     /**
@@ -261,15 +263,16 @@ public class StringKit {
      * @param str the given string
      * @return the converted string
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static @Nonnull String upperCase(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (str.length() == 0) {</span>
-<span class="fc" id="L266">            return str.toString();</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (str.length() == 0) {</span>
+<span class="fc" id="L269">            return str.toString();</span>
         }
-<span class="fc" id="L268">        char[] cs = new char[str.length()];</span>
-<span class="fc bfc" id="L269" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L270">            cs[i] = Character.toUpperCase(str.charAt(i));</span>
+<span class="fc" id="L271">        char[] cs = new char[str.length()];</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L273">            cs[i] = Character.toUpperCase(str.charAt(i));</span>
         }
-<span class="fc" id="L272">        return new String(cs);</span>
+<span class="fc" id="L275">        return new String(cs);</span>
     }
 
     /**
@@ -278,15 +281,16 @@ public class StringKit {
      * @param str the given string
      * @return the converted string
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static @Nonnull String lowerCase(@Nonnull CharSequence str) {
-<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (str.length() == 0) {</span>
-<span class="fc" id="L283">            return str.toString();</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (str.length() == 0) {</span>
+<span class="fc" id="L287">            return str.toString();</span>
         }
-<span class="fc" id="L285">        char[] cs = new char[str.length()];</span>
-<span class="fc bfc" id="L286" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L287">            cs[i] = Character.toLowerCase(str.charAt(i));</span>
+<span class="fc" id="L289">        char[] cs = new char[str.length()];</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L291">            cs[i] = Character.toLowerCase(str.charAt(i));</span>
         }
-<span class="fc" id="L289">        return new String(cs);</span>
+<span class="fc" id="L293">        return new String(cs);</span>
     }
 
     /**
@@ -302,7 +306,7 @@ public class StringKit {
      * @return the first index of the specified char in the specified string, or {@code -1} if not found
      */
     public static int indexOf(CharSequence str, char c) {
-<span class="fc" id="L305">        return indexOf(str, c, 0);</span>
+<span class="fc" id="L309">        return indexOf(str, c, 0);</span>
     }
 
     /**
@@ -324,19 +328,19 @@ public class StringKit {
      * {@code -1} if not found
      */
     public static int indexOf(CharSequence str, char c, int index) {
-<span class="fc bfc" id="L327" title="All 2 branches covered.">        if (str instanceof String) {</span>
-<span class="fc" id="L328">            return ((String) str).indexOf(c, index);</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        if (str instanceof String) {</span>
+<span class="fc" id="L332">            return ((String) str).indexOf(c, index);</span>
         }
-<span class="fc bfc" id="L330" title="All 2 branches covered.">        if (index &gt;= str.length()) {</span>
-<span class="fc" id="L331">            return -1;</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        if (index &gt;= str.length()) {</span>
+<span class="fc" id="L335">            return -1;</span>
         }
-<span class="fc" id="L333">        int s = Math.max(0, index);</span>
-<span class="fc bfc" id="L334" title="All 2 branches covered.">        for (int i = s; i &lt; str.length(); i++) {</span>
-<span class="fc bfc" id="L335" title="All 2 branches covered.">            if (str.charAt(i) == c) {</span>
-<span class="fc" id="L336">                return i;</span>
+<span class="fc" id="L337">        int s = Math.max(0, index);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        for (int i = s; i &lt; str.length(); i++) {</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">            if (str.charAt(i) == c) {</span>
+<span class="fc" id="L340">                return i;</span>
             }
         }
-<span class="fc" id="L339">        return -1;</span>
+<span class="fc" id="L343">        return -1;</span>
     }
 
     /**
@@ -353,7 +357,7 @@ public class StringKit {
      * found
      */
     public static int lastIndexOf(CharSequence str, char c) {
-<span class="fc" id="L356">        return lastIndexOf(str, c, str.length() - 1);</span>
+<span class="fc" id="L360">        return lastIndexOf(str, c, str.length() - 1);</span>
     }
 
     /**
@@ -375,19 +379,19 @@ public class StringKit {
      * specified index, or {@code -1} if not found
      */
     public static int lastIndexOf(CharSequence str, char c, int index) {
-<span class="fc bfc" id="L378" title="All 2 branches covered.">        if (str instanceof String) {</span>
-<span class="fc" id="L379">            return ((String) str).lastIndexOf(c, index);</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (str instanceof String) {</span>
+<span class="fc" id="L383">            return ((String) str).lastIndexOf(c, index);</span>
         }
-<span class="fc bfc" id="L381" title="All 2 branches covered.">        if (index &lt; 0) {</span>
-<span class="fc" id="L382">            return -1;</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L386">            return -1;</span>
         }
-<span class="fc" id="L384">        int s = Math.min(str.length() - 1, index);</span>
-<span class="fc bfc" id="L385" title="All 2 branches covered.">        for (int i = s; i &gt;= 0; i--) {</span>
-<span class="fc bfc" id="L386" title="All 2 branches covered.">            if (str.charAt(i) == c) {</span>
-<span class="fc" id="L387">                return i;</span>
+<span class="fc" id="L388">        int s = Math.min(str.length() - 1, index);</span>
+<span class="fc bfc" id="L389" title="All 2 branches covered.">        for (int i = s; i &gt;= 0; i--) {</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">            if (str.charAt(i) == c) {</span>
+<span class="fc" id="L391">                return i;</span>
             }
         }
-<span class="fc" id="L390">        return -1;</span>
+<span class="fc" id="L394">        return -1;</span>
     }
 
     /**
@@ -405,7 +409,7 @@ public class StringKit {
      * @return the first index of the specified substring in the specified string, or {@code -1} if not found
      */
     public static int indexOf(CharSequence str, CharSequence sub) {
-<span class="fc" id="L408">        return indexOf(str, sub, 0);</span>
+<span class="fc" id="L412">        return indexOf(str, sub, 0);</span>
     }
 
     /**
@@ -424,24 +428,25 @@ public class StringKit {
      * @return the first index of the specified substring in the specified string, starting at the specified index, or
      * {@code -1} if not found
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static int indexOf(CharSequence str, CharSequence sub, int index) {
-<span class="fc bfc" id="L428" title="All 4 branches covered.">        if ((str instanceof String) &amp;&amp; (sub instanceof String)) {</span>
-<span class="fc" id="L429">            return ((String) str).indexOf((String) sub, index);</span>
+<span class="fc bfc" id="L433" title="All 4 branches covered.">        if ((str instanceof String) &amp;&amp; (sub instanceof String)) {</span>
+<span class="fc" id="L434">            return ((String) str).indexOf((String) sub, index);</span>
         }
-<span class="fc" id="L431">        int maxIndex = str.length() - sub.length();</span>
-<span class="fc bfc" id="L432" title="All 2 branches covered.">        if (index &gt; maxIndex) {</span>
-<span class="fc bfc" id="L433" title="All 2 branches covered.">            return (sub.length() == 0 ? str.length() : -1);</span>
+<span class="fc" id="L436">        int maxIndex = str.length() - sub.length();</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">        if (index &gt; maxIndex) {</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">            return (sub.length() == 0 ? str.length() : -1);</span>
         }
-<span class="fc" id="L435">        int s = Math.max(index, 0);</span>
-<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (sub.length() == 0) {</span>
-<span class="fc" id="L437">            return s;</span>
+<span class="fc" id="L440">        int s = Math.max(index, 0);</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">        if (sub.length() == 0) {</span>
+<span class="fc" id="L442">            return s;</span>
         }
-<span class="fc bfc" id="L439" title="All 2 branches covered.">        for (int i = s; i &lt;= maxIndex; i++) {</span>
-<span class="fc bfc" id="L440" title="All 2 branches covered.">            if (startsWith(str, sub, i)) {</span>
-<span class="fc" id="L441">                return i;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        for (int i = s; i &lt;= maxIndex; i++) {</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">            if (startsWith(str, sub, i)) {</span>
+<span class="fc" id="L446">                return i;</span>
             }
         }
-<span class="fc" id="L444">        return -1;</span>
+<span class="fc" id="L449">        return -1;</span>
     }
 
     /**
@@ -460,7 +465,7 @@ public class StringKit {
      * not found
      */
     public static int lastIndexOf(CharSequence str, CharSequence sub) {
-<span class="fc" id="L463">        return lastIndexOf(str, sub, str.length());</span>
+<span class="fc" id="L468">        return lastIndexOf(str, sub, str.length());</span>
     }
 
     /**
@@ -479,24 +484,25 @@ public class StringKit {
      * @return the last index of the specified substring in the specified string, searching backward starting at the
      * specified index, or {@code -1} if not found
      */
+    @SuppressWarnings(&quot;SizeReplaceableByIsEmpty&quot;)
     public static int lastIndexOf(CharSequence str, CharSequence sub, int index) {
-<span class="fc bfc" id="L483" title="All 4 branches covered.">        if ((str instanceof String) &amp;&amp; (sub instanceof String)) {</span>
-<span class="fc" id="L484">            return ((String) str).lastIndexOf((String) sub, index);</span>
+<span class="fc bfc" id="L489" title="All 4 branches covered.">        if ((str instanceof String) &amp;&amp; (sub instanceof String)) {</span>
+<span class="fc" id="L490">            return ((String) str).lastIndexOf((String) sub, index);</span>
         }
-<span class="fc bfc" id="L486" title="All 2 branches covered.">        if (index &lt; 0) {</span>
-<span class="fc" id="L487">            return -1;</span>
+<span class="fc bfc" id="L492" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L493">            return -1;</span>
         }
-<span class="fc" id="L489">        int maxIndex = str.length() - sub.length();</span>
-<span class="fc" id="L490">        int s = Math.min(index, maxIndex);</span>
-<span class="fc bfc" id="L491" title="All 2 branches covered.">        if (sub.length() == 0) {</span>
-<span class="fc" id="L492">            return s;</span>
+<span class="fc" id="L495">        int maxIndex = str.length() - sub.length();</span>
+<span class="fc" id="L496">        int s = Math.min(index, maxIndex);</span>
+<span class="fc bfc" id="L497" title="All 2 branches covered.">        if (sub.length() == 0) {</span>
+<span class="fc" id="L498">            return s;</span>
         }
-<span class="fc bfc" id="L494" title="All 2 branches covered.">        for (int i = s; i &gt;= 0; i--) {</span>
-<span class="fc bfc" id="L495" title="All 2 branches covered.">            if (startsWith(str, sub, i)) {</span>
-<span class="fc" id="L496">                return i;</span>
+<span class="fc bfc" id="L500" title="All 2 branches covered.">        for (int i = s; i &gt;= 0; i--) {</span>
+<span class="fc bfc" id="L501" title="All 2 branches covered.">            if (startsWith(str, sub, i)) {</span>
+<span class="fc" id="L502">                return i;</span>
             }
         }
-<span class="fc" id="L499">        return -1;</span>
+<span class="fc" id="L505">        return -1;</span>
     }
 
     /**
@@ -509,7 +515,7 @@ public class StringKit {
      * @return whether the specified string is starts with the specified substring
      */
     public static boolean startsWith(@Nonnull CharSequence str, @Nonnull CharSequence sub) {
-<span class="fc" id="L512">        return startsWith(str, sub, 0);</span>
+<span class="fc" id="L518">        return startsWith(str, sub, 0);</span>
     }
 
     /**
@@ -524,18 +530,18 @@ public class StringKit {
      * @return whether the specified string is starts with the specified substring
      */
     public static boolean startsWith(@Nonnull CharSequence str, @Nonnull CharSequence sub, int index) {
-<span class="fc" id="L527">        int strLen = str.length();</span>
-<span class="fc" id="L528">        int subLen = sub.length();</span>
-<span class="fc bfc" id="L529" title="All 4 branches covered.">        if (index &lt; 0 || index &gt; strLen - subLen) {</span>
-<span class="fc" id="L530">            return false;</span>
+<span class="fc" id="L533">        int strLen = str.length();</span>
+<span class="fc" id="L534">        int subLen = sub.length();</span>
+<span class="fc bfc" id="L535" title="All 4 branches covered.">        if (index &lt; 0 || index &gt; strLen - subLen) {</span>
+<span class="fc" id="L536">            return false;</span>
         }
-<span class="fc" id="L532">        int l = subLen + index;</span>
-<span class="fc bfc" id="L533" title="All 2 branches covered.">        for (int i = index, j = 0; i &lt; l; i++, j++) {</span>
-<span class="fc bfc" id="L534" title="All 2 branches covered.">            if (str.charAt(i) != sub.charAt(j)) {</span>
-<span class="fc" id="L535">                return false;</span>
+<span class="fc" id="L538">        int l = subLen + index;</span>
+<span class="fc bfc" id="L539" title="All 2 branches covered.">        for (int i = index, j = 0; i &lt; l; i++, j++) {</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">            if (str.charAt(i) != sub.charAt(j)) {</span>
+<span class="fc" id="L541">                return false;</span>
             }
         }
-<span class="fc" id="L538">        return true;</span>
+<span class="fc" id="L544">        return true;</span>
     }
 
     /**
@@ -548,7 +554,7 @@ public class StringKit {
      * @return whether the specified string is ends with the specified substring
      */
     public static boolean endsWith(@Nonnull CharSequence str, @Nonnull CharSequence sub) {
-<span class="fc" id="L551">        return startsWith(str, sub, str.length() - sub.length());</span>
+<span class="fc" id="L557">        return startsWith(str, sub, str.length() - sub.length());</span>
     }
 
     /**
@@ -562,7 +568,7 @@ public class StringKit {
      * @return the {@code toString} of the given object
      */
     public static @Nonnull String toString(@Nullable Object obj) {
-<span class="fc" id="L565">        return toStringWith(obj, true, true);</span>
+<span class="fc" id="L571">        return toStringWith(obj, true, true);</span>
     }
 
     /**
@@ -572,7 +578,7 @@ public class StringKit {
      * @return the {@code toString} of the given objects via {@link Arrays#deepToString(Object[])}
      */
     public static @Nonnull String toStringAll(@Nullable Object @Nonnull ... objs) {
-<span class="fc" id="L575">        return Arrays.deepToString(objs);</span>
+<span class="fc" id="L581">        return Arrays.deepToString(objs);</span>
     }
 
     /**
@@ -601,45 +607,45 @@ public class StringKit {
      * @return the {@code toString} of the given object
      */
     public static @Nonnull String toStringWith(@Nullable Object obj, boolean arrayToString, boolean deep) {
-<span class="fc bfc" id="L604" title="All 4 branches covered.">        if (obj == null || !arrayToString) {</span>
-<span class="fc" id="L605">            return Objects.toString(obj);</span>
+<span class="fc bfc" id="L610" title="All 4 branches covered.">        if (obj == null || !arrayToString) {</span>
+<span class="fc" id="L611">            return Objects.toString(obj);</span>
         }
-<span class="fc" id="L607">        Class&lt;?&gt; cls = obj.getClass();</span>
-<span class="fc bfc" id="L608" title="All 2 branches covered.">        if (cls.isArray()) {</span>
-<span class="fc" id="L609">            return toStringArray(obj, deep);</span>
+<span class="fc" id="L613">        Class&lt;?&gt; cls = obj.getClass();</span>
+<span class="fc bfc" id="L614" title="All 2 branches covered.">        if (cls.isArray()) {</span>
+<span class="fc" id="L615">            return toStringArray(obj, deep);</span>
         }
-<span class="fc" id="L611">        return obj.toString();</span>
+<span class="fc" id="L617">        return obj.toString();</span>
     }
 
     private static @Nonnull String toStringArray(@Nonnull Object obj, boolean deep) {
-<span class="fc bfc" id="L615" title="All 2 branches covered.">        if (obj instanceof Object[]) {</span>
-<span class="fc bfc" id="L616" title="All 2 branches covered.">            return deep ? Arrays.deepToString((Object[]) obj) : Arrays.toString((Object[]) obj);</span>
+<span class="fc bfc" id="L621" title="All 2 branches covered.">        if (obj instanceof Object[]) {</span>
+<span class="fc bfc" id="L622" title="All 2 branches covered.">            return deep ? Arrays.deepToString((Object[]) obj) : Arrays.toString((Object[]) obj);</span>
         }
-<span class="fc bfc" id="L618" title="All 2 branches covered.">        if (obj instanceof boolean[]) {</span>
-<span class="fc" id="L619">            return Arrays.toString((boolean[]) obj);</span>
+<span class="fc bfc" id="L624" title="All 2 branches covered.">        if (obj instanceof boolean[]) {</span>
+<span class="fc" id="L625">            return Arrays.toString((boolean[]) obj);</span>
         }
-<span class="fc bfc" id="L621" title="All 2 branches covered.">        if (obj instanceof byte[]) {</span>
-<span class="fc" id="L622">            return Arrays.toString((byte[]) obj);</span>
+<span class="fc bfc" id="L627" title="All 2 branches covered.">        if (obj instanceof byte[]) {</span>
+<span class="fc" id="L628">            return Arrays.toString((byte[]) obj);</span>
         }
-<span class="fc bfc" id="L624" title="All 2 branches covered.">        if (obj instanceof short[]) {</span>
-<span class="fc" id="L625">            return Arrays.toString((short[]) obj);</span>
+<span class="fc bfc" id="L630" title="All 2 branches covered.">        if (obj instanceof short[]) {</span>
+<span class="fc" id="L631">            return Arrays.toString((short[]) obj);</span>
         }
-<span class="fc bfc" id="L627" title="All 2 branches covered.">        if (obj instanceof char[]) {</span>
-<span class="fc" id="L628">            return Arrays.toString((char[]) obj);</span>
+<span class="fc bfc" id="L633" title="All 2 branches covered.">        if (obj instanceof char[]) {</span>
+<span class="fc" id="L634">            return Arrays.toString((char[]) obj);</span>
         }
-<span class="fc bfc" id="L630" title="All 2 branches covered.">        if (obj instanceof int[]) {</span>
-<span class="fc" id="L631">            return Arrays.toString((int[]) obj);</span>
+<span class="fc bfc" id="L636" title="All 2 branches covered.">        if (obj instanceof int[]) {</span>
+<span class="fc" id="L637">            return Arrays.toString((int[]) obj);</span>
         }
-<span class="fc bfc" id="L633" title="All 2 branches covered.">        if (obj instanceof long[]) {</span>
-<span class="fc" id="L634">            return Arrays.toString((long[]) obj);</span>
+<span class="fc bfc" id="L639" title="All 2 branches covered.">        if (obj instanceof long[]) {</span>
+<span class="fc" id="L640">            return Arrays.toString((long[]) obj);</span>
         }
-<span class="fc bfc" id="L636" title="All 2 branches covered.">        if (obj instanceof float[]) {</span>
-<span class="fc" id="L637">            return Arrays.toString((float[]) obj);</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">        if (obj instanceof float[]) {</span>
+<span class="fc" id="L643">            return Arrays.toString((float[]) obj);</span>
         }
-<span class="fc bfc" id="L639" title="All 2 branches covered.">        if (obj instanceof double[]) {</span>
-<span class="fc" id="L640">            return Arrays.toString((double[]) obj);</span>
+<span class="fc bfc" id="L645" title="All 2 branches covered.">        if (obj instanceof double[]) {</span>
+<span class="fc" id="L646">            return Arrays.toString((double[]) obj);</span>
         }
-<span class="fc" id="L642">        throw new UnknownArrayTypeException(obj.getClass());</span>
+<span class="fc" id="L648">        throw new UnknownArrayTypeException(obj.getClass());</span>
     }
 
     /**
@@ -652,15 +658,15 @@ public class StringKit {
      * otherwise {@code false}
      */
     public static boolean charEquals(CharSequence cs1, CharSequence cs2) {
-<span class="fc bfc" id="L655" title="All 2 branches covered.">        if (cs1.length() != cs2.length()) {</span>
-<span class="fc" id="L656">            return false;</span>
+<span class="fc bfc" id="L661" title="All 2 branches covered.">        if (cs1.length() != cs2.length()) {</span>
+<span class="fc" id="L662">            return false;</span>
         }
-<span class="fc bfc" id="L658" title="All 2 branches covered.">        for (int i = 0; i &lt; cs1.length(); i++) {</span>
-<span class="fc bfc" id="L659" title="All 2 branches covered.">            if (cs1.charAt(i) != cs2.charAt(i)) {</span>
-<span class="fc" id="L660">                return false;</span>
+<span class="fc bfc" id="L664" title="All 2 branches covered.">        for (int i = 0; i &lt; cs1.length(); i++) {</span>
+<span class="fc bfc" id="L665" title="All 2 branches covered.">            if (cs1.charAt(i) != cs2.charAt(i)) {</span>
+<span class="fc" id="L666">                return false;</span>
             }
         }
-<span class="fc" id="L663">        return true;</span>
+<span class="fc" id="L669">        return true;</span>
     }
 
     /**
@@ -680,19 +686,19 @@ public class StringKit {
     public static void charsCopy(
         @Nonnull CharSequence str, int start, int end, char @Nonnull [] dst, int off
     ) throws IndexOutOfBoundsException {
-<span class="fc bfc" id="L683" title="All 2 branches covered.">        if (str instanceof String) {</span>
-<span class="fc" id="L684">            ((String) str).getChars(start, end, dst, off);</span>
+<span class="fc bfc" id="L689" title="All 2 branches covered.">        if (str instanceof String) {</span>
+<span class="fc" id="L690">            ((String) str).getChars(start, end, dst, off);</span>
         } else {
-<span class="fc" id="L686">            Checker.checkInBounds(start, end, 0, str.length());</span>
-<span class="fc" id="L687">            Checker.checkInBounds(off, off + end - start, 0, dst.length);</span>
-<span class="fc bfc" id="L688" title="All 2 branches covered.">            if (start == end) {</span>
-<span class="fc" id="L689">                return;</span>
+<span class="fc" id="L692">            Checker.checkInBounds(start, end, 0, str.length());</span>
+<span class="fc" id="L693">            Checker.checkInBounds(off, off + end - start, 0, dst.length);</span>
+<span class="fc bfc" id="L694" title="All 2 branches covered.">            if (start == end) {</span>
+<span class="fc" id="L695">                return;</span>
             }
-<span class="fc bfc" id="L691" title="All 2 branches covered.">            for (int i = 0; i &lt; end - start; i++) {</span>
-<span class="fc" id="L692">                dst[off + i] = str.charAt(start + i);</span>
+<span class="fc bfc" id="L697" title="All 2 branches covered.">            for (int i = 0; i &lt; end - start; i++) {</span>
+<span class="fc" id="L698">                dst[off + i] = str.charAt(start + i);</span>
             }
         }
-<span class="fc" id="L695">    }</span>
+<span class="fc" id="L701">    }</span>
 
     /**
      * Copies the specified length of chars from the given source, starting at the specified source offset, to the given
@@ -714,19 +720,45 @@ public class StringKit {
         int dstOff,
         int len
     ) throws IndexOutOfBoundsException {
-<span class="fc bfc" id="L717" title="All 2 branches covered.">        if (src instanceof String) {</span>
-<span class="fc" id="L718">            ((String) src).getChars(srcOff, srcOff + len, dst, dstOff);</span>
+<span class="fc bfc" id="L723" title="All 2 branches covered.">        if (src instanceof String) {</span>
+<span class="fc" id="L724">            ((String) src).getChars(srcOff, srcOff + len, dst, dstOff);</span>
         } else {
-<span class="fc" id="L720">            Checker.checkOffLen(srcOff, len, src.length());</span>
-<span class="fc" id="L721">            Checker.checkOffLen(dstOff, len, dst.length);</span>
-<span class="fc bfc" id="L722" title="All 2 branches covered.">            if (len == 0) {</span>
-<span class="fc" id="L723">                return;</span>
+<span class="fc" id="L726">            Checker.checkOffLen(srcOff, len, src.length());</span>
+<span class="fc" id="L727">            Checker.checkOffLen(dstOff, len, dst.length);</span>
+<span class="fc bfc" id="L728" title="All 2 branches covered.">            if (len == 0) {</span>
+<span class="fc" id="L729">                return;</span>
             }
-<span class="fc bfc" id="L725" title="All 2 branches covered.">            for (int i = 0; i &lt; len; i++) {</span>
-<span class="fc" id="L726">                dst[dstOff + i] = src.charAt(srcOff + i);</span>
+<span class="fc bfc" id="L731" title="All 2 branches covered.">            for (int i = 0; i &lt; len; i++) {</span>
+<span class="fc" id="L732">                dst[dstOff + i] = src.charAt(srcOff + i);</span>
             }
         }
-<span class="fc" id="L729">    }</span>
+<span class="fc" id="L735">    }</span>
+
+    /**
+     * Returns {@code true} if the given {@link CharSequence} is enabled, otherwise {@code false}.
+     * &lt;p&gt;
+     * A {@link CharSequence} is enabled if it is equal-case-insensitive to any of the following strings:
+     * &lt;ul&gt;
+     *     &lt;li&gt;{@code true}&lt;/li&gt;
+     *     &lt;li&gt;{@code on}&lt;/li&gt;
+     *     &lt;li&gt;{@code enabled}&lt;/li&gt;
+     *     &lt;li&gt;{@code yes}&lt;/li&gt;
+     *     &lt;li&gt;{@code y}&lt;/li&gt;
+     *     &lt;li&gt;{@code 1}&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param cs the given {@link CharSequence} to check
+     * @return {@code true} if the given {@link CharSequence} is enabled, otherwise {@code false}
+     */
+    public static boolean isEnabled(@Nonnull CharSequence cs) {
+<span class="fc" id="L754">        String str = cs.toString();</span>
+<span class="fc bfc" id="L755" title="All 2 branches covered.">        return str.equalsIgnoreCase(&quot;true&quot;)</span>
+<span class="fc bfc" id="L756" title="All 2 branches covered.">            || str.equalsIgnoreCase(&quot;on&quot;)</span>
+<span class="fc bfc" id="L757" title="All 2 branches covered.">            || str.equalsIgnoreCase(&quot;enabled&quot;)</span>
+<span class="fc bfc" id="L758" title="All 2 branches covered.">            || str.equalsIgnoreCase(&quot;yes&quot;)</span>
+<span class="fc bfc" id="L759" title="All 2 branches covered.">            || str.equalsIgnoreCase(&quot;y&quot;)</span>
+<span class="fc bfc" id="L760" title="All 2 branches covered.">            || str.equalsIgnoreCase(&quot;1&quot;);</span>
+    }
 
     private StringKit() {
     }

@@ -148,6 +148,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an immutable list backed by the given array.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newFunction(java.lang.reflect.Type)" class="member-name-link">newFunction</a><wbr>(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;listType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new instance of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link"><code>IntFunction</code></a> that creates a new list instance with the given list type.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newList(java.lang.reflect.Type,int)" class="member-name-link">newList</a><wbr>(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;listType,
+ int&nbsp;initialCapacity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a new list instance with the given list type and initial capacity.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../annotation/Immutable.html" title="annotation interface in space.sunqian.annotation">@Immutable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Short.html" title="class or interface in java.lang" class="external-link">Short</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shortList(short...)" class="member-name-link">shortList</a><wbr>(short <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../annotation/RetainedParam.html" title="annotation interface in space.sunqian.annotation">@RetainedParam</a> ...&nbsp;array)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -448,6 +459,55 @@ loadScripts(document, 'script');</script>
 <dd><code>lists</code> - the lists to be composited as a view</dd>
 <dt>Returns:</dt>
 <dd>a composite view of multiple lists</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newList(java.lang.reflect.Type,int)">
+<h3>newList</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</span>&nbsp;<span class="element-name">newList</span><wbr><span class="parameters">(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;listType,
+ int&nbsp;initialCapacity)</span></div>
+<div class="block">Returns a new list instance with the given list type and initial capacity. If the given list type is unsupported,
+ returns <code>null</code>. The supported list types follow the <a href="#newFunction(java.lang.reflect.Type)"><code>newFunction(Type)</code></a>.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - the type of the list elements</dd>
+<dt>Parameters:</dt>
+<dd><code>listType</code> - the given list type</dd>
+<dd><code>initialCapacity</code> - the initial capacity</dd>
+<dt>Returns:</dt>
+<dd>a new list instance, or <code>null</code> if the given list type is unsupported</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newFunction(java.lang.reflect.Type)">
+<h3>newFunction</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>
+<span class="return-type"><a href="../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&gt;</span>&nbsp;<span class="element-name">newFunction</span><wbr><span class="parameters">(<a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ <a href="../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;listType)</span></div>
+<div class="block">Returns a new instance of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link"><code>IntFunction</code></a> that creates a new list instance with the given list type. If the
+ given list type is unsupported, returns <code>null</code>. The supported list types are:
+ <ul>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link"><code>Iterable</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link"><code>Collection</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/AbstractList.html" title="class or interface in java.util" class="external-link"><code>AbstractList</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link"><code>ArrayList</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/LinkedList.html" title="class or interface in java.util" class="external-link"><code>LinkedList</code></a></li>
+     <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CopyOnWriteArrayList.html" title="class or interface in java.util.concurrent" class="external-link"><code>CopyOnWriteArrayList</code></a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - the type of the list elements</dd>
+<dt>Parameters:</dt>
+<dd><code>listType</code> - the given list type</dd>
+<dt>Returns:</dt>
+<dd>a new instance of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link"><code>IntFunction</code></a> that creates a new list instance with the given list type, or
+ <code>null</code> if the given list type is unsupported</dd>
 </dl>
 </section>
 </li>

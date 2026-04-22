@@ -528,6 +528,26 @@ public class JvmKit {
 <span class="fc" id="L528">        throw new JvmException(&quot;Unknown array type: &quot; + type + &quot;.&quot;);</span>
     }
 
+    /**
+     * Returns an array contains the internal names of exceptions declared by the given executable, or null if no
+     * exception is declared.
+     *
+     * @param executable the given executable
+     * @return an array contains the internal names of exceptions declared by the given executable, or null if no
+     * exception is declared
+     */
+    public static @Nonnull String @Nullable [] toExceptions(@Nonnull Executable executable) {
+<span class="fc" id="L540">        Class&lt;?&gt;[] exceptionTypes = executable.getExceptionTypes();</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if (exceptionTypes.length == 0) {</span>
+<span class="fc" id="L542">            return null;</span>
+        }
+<span class="fc" id="L544">        String[] expInternalNames = new String[exceptionTypes.length];</span>
+<span class="fc bfc" id="L545" title="All 2 branches covered.">        for (int i = 0; i &lt; exceptionTypes.length; i++) {</span>
+<span class="fc" id="L546">            expInternalNames[i] = toInternalName(exceptionTypes[i]);</span>
+        }
+<span class="fc" id="L548">        return expInternalNames;</span>
+    }
+
     private JvmKit() {
     }
 }

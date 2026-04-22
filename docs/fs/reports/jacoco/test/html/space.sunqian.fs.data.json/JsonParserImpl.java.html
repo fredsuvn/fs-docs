@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonParserImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.data.json</a> &gt; <span class="el_source">JsonParserImpl.java</span></div><h1>JsonParserImpl.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.data.json;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.annotation.Nullable;
+import space.sunqian.fs.Fs;
+import space.sunqian.fs.base.chars.CharsKit;
+import space.sunqian.fs.base.number.NumKit;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+<span class="fc" id="L20">enum JsonParserImpl implements JsonParser {</span>
+<span class="fc" id="L21">    INST;</span>
+
+<span class="fc" id="L23">    private static final @Nonnull Object NULL = new Object();</span>
+
+    @Override
+    public @Nonnull JsonData parse(@Nonnull InputStream input) throws JsonDataParsingException {
+<span class="fc" id="L27">        Reader reader = new InputStreamReader(input, CharsKit.defaultCharset());</span>
+<span class="fc" id="L28">        return parse(reader);</span>
+    }
+
+    @Override
+    public @Nonnull JsonData parse(@Nonnull ReadableByteChannel channel) throws JsonDataParsingException {
+        // compatible with JDK8
+        @SuppressWarnings(&quot;CharsetObjectCanBeUsed&quot;)
+<span class="fc" id="L35">        Reader reader = Channels.newReader(channel, CharsKit.defaultCharset().name());</span>
+<span class="fc" id="L36">        return parse(reader);</span>
+    }
+
+    @Override
+    public @Nonnull JsonData parse(@Nonnull Reader reader) throws JsonDataParsingException {
+        try {
+<span class="fc" id="L42">            JReader jReader = new JReader(reader);</span>
+<span class="fc" id="L43">            Object result = parseJson(jReader, new StringBuilder(), true);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (result == null) {</span>
+<span class="fc" id="L45">                return JsonData.ofNull();</span>
+            }
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            if (result instanceof String) {</span>
+<span class="fc" id="L48">                return JsonData.ofString((String) result);</span>
+            }
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            if (result instanceof Boolean) {</span>
+<span class="fc" id="L51">                return JsonData.ofBoolean((Boolean) result);</span>
+            }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if (result instanceof Number) {</span>
+<span class="fc" id="L54">                return JsonData.ofNumber((Number) result);</span>
+            }
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (result instanceof List&lt;?&gt;) {</span>
+<span class="fc" id="L57">                return JsonData.ofList(Fs.as(result));</span>
+            }
+<span class="fc" id="L59">            return JsonData.ofMap(Fs.as(result));</span>
+<span class="fc" id="L60">        } catch (JsonDataParsingException e) {</span>
+<span class="fc" id="L61">            throw e;</span>
+<span class="fc" id="L62">        } catch (Exception e) {</span>
+<span class="fc" id="L63">            throw new JsonDataParsingException(e);</span>
+        }
+    }
+
+    private Object parseJson(
+        @Nonnull JReader reader, @Nonnull StringBuilder strBuilder, boolean toEnd
+    ) throws Exception {
+<span class="fc" id="L70">        Object result = null;</span>
+        int i;
+        PARSING:
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L74">            char c = (char) i;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (Character.isWhitespace(c)) {</span>
+<span class="fc" id="L76">                continue;</span>
+            }
+<span class="fc bfc" id="L78" title="All 8 branches covered.">            switch (c) {</span>
+                case 'n':
+<span class="fc" id="L80">                    parseNull(reader);</span>
+<span class="fc" id="L81">                    result = NULL;</span>
+<span class="fc" id="L82">                    break PARSING;</span>
+                case 't':
+<span class="fc" id="L84">                    parseTrue(reader);</span>
+<span class="fc" id="L85">                    result = true;</span>
+<span class="fc" id="L86">                    break PARSING;</span>
+                case 'f':
+<span class="fc" id="L88">                    parseFalse(reader);</span>
+<span class="fc" id="L89">                    result = false;</span>
+<span class="fc" id="L90">                    break PARSING;</span>
+                case '\&quot;': {
+<span class="fc" id="L92">                    parseString(reader, strBuilder);</span>
+<span class="fc" id="L93">                    result = strBuilder.toString();</span>
+<span class="fc" id="L94">                    strBuilder.setLength(0);</span>
+<span class="fc" id="L95">                    break PARSING;</span>
+                }
+                case '{': {
+<span class="fc" id="L98">                    Map&lt;String, Object&gt; objBuilder = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L99">                    parseObject(reader, objBuilder, strBuilder);</span>
+<span class="fc" id="L100">                    result = objBuilder;</span>
+<span class="fc" id="L101">                    break PARSING;</span>
+                }
+                case '[': {
+<span class="fc" id="L104">                    List&lt;Object&gt; arrBuilder = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L105">                    parseArray(reader, arrBuilder, strBuilder);</span>
+<span class="fc" id="L106">                    result = arrBuilder;</span>
+<span class="fc" id="L107">                    break PARSING;</span>
+                }
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '-':
+<span class="fc" id="L120">                    strBuilder.append(c);</span>
+                    @SuppressWarnings(&quot;UnnecessaryLocalVariable&quot;)
+<span class="fc" id="L122">                    Number number = parseNumber(reader, strBuilder);</span>
+<span class="fc" id="L123">                    result = number;</span>
+<span class="fc" id="L124">                    strBuilder.setLength(0);</span>
+<span class="fc" id="L125">                    break PARSING;</span>
+                default:
+<span class="fc" id="L127">                    throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), null);</span>
+            }
+        }
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (result == null) {</span>
+<span class="fc" id="L131">            throw new JsonDataParsingException(reader.nextIndex(), null, null);</span>
+        }
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (result == NULL) {</span>
+<span class="fc" id="L134">            return null;</span>
+        }
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (toEnd) {</span>
+<span class="fc" id="L137">            skipToEof(reader);</span>
+        }
+<span class="fc" id="L139">        return result;</span>
+    }
+
+    private void parseObject(
+        @Nonnull JReader reader,
+        @Nonnull Map&lt;@Nonnull String, @Nullable Object&gt; objBuilder,
+        @Nonnull StringBuilder strBuilder
+    ) throws Exception {
+<span class="fc" id="L147">        boolean first = true;</span>
+        int i;
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L150">            char c = (char) i;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (Character.isWhitespace(c)) {</span>
+<span class="fc" id="L152">                continue;</span>
+            }
+<span class="fc bfc" id="L154" title="All 4 branches covered.">            switch (c) {</span>
+                case '\&quot;':
+<span class="fc" id="L156">                    parseString(reader, strBuilder);</span>
+<span class="fc" id="L157">                    skipToChar(reader, ':');</span>
+<span class="fc" id="L158">                    String key = strBuilder.toString();</span>
+<span class="fc" id="L159">                    strBuilder.setLength(0);</span>
+<span class="fc" id="L160">                    Object obj = parseJson(reader, strBuilder, false);</span>
+<span class="fc" id="L161">                    objBuilder.put(key, obj);</span>
+<span class="fc" id="L162">                    first = false;</span>
+<span class="fc" id="L163">                    continue;</span>
+                case ',':
+<span class="fc bfc" id="L165" title="All 2 branches covered.">                    if (!first) {</span>
+<span class="fc" id="L166">                        continue;</span>
+                    } else {
+<span class="fc" id="L168">                        throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), null);</span>
+                    }
+                case '}':
+<span class="fc" id="L171">                    return;</span>
+                default:
+<span class="fc" id="L173">                    throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), null);</span>
+            }
+        }
+<span class="fc" id="L176">        throw new JsonDataParsingException(reader.nextIndex(), null, &quot;}&quot;);</span>
+    }
+
+    private void parseArray(
+        @Nonnull JReader reader,
+        @Nonnull List&lt;@Nullable Object&gt; arrBuilder,
+        @Nonnull StringBuilder strBuilder
+    ) throws Exception {
+<span class="fc" id="L184">        int count = 0;</span>
+        int i;
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L187">            char c = (char) i;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (Character.isWhitespace(c)) {</span>
+<span class="fc" id="L189">                continue;</span>
+            }
+<span class="fc bfc" id="L191" title="All 2 branches covered.">            if (c == ',') {</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">                if (count == 0) {</span>
+<span class="fc" id="L193">                    throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), null);</span>
+                }
+                continue;
+            }
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            if (c == ']') {</span>
+<span class="fc" id="L198">                return;</span>
+            }
+            // parsing element
+<span class="fc" id="L201">            reader.swallow(i);</span>
+<span class="fc" id="L202">            Object element = parseJson(reader, strBuilder, false);</span>
+<span class="fc" id="L203">            arrBuilder.add(element);</span>
+<span class="fc" id="L204">            count++;</span>
+<span class="fc" id="L205">        }</span>
+<span class="fc" id="L206">        throw new JsonDataParsingException(reader.nextIndex(), null, &quot;]&quot;);</span>
+    }
+
+    private void parseNull(@Nonnull JReader reader) throws Exception {
+<span class="fc" id="L210">        nextChar(reader, 'u');</span>
+<span class="fc" id="L211">        nextChar(reader, 'l');</span>
+<span class="fc" id="L212">        nextChar(reader, 'l');</span>
+<span class="fc" id="L213">    }</span>
+
+    private void parseTrue(@Nonnull JReader reader) throws Exception {
+<span class="fc" id="L216">        nextChar(reader, 'r');</span>
+<span class="fc" id="L217">        nextChar(reader, 'u');</span>
+<span class="fc" id="L218">        nextChar(reader, 'e');</span>
+<span class="fc" id="L219">    }</span>
+
+    private void parseFalse(@Nonnull JReader reader) throws Exception {
+<span class="fc" id="L222">        nextChar(reader, 'a');</span>
+<span class="fc" id="L223">        nextChar(reader, 'l');</span>
+<span class="fc" id="L224">        nextChar(reader, 's');</span>
+<span class="fc" id="L225">        nextChar(reader, 'e');</span>
+<span class="fc" id="L226">    }</span>
+
+    private void parseString(
+        @Nonnull JReader reader, @Nonnull StringBuilder builder
+    ) throws Exception {
+        int i;
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L233">            char c = (char) i;</span>
+<span class="fc bfc" id="L234" title="All 3 branches covered.">            switch (c) {</span>
+                case '\&quot;':
+<span class="fc" id="L236">                    return;</span>
+                case '\\':
+<span class="fc" id="L238">                    parseEscape(reader, builder);</span>
+<span class="fc" id="L239">                    continue;</span>
+                default:
+<span class="fc" id="L241">                    builder.append(c);</span>
+            }
+<span class="fc" id="L243">        }</span>
+<span class="fc" id="L244">        throw new JsonDataParsingException(reader.nextIndex(), null, &quot;\&quot;&quot;);</span>
+    }
+
+    private void parseEscape(
+        @Nonnull JReader reader, @Nonnull StringBuilder builder
+    ) throws Exception {
+<span class="fc" id="L250">        int i = reader.nextChar();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (i != -1) {</span>
+<span class="fc" id="L252">            char c = (char) i;</span>
+<span class="fc bfc" id="L253" title="All 8 branches covered.">            switch (c) {</span>
+                case '\&quot;':
+                case '\\':
+<span class="fc" id="L256">                    builder.append(c);</span>
+<span class="fc" id="L257">                    return;</span>
+                case 'r':
+<span class="fc" id="L259">                    builder.append('\r');</span>
+<span class="fc" id="L260">                    return;</span>
+                case 'n':
+<span class="fc" id="L262">                    builder.append('\n');</span>
+<span class="fc" id="L263">                    return;</span>
+                case 't':
+<span class="fc" id="L265">                    builder.append('\t');</span>
+<span class="fc" id="L266">                    return;</span>
+                case 'b':
+<span class="fc" id="L268">                    builder.append('\b');</span>
+<span class="fc" id="L269">                    return;</span>
+                case 'f':
+<span class="fc" id="L271">                    builder.append('\f');</span>
+<span class="fc" id="L272">                    return;</span>
+                case 'u':
+<span class="fc" id="L274">                    parseUnicode(reader, builder);</span>
+<span class="fc" id="L275">                    return;</span>
+                default:
+<span class="fc" id="L277">                    throw new JsonDataParsingException(reader.nextIndex(), String.valueOf(c), null);</span>
+            }
+        }
+<span class="fc" id="L280">        throw new JsonDataParsingException(reader.nextIndex(), null, null);</span>
+    }
+
+    private void parseUnicode(
+        @Nonnull JReader reader, @Nonnull StringBuilder builder
+    ) throws Exception {
+<span class="fc" id="L286">        char c1 = nextChar(reader);</span>
+<span class="fc" id="L287">        char c2 = nextChar(reader);</span>
+<span class="fc" id="L288">        char c3 = nextChar(reader);</span>
+<span class="fc" id="L289">        char c4 = nextChar(reader);</span>
+<span class="fc" id="L290">        builder.append(CharsKit.unicodeToChar(c1, c2, c3, c4));</span>
+<span class="fc" id="L291">    }</span>
+
+    private Number parseNumber(
+        @Nonnull JReader reader, @Nonnull StringBuilder strBuilder
+    ) throws Exception {
+<span class="fc" id="L296">        int startIndex = reader.nextIndex() - 1;</span>
+        int i;
+<span class="fc bfc" id="L298" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L299">            char c = (char) i;</span>
+<span class="fc bfc" id="L300" title="All 12 branches covered.">            if (</span>
+                (c &gt;= '0' &amp;&amp; c &lt;= '9')
+                    || (c == '.')
+                    || (c == 'e')
+                    || (c == 'E')
+                    || (c == '+')
+            ) {
+<span class="fc" id="L307">                strBuilder.append(c);</span>
+                // continue;
+            } else {
+<span class="fc" id="L310">                reader.swallow(i);</span>
+<span class="fc" id="L311">                break;</span>
+            }
+<span class="fc" id="L313">        }</span>
+<span class="fc" id="L314">        String numberString = strBuilder.toString();</span>
+        try {
+<span class="fc" id="L316">            return NumKit.toNumber(numberString);</span>
+<span class="fc" id="L317">        } catch (Exception e) {</span>
+<span class="fc" id="L318">            throw new JsonDataParsingException(startIndex, numberString, null);</span>
+        }
+    }
+
+    private char nextChar(@Nonnull JReader reader) throws Exception {
+<span class="fc" id="L323">        int i = reader.nextChar();</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (i == -1) {</span>
+<span class="fc" id="L325">            throw new JsonDataParsingException(reader.nextIndex(), null, null);</span>
+        }
+<span class="fc" id="L327">        return (char) i;</span>
+    }
+
+    private void nextChar(@Nonnull JReader reader, char shouldBe) throws Exception {
+<span class="fc" id="L331">        int i = reader.nextChar();</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (i == -1) {</span>
+<span class="fc" id="L333">            throw new JsonDataParsingException(reader.nextIndex(), null, String.valueOf(shouldBe));</span>
+        }
+<span class="fc" id="L335">        char c = (char) i;</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        if (shouldBe != c) {</span>
+<span class="fc" id="L337">            throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), String.valueOf(shouldBe));</span>
+        }
+<span class="fc" id="L339">    }</span>
+
+    private void skipToEof(@Nonnull JReader reader) throws Exception {
+        int i;
+<span class="fc bfc" id="L343" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L344">            char c = (char) i;</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">            if (!Character.isWhitespace(c)) {</span>
+<span class="fc" id="L346">                throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), null);</span>
+            }
+<span class="fc" id="L348">        }</span>
+<span class="fc" id="L349">    }</span>
+
+    @SuppressWarnings(&quot;SameParameterValue&quot;)
+    private void skipToChar(@Nonnull JReader reader, char target) throws Exception {
+        int i;
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        while ((i = reader.nextChar()) != -1) {</span>
+<span class="fc" id="L355">            char c = (char) i;</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">            if (c == target) {</span>
+<span class="fc" id="L357">                return;</span>
+            }
+<span class="fc bfc" id="L359" title="All 2 branches covered.">            if (!Character.isWhitespace(c)) {</span>
+<span class="fc" id="L360">                throw new JsonDataParsingException(reader.nextIndex() - 1, String.valueOf(c), String.valueOf(target));</span>
+            }
+<span class="fc" id="L362">        }</span>
+<span class="fc" id="L363">        throw new JsonDataParsingException(reader.nextIndex(), null, String.valueOf(target));</span>
+    }
+
+    private static final class JReader {
+
+        private final @Nonnull Reader reader;
+<span class="fc" id="L369">        private int index = 0;</span>
+<span class="fc" id="L370">        private int swallowedChar = -1;</span>
+
+<span class="fc" id="L372">        private JReader(@Nonnull Reader reader) {</span>
+<span class="fc" id="L373">            this.reader = reader;</span>
+<span class="fc" id="L374">        }</span>
+
+        public int nextChar() throws IOException {
+            int result;
+<span class="fc bfc" id="L378" title="All 2 branches covered.">            if (swallowedChar != -1) {</span>
+<span class="fc" id="L379">                result = swallowedChar;</span>
+<span class="fc" id="L380">                swallowedChar = -1;</span>
+            } else {
+<span class="fc" id="L382">                result = reader.read();</span>
+            }
+<span class="fc bfc" id="L384" title="All 2 branches covered.">            if (result != -1) {</span>
+<span class="fc" id="L385">                index++;</span>
+            }
+<span class="fc" id="L387">            return result;</span>
+        }
+
+        public int nextIndex() {
+<span class="fc" id="L391">            return index;</span>
+        }
+
+        public void swallow(int buf) {
+<span class="fc" id="L395">            this.swallowedChar = buf;</span>
+<span class="fc" id="L396">            index--;</span>
+<span class="fc" id="L397">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -77,27 +77,28 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../object/data/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser.Handler</a></code></dd>
+<dd><code><a href="../../object/schema/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser.Handler</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProtobufSchemaHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../object/data/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser.Handler</a></span></div>
-<div class="block"><a href="../../object/data/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.data"><code>ObjectSchemaParser.Handler</code></a> implementation for
+implements <a href="../../object/schema/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser.Handler</a></span></div>
+<div class="block"><a href="../../object/schema/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchemaParser.Handler</code></a> implementation for
  <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffers</a>, can be quickly used through similar
  codes:
  <pre><code>
- ObjectSchemaParser parser = ObjectSchemaParser
-     .defaultParser()
-     .withFirstHandler(new ProtobufSchemaHandler());
+ ObjectSchemaParser parser = ...;
+ ObjectSchemaParser protoParser = parser
+     .withFirstHandler(ProtobufSchemaHandler.getInstance());
  </code></pre>
- To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment.
+ To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment. And in this
+ environment, the <a href="../../object/schema/ObjectSchemaParser.html#defaultParser()"><code>ObjectSchemaParser.defaultParser()</code></a> will automatically load this handler.
  <p>
  Note:
  <ul>
      <li>
          When <code>ProtocolStringList</code> is used as a property type, it will be mapped to <code>List&lt;String&gt;</code>, but
-         the type of the instance returned by <a href="../../object/data/ObjectProperty.html#getValue(java.lang.Object)"><code>ObjectProperty.getValue(Object)</code></a> is still
+         the type of the instance returned by <a href="../../object/schema/ObjectProperty.html#getValue(java.lang.Object)"><code>ObjectProperty.getValue(Object)</code></a> is still
          <code>ProtocolStringList</code>;
      </li>
      <li>
@@ -128,16 +129,21 @@ implements <a href="../../object/data/ObjectSchemaParser.Handler.html" title="in
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parse(space.sunqian.fs.object.data.ObjectSchemaParser.Context)" class="member-name-link">parse</a><wbr>(<a href="../../object/data/ObjectSchemaParser.Context.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser.Context</a>&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Parses <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> to <a href="../../object/data/ObjectSchema.html" title="interface in space.sunqian.fs.object.data"><code>ObjectSchema</code></a> with its owner parsing logic.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufSchemaHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufSchemaHandler</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a same one instance of this handler.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#parse(space.sunqian.fs.object.schema.ObjectSchemaParser.Context)" class="member-name-link">parse</a><wbr>(<a href="../../object/schema/ObjectSchemaParser.Context.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser.Context</a>&nbsp;context)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Parses <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> to <a href="../../object/schema/ObjectSchema.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchema</code></a> with its owner parsing logic.</div>
 </div>
 </div>
 </div>
@@ -178,19 +184,27 @@ implements <a href="../../object/data/ObjectSchemaParser.Handler.html" title="in
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="parse(space.sunqian.fs.object.data.ObjectSchemaParser.Context)">
+<section class="detail" id="getInstance()">
+<h3>getInstance</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufSchemaHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufSchemaHandler</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Returns a same one instance of this handler.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="parse(space.sunqian.fs.object.schema.ObjectSchemaParser.Context)">
 <h3>parse</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">parse</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../object/data/ObjectSchemaParser.Context.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser.Context</a>&nbsp;context)</span>
+ <a href="../../object/schema/ObjectSchemaParser.Context.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser.Context</a>&nbsp;context)</span>
               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../object/data/ObjectSchemaParser.Handler.html#parse(space.sunqian.fs.object.data.ObjectSchemaParser.Context)">ObjectSchemaParser.Handler</a></code></span></div>
-<div class="block">Parses <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> to <a href="../../object/data/ObjectSchema.html" title="interface in space.sunqian.fs.object.data"><code>ObjectSchema</code></a> with its owner parsing logic. The <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> is specified by
- <a href="../../object/data/ObjectSchemaParser.Context.html#dataType()"><code>ObjectSchemaParser.Context.dataType()</code></a> of the given context, and the parsed properties should be stored in
- <a href="../../object/data/ObjectSchemaParser.Context.html#propertyBaseMap()"><code>ObjectSchemaParser.Context.propertyBaseMap()</code></a>. Returns <code>false</code> to prevent subsequent handlers to continue to parse,
- otherwise returns <code>true</code>.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../object/schema/ObjectSchemaParser.Handler.html#parse(space.sunqian.fs.object.schema.ObjectSchemaParser.Context)">ObjectSchemaParser.Handler</a></code></span></div>
+<div class="block">Parses <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> to <a href="../../object/schema/ObjectSchema.html" title="interface in space.sunqian.fs.object.schema"><code>ObjectSchema</code></a> with its owner parsing logic. The <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link"><code>Type</code></a> is specified by
+ <a href="../../object/schema/ObjectSchemaParser.Context.html#parsedType()"><code>ObjectSchemaParser.Context.parsedType()</code></a> of the given context, and the parsed properties should be stored in
+ <a href="../../object/schema/ObjectSchemaParser.Context.html#propertyBaseMap()"><code>ObjectSchemaParser.Context.propertyBaseMap()</code></a>. Returns <code>false</code> to prevent subsequent handlers to continue to parse,
+ otherwise returns <code>true</code> to continue to parse.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../object/data/ObjectSchemaParser.Handler.html#parse(space.sunqian.fs.object.data.ObjectSchemaParser.Context)">parse</a></code>&nbsp;in interface&nbsp;<code><a href="../../object/data/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.data">ObjectSchemaParser.Handler</a></code></dd>
+<dd><code><a href="../../object/schema/ObjectSchemaParser.Handler.html#parse(space.sunqian.fs.object.schema.ObjectSchemaParser.Context)">parse</a></code>&nbsp;in interface&nbsp;<code><a href="../../object/schema/ObjectSchemaParser.Handler.html" title="interface in space.sunqian.fs.object.schema">ObjectSchemaParser.Handler</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>context</code> - the given context</dd>
 <dt>Returns:</dt>

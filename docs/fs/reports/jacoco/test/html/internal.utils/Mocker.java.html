@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Mocker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">internal.utils</a> &gt; <span class="el_source">Mocker.java</span></div><h1>Mocker.java</h1><pre class="source lang-java linenums">package internal.utils;
+
+import org.mockito.Mockito;
+import space.sunqian.annotation.Nonnull;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.function.IntFunction;
+
+/**
+ * Mocker to mock classes.
+ *
+ * @author sunqian
+ */
+public class Mocker {
+
+    private Mocker() {
+    }
+
+    /**
+     * Mocks a class, including private types.
+     *
+     * @param clazz the class to mock
+     * @return the mocked class
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T mock(@Nonnull Class&lt;T&gt; clazz) {
+<span class="fc" id="L33">        return (T) mock0(clazz);</span>
+    }
+
+    private static Object mock0(@Nonnull Class&lt;?&gt; clazz) {
+<span class="fc bfc" id="L37" title="All 4 branches covered.">        if (clazz.isPrimitive() || Number.class.isAssignableFrom(clazz)) {</span>
+<span class="fc bfc" id="L38" title="All 4 branches covered.">            if (Objects.equals(clazz, int.class) || Objects.equals(clazz, Integer.class)) {</span>
+<span class="fc" id="L39">                return 0;</span>
+            }
+<span class="fc bfc" id="L41" title="All 4 branches covered.">            if (Objects.equals(clazz, long.class) || Objects.equals(clazz, Long.class)) {</span>
+<span class="fc" id="L42">                return 0L;</span>
+            }
+<span class="fc bfc" id="L44" title="All 4 branches covered.">            if (Objects.equals(clazz, float.class) || Objects.equals(clazz, Float.class)) {</span>
+<span class="fc" id="L45">                return 0.0f;</span>
+            }
+<span class="fc bfc" id="L47" title="All 4 branches covered.">            if (Objects.equals(clazz, double.class) || Objects.equals(clazz, Double.class)) {</span>
+<span class="fc" id="L48">                return 0.0;</span>
+            }
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            if (Objects.equals(clazz, char.class)) {</span>
+<span class="fc" id="L51">                return (char) 0;</span>
+            }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if (Objects.equals(clazz, boolean.class)) {</span>
+<span class="fc" id="L54">                return false;</span>
+            }
+<span class="fc bfc" id="L56" title="All 4 branches covered.">            if (Objects.equals(clazz, byte.class) || Objects.equals(clazz, Byte.class)) {</span>
+<span class="fc" id="L57">                return (byte) 0;</span>
+            }
+<span class="fc bfc" id="L59" title="All 4 branches covered.">            if (Objects.equals(clazz, short.class) || Objects.equals(clazz, Short.class)) {</span>
+<span class="fc" id="L60">                return (short) 0;</span>
+            }
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if (Objects.equals(clazz, BigDecimal.class)) {</span>
+<span class="fc" id="L63">                return BigDecimal.ZERO;</span>
+            }
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            if (Objects.equals(clazz, BigInteger.class)) {</span>
+<span class="fc" id="L66">                return BigInteger.ZERO;</span>
+            }
+<span class="fc" id="L68">            return null;</span>
+        }
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (Objects.equals(clazz, String.class)) {</span>
+<span class="fc" id="L71">            return &quot;&quot;;</span>
+        }
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (Objects.equals(clazz, Character.class)) {</span>
+<span class="fc" id="L74">            return (char) 0;</span>
+        }
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (Objects.equals(clazz, Boolean.class)) {</span>
+<span class="fc" id="L77">            return false;</span>
+        }
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (clazz.isArray()) {</span>
+<span class="fc" id="L80">            return Array.newInstance(clazz.getComponentType(), 0);</span>
+        }
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (clazz.isEnum()) {</span>
+<span class="fc" id="L83">            Object[] constants = clazz.getEnumConstants();</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            return constants.length &gt; 0 ? constants[0] : null;</span>
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (Objects.equals(clazz, Collection.class)) {</span>
+<span class="fc" id="L87">            return Collections.emptyList();</span>
+        }
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (Objects.equals(clazz, IntFunction.class)) {</span>
+<span class="fc" id="L90">            return (IntFunction&lt;Object&gt;) Object[]::new;</span>
+        }
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (Modifier.isFinal(clazz.getModifiers())) {</span>
+<span class="fc" id="L93">            return null;</span>
+        }
+<span class="fc" id="L95">        return Mockito.mock(clazz);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

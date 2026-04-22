@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fs-all</a> &gt; <a href="index.source.html" class="el_package">space.sunqian.fs.object.schema</a> &gt; <span class="el_source">MapType.java</span></div><h1>MapType.java</h1><pre class="source lang-java linenums">package space.sunqian.fs.object.schema;
+
+import space.sunqian.annotation.Nonnull;
+import space.sunqian.fs.reflect.TypeKit;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+/**
+ * Represents the type of map.
+ *
+ * @author sunqian
+ */
+public interface MapType extends Type {
+
+    /**
+     * Returns a new {@link MapType} instance.
+     *
+     * @param mapType   the type of the map itself
+     * @param keyType   the type of the key in the map
+     * @param valueType the type of the value in the map
+     * @return a new {@link MapType} instance
+     * @throws IllegalArgumentException if the given map type is not a {@link Class} or a {@link ParameterizedType}
+     */
+    static @Nonnull MapType of(
+        @Nonnull Type mapType,
+        @Nonnull Type keyType,
+        @Nonnull Type valueType
+    ) throws IllegalArgumentException {
+<span class="fc" id="L30">        Class&lt;?&gt; rawMapType = TypeKit.getRawClass(mapType);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (rawMapType == null) {</span>
+<span class="fc" id="L32">            throw new IllegalArgumentException(&quot;Given map type must be a Class or a ParameterizedType.&quot;);</span>
+        }
+<span class="fc" id="L34">        return new MapType() {</span>
+            @Override
+            public @Nonnull Type mapType() {
+<span class="fc" id="L37">                return mapType;</span>
+            }
+
+            @Override
+            public @Nonnull Class&lt;?&gt; rawType() {
+<span class="fc" id="L42">                return rawMapType;</span>
+            }
+
+            @Override
+            public @Nonnull Type keyType() {
+<span class="fc" id="L47">                return keyType;</span>
+            }
+
+            @Override
+            public @Nonnull Type valueType() {
+<span class="fc" id="L52">                return valueType;</span>
+            }
+
+            @Override
+            public int hashCode() {
+<span class="fc" id="L57">                return 31 * mapType().hashCode() + 31 * keyType().hashCode() + 31 * valueType().hashCode();</span>
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">                if (this == obj) {</span>
+<span class="fc" id="L63">                    return true;</span>
+                }
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                if (!(obj instanceof MapType)) {</span>
+<span class="fc" id="L66">                    return false;</span>
+                }
+<span class="fc" id="L68">                MapType o = (MapType) obj;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                return mapType().equals(o.mapType()) &amp;&amp;</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                    keyType().equals(o.keyType()) &amp;&amp;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">                    valueType().equals(o.valueType());</span>
+            }
+
+            @Override
+            public String toString() {
+<span class="fc" id="L76">                return getTypeName();</span>
+            }
+        };
+    }
+
+    /**
+     * Returns the type of the map itself.
+     *
+     * @return the type of the map itself
+     */
+    @Nonnull
+    Type mapType();
+
+    /**
+     * Returns the raw type of the map itself.
+     *
+     * @return the raw type of the map itself
+     */
+    @Nonnull
+    Class&lt;?&gt; rawType();
+
+    /**
+     * Returns the type of the key in the map.
+     *
+     * @return the type of the key in the map
+     */
+    @Nonnull
+    Type keyType();
+
+    /**
+     * Returns the type of the value in the map.
+     *
+     * @return the type of the value in the map
+     */
+    @Nonnull
+    Type valueType();
+
+    @Override
+    default String getTypeName() {
+<span class="fc" id="L115">        return rawType().getTypeName() + &quot;&lt;&quot; + keyType().getTypeName() + &quot;, &quot; + valueType().getTypeName() + &quot;&gt;&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

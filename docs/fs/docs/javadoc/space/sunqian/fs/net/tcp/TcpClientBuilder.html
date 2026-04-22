@@ -111,16 +111,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Binds the client's socket to the specified local address.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClientBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpClientBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#bufferSize(int)" class="member-name-link">bufferSize</a><wbr>(int&nbsp;bufSize)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClient.html" title="interface in space.sunqian.fs.net.tcp">TcpClient</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#connect(java.net.InetSocketAddress)" class="member-name-link">connect</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetSocketAddress.html" title="class or interface in java.net" class="external-link">InetSocketAddress</a>&nbsp;remoteAddress)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the buffer size for advanced IO operations.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClient.html" title="interface in space.sunqian.fs.net.tcp">TcpClient</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#connect(java.net.InetSocketAddress)" class="member-name-link">connect</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/InetSocketAddress.html" title="class or interface in java.net" class="external-link">InetSocketAddress</a>&nbsp;remoteAddress)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Connects this client's socket to the specified remote address and configures the socket to listen for
  connections.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClientBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpClientBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ioBufferSize(int)" class="member-name-link">ioBufferSize</a><wbr>(int&nbsp;bufSize)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the I/O buffer size for advanced IO operations, typically used for read/write operations on
+ <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClientBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpClientBuilder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#socketOption(java.net.SocketOption,T)" class="member-name-link">socketOption</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/SocketOption.html" title="class or interface in java.net" class="external-link">SocketOption</a>&lt;T&gt;&nbsp;name,
@@ -160,20 +161,20 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="bufferSize(int)">
-<h3>bufferSize</h3>
+<section class="detail" id="ioBufferSize(int)">
+<h3>ioBufferSize</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClientBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpClientBuilder</a></span>&nbsp;<span class="element-name">bufferSize</span><wbr><span class="parameters">(int&nbsp;bufSize)</span>
-                                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
-<div class="block">Sets the buffer size for advanced IO operations. Note this buffer size is not the kernel network buffer size, it
- is an I/O advanced operations buffer size.</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="TcpClientBuilder.html" title="class in space.sunqian.fs.net.tcp">TcpClientBuilder</a></span>&nbsp;<span class="element-name">ioBufferSize</span><wbr><span class="parameters">(int&nbsp;bufSize)</span>
+                                       throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></span></div>
+<div class="block">Sets the I/O buffer size for advanced IO operations, typically used for read/write operations on
+ <a href="../../io/IOOperator.html" title="interface in space.sunqian.fs.io"><code>IOOperator</code></a>. The default size is <a href="../../io/IOKit.html#bufferSize()"><code>IOKit.bufferSize()</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>bufSize</code> - the buffer size for advanced IO operations</dd>
+<dd><code>bufSize</code> - the I/O buffer size for advanced IO operations</dd>
 <dt>Returns:</dt>
 <dd>this builder</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the buffer size is negative or <code>0</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the I/O buffer size is negative or <code>0</code></dd>
 </dl>
 </section>
 </li>

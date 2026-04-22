@@ -83,18 +83,19 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProtobufConvertHandler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../../object/convert/ObjectConverter.Handler.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter.Handler</a></span></div>
-<div class="block"><a href="../../object/data/ObjectBuilderProvider.Handler.html" title="interface in space.sunqian.fs.object.data"><code>ObjectBuilderProvider.Handler</code></a> implementation for
+<div class="block"><a href="../../object/convert/ObjectConverter.Handler.html" title="interface in space.sunqian.fs.object.convert"><code>ObjectConverter.Handler</code></a> implementation for
  <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffers</a>, can be quickly used through similar
  codes:
  <pre><code>
- ObjectConverter converter = ObjectConverter
-     .defaultConverter()
-     .withFirstHandler(new ProtobufConvertHandler());
+ ObjectConverter converter = ...;
+ ObjectConverter protoConverter = converter
+     .withFirstHandler(ProtobufConvertHandler.getInstance());
  </code></pre>
  <p>
  This handler provides support for <code>ProtocolStringList</code> and <code>ByteString</code>.
  <p>
- To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment.</div>
+ To use this class, the protobuf package <code>com.google.protobuf</code> must in the runtime environment. And in this
+ environment, the <a href="../../object/convert/ObjectConverter.html#defaultConverter()"><code>ObjectConverter.defaultConverter()</code></a> will automatically load this handler.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -118,7 +119,7 @@ implements <a href="../../object/convert/ObjectConverter.Handler.html" title="in
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -127,11 +128,16 @@ implements <a href="../../object/convert/ObjectConverter.Handler.html" title="in
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#convert(java.lang.Object,java.lang.reflect.Type,java.lang.reflect.Type,space.sunqian.fs.object.convert.ObjectConverter,space.sunqian.fs.base.option.Option...)" class="member-name-link">convert</a><wbr>(<a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;src,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../object/convert/ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../base/option/Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts the given source object to the given target type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufConvertHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufConvertHandler</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a same one instance of this handler.</div>
 </div>
 </div>
 </div>
@@ -172,6 +178,14 @@ implements <a href="../../object/convert/ObjectConverter.Handler.html" title="in
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getInstance()">
+<h3>getInstance</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="ProtobufConvertHandler.html" title="class in space.sunqian.fs.third.protobuf">ProtobufConvertHandler</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Returns a same one instance of this handler.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="convert(java.lang.Object,java.lang.reflect.Type,java.lang.reflect.Type,space.sunqian.fs.object.convert.ObjectConverter,space.sunqian.fs.base.option.Option...)">
 <h3>convert</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">convert</span><wbr><span class="parameters">(<a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
@@ -179,7 +193,7 @@ implements <a href="../../object/convert/ObjectConverter.Handler.html" title="in
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;srcType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;target,
+ <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/reflect/Type.html" title="class or interface in java.lang.reflect" class="external-link">Type</a>&nbsp;targetType,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="../../object/convert/ObjectConverter.html" title="interface in space.sunqian.fs.object.convert">ObjectConverter</a>&nbsp;converter,
  <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -193,7 +207,7 @@ implements <a href="../../object/convert/ObjectConverter.Handler.html" title="in
 <dt>Parameters:</dt>
 <dd><code>src</code> - the given source object</dd>
 <dd><code>srcType</code> - the specified type of the given source object</dd>
-<dd><code>target</code> - the specified type of the target object</dd>
+<dd><code>targetType</code> - the specified type of the target object</dd>
 <dd><code>converter</code> - the converter where this handler in</dd>
 <dd><code>options</code> - the other conversion options</dd>
 <dt>Returns:</dt>

@@ -77,24 +77,20 @@ loadScripts(document, 'script');</script>
 <dd><code>K</code> - the key type</dd>
 <dd><code>V</code> - the value type</dd>
 </dl>
-<dl class="notes">
-<dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../../object/convert/ConvertOption.html" title="enum class in space.sunqian.fs.object.convert">ConvertOption</a></code></dd>
-</dl>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="../../../annotation/Immutable.html" title="annotation interface in space.sunqian.annotation">@Immutable</a>
 </span><span class="modifiers">public interface </span><span class="element-name type-name-label">Option&lt;K,<wbr>V&gt;</span></div>
 <div class="block">This interface represents an option with a key and value. For example:
  <pre><code>
-     //declaration:
-     public void start(Option&lt;?, ?&gt;... options){...}
+ //declaration:
+ public void start(Option&lt;?, ?&gt;... options){...}
 
-     //usage:
-     start(
-         Option.of("server", null),
-         Option.of("Xms", "1G"),
-         Option.of("Xmx", "2G")
-     );
+ //usage:
+ start(
+     Option.of("server", null),
+     Option.of("Xms", "1G"),
+     Option.of("Xmx", "2G")
+ );
  </code></pre></div>
 </section>
 <section class="summary">
@@ -110,38 +106,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#containsKey(java.lang.Object,space.sunqian.fs.base.option.Option...)" class="member-name-link">containsKey</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Returns whether the given options contain an option whose key equals the specified key.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>V&gt;[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#emptyOptions()" class="member-name-link">emptyOptions</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#emptyOptions()" class="member-name-link">emptyOptions</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns an empty <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> array;</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
-V,<wbr>
-O extends <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>
-V&gt;&gt;<br>O</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#findOption(K,space.sunqian.fs.base.option.Option...)" class="member-name-link">findOption</a><wbr>(K&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Finds and returns the first option whose key equals the specified key from the given options, or null if not
- found.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns <code>true</code> if the specified object is equal to this option: both key and value are equal.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;V&gt;&nbsp;V</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#findValue(java.lang.Object,space.sunqian.fs.base.option.Option...)" class="member-name-link">findValue</a><wbr>(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
-<div class="block">Finds the first option whose key equals the specified key from the given options.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Option.html" title="type parameter in Option">K</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#key()" class="member-name-link">key</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns the hash code for this option.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Option.html" title="type parameter in Option">K</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#key()" class="member-name-link">key</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the key of this option.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
+V&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>V&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#of(K)" class="member-name-link">of</a><wbr>(K&nbsp;key)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="block">Returns an <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> with the specified key and <code>null</code> value.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static &lt;K,<wbr>
 V&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>V&gt;</code></div>
@@ -150,9 +140,14 @@ V&gt;&nbsp;<a href="../../../annotation/Nonnull.html" title="annotation interfac
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Returns an <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> with the specified key and value.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Option.html" title="type parameter in Option">V</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#value()" class="member-name-link">value</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns a string to describe this option in format: <code>[key: value]</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Option.html" title="type parameter in Option">V</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#value()" class="member-name-link">value</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns the value of this option.</div>
 </div>
 </div>
@@ -192,6 +187,25 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull
 </section>
 </li>
 <li>
+<section class="detail" id="of(K)">
+<h3 id="of(java.lang.Object)">of</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
+V&gt;</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>V&gt;</span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+ K&nbsp;key)</span></div>
+<div class="block">Returns an <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> with the specified key and <code>null</code> value.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>K</code> - the key type</dd>
+<dd><code>V</code> - the value type</dd>
+<dt>Parameters:</dt>
+<dd><code>key</code> - the specified key</dd>
+<dt>Returns:</dt>
+<dd>an <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> with the specified key and <code>null</code> value</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="emptyOptions()">
 <h3>emptyOptions</h3>
 <div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
@@ -204,70 +218,6 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="../../../annotation/Nonnull
 <dd><code>V</code> - the value type</dd>
 <dt>Returns:</dt>
 <dd>an empty <a href="Option.html" title="interface in space.sunqian.fs.base.option"><code>Option</code></a> array</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="findOption(K,space.sunqian.fs.base.option.Option...)">
-<h3 id="findOption(java.lang.Object,space.sunqian.fs.base.option.Option[])">findOption</h3>
-<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
-</span><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
-V,<wbr>
-O extends <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;K,<wbr>
-V&gt;&gt;</span>&nbsp;<span class="return-type">O</span>&nbsp;<span class="element-name">findOption</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- K&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
-<div class="block">Finds and returns the first option whose key equals the specified key from the given options, or null if not
- found. This method will cast returned option to the specified type <code>O</code>.</div>
-<dl class="notes">
-<dt>Type Parameters:</dt>
-<dd><code>K</code> - the key type</dd>
-<dd><code>V</code> - the value type</dd>
-<dd><code>O</code> - the returned option type</dd>
-<dt>Parameters:</dt>
-<dd><code>key</code> - the specified key</dd>
-<dd><code>options</code> - the given options</dd>
-<dt>Returns:</dt>
-<dd>the first option whose key equals the specified key from the given options, or null if not found</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="findValue(java.lang.Object,space.sunqian.fs.base.option.Option...)">
-<h3>findValue</h3>
-<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-name">findValue</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
-<div class="block">Finds the first option whose key equals the specified key from the given options. Returns the value of the found
- option, or null if not found. This method will cast returned value to the specified type <code>V</code>.</div>
-<dl class="notes">
-<dt>Type Parameters:</dt>
-<dd><code>V</code> - the value type</dd>
-<dt>Parameters:</dt>
-<dd><code>key</code> - the specified key</dd>
-<dd><code>options</code> - the given options</dd>
-<dt>Returns:</dt>
-<dd>the value of the found option, or null if not found</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="containsKey(java.lang.Object,space.sunqian.fs.base.option.Option...)">
-<h3>containsKey</h3>
-<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsKey</span><wbr><span class="parameters">(<a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
- <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="Option.html" title="interface in space.sunqian.fs.base.option">Option</a>&lt;?,<wbr>?&gt; <a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> ...&nbsp;options)</span></div>
-<div class="block">Returns whether the given options contain an option whose key equals the specified key.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - the specified key</dd>
-<dd><code>options</code> - the given options</dd>
-<dt>Returns:</dt>
-<dd><code>true</code> if given options contain an option whose key equals the specified key, otherwise
- <code>false</code></dd>
 </dl>
 </section>
 </li>
@@ -292,6 +242,49 @@ V&gt;&gt;</span>&nbsp;<span class="return-type">O</span>&nbsp;<span class="eleme
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of this option.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="equals(java.lang.Object)">
+<h3>equals</h3>
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a>
+ <a href="../../../annotation/Nullable.html" title="annotation interface in space.sunqian.annotation">@Nullable</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</span></div>
+<div class="block">Returns <code>true</code> if the specified object is equal to this option: both key and value are equal.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>obj</code> - the object with which to compare.</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the specified object is equal to this option.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hashCode()">
+<h3>hashCode</h3>
+<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
+<div class="block">Returns the hash code for this option.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Returns:</dt>
+<dd>the hash code for this option.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="annotations"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a>
+</span><span class="return-type"><a href="../../../annotation/Nonnull.html" title="annotation interface in space.sunqian.annotation">@Nonnull</a> <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<div class="block">Returns a string to describe this option in format: <code>[key: value]</code>.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Returns:</dt>
+<dd>assertEquals(Option.of("a", "1"), defaultOptions[0]);</dd>
 </dl>
 </section>
 </li>

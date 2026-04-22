@@ -8,6 +8,7 @@ import space.sunqian.fs.base.function.VoidCallable;
 import space.sunqian.fs.io.BufferKit;
 import space.sunqian.fs.io.IOKit;
 import space.sunqian.fs.net.NetException;
+import space.sunqian.fs.net.NetSelector;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -16,7 +17,6 @@ import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -128,7 +128,7 @@ import java.util.concurrent.ThreadFactory;
     private static final class UdpServerImpl implements UdpServer, Runnable {
 
         private final @Nonnull DatagramChannel server;
-        private final @Nonnull Selector mainSelector;
+        private final @Nonnull NetSelector mainSelector;
         private final @Nonnull Thread mainThread;
         private final @Nonnull UdpServerHandler handler;
         private final @Nonnull InetSocketAddress localAddress;
@@ -145,13 +145,13 @@ import java.util.concurrent.ThreadFactory;
             Map&lt;SocketOption&lt;?&gt;, Object&gt; socketOptions
 <span class="fc" id="L146">        ) throws Exception {</span>
 <span class="fc" id="L147">            this.server = DatagramChannel.open();</span>
-<span class="fc" id="L148">            this.mainSelector = Selector.open();</span>
+<span class="fc" id="L148">            this.mainSelector = NetSelector.open();</span>
 <span class="fc" id="L149">            this.handler = handler;</span>
 <span class="fc" id="L150">            this.mainThread = newThread(mainthreadFactory, this);</span>
 <span class="fc" id="L151">            socketOptions.forEach((name, value) -&gt;</span>
 <span class="fc" id="L152">                Fs.uncheck(() -&gt; server.setOption(Fs.as(name), value), NetException::new));</span>
 <span class="fc" id="L153">            server.configureBlocking(false);</span>
-<span class="fc" id="L154">            server.register(mainSelector, SelectionKey.OP_READ);</span>
+<span class="fc" id="L154">            server.register(mainSelector.selector(), SelectionKey.OP_READ);</span>
 <span class="fc" id="L155">            this.buffer = ByteBuffer.allocate(maxPacketSize);</span>
 <span class="fc" id="L156">            server.bind(localAddress);</span>
 <span class="fc" id="L157">            this.localAddress = (InetSocketAddress) server.getLocalAddress();</span>
@@ -210,7 +210,7 @@ import java.util.concurrent.ThreadFactory;
 <span class="fc" id="L210">        }</span>
 
         private void doMainWork() throws Exception {
-<span class="fc" id="L213">            mainSelector.select();</span>
+<span class="fc" id="L213">            mainSelector.select(0);</span>
 <span class="fc" id="L214">            Set&lt;SelectionKey&gt; selectedKeys = mainSelector.selectedKeys();</span>
 <span class="fc" id="L215">            Iterator&lt;SelectionKey&gt; keys = selectedKeys.iterator();</span>
 <span class="fc bfc" id="L216" title="All 2 branches covered.">            while (keys.hasNext()) {</span>
